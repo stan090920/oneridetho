@@ -494,8 +494,8 @@ const Signup = () => {
             <p className="CountdownTimer font-semibold leading-6 text-center box-border border-0 p-0 mb-4 text-gray-500 flex justify-center items-center text-xs">
               <svg 
                 className="CountdownTimerIcon text-gray-500 font-normal leading-6 text-center text-sm box-border w-4 h-4 mr-1" 
-                focusable="false" viewBox="0 0 12 12" aria-hidden="true" optly_change_2="">
-                <path d="M6,0c0.4,0,0.8,0.4,0.8,0.8c0,0.4-0.4,0.8-0.8,0.8H5.6v0.8c0.9,0.1,1.7,0.5,2.3,1l0.5-0.5 c0.3-0.3,0.8-0.3,1.1,0c0.3,0.3,0.3,0.8,0,1.1L9,4.5c0.5,0.8,0.8,1.7,0.8,2.6c0,2.7-2.2,4.9-4.9,4.9C2.2,12,0,9.8,0,7.1 c0-2.4,1.8-4.5,4.1-4.8V1.5H3.8C3.3,1.5,3,1.2,3,0.8C3,0.4,3.3,0,3.8,0H6z M5.4,4.5c0-0.3-0.3-0.6-0.6-0.6c-0.3,0-0.6,0.3-0.6,0.6v3 c0,0.3,0.2,0.6,0.6,0.6c0.3,0,0.6-0.2,0.6-0.6V4.5z" optly_change_2="">
+                focusable="false" viewBox="0 0 12 12" aria-hidden="true">
+                <path d="M6,0c0.4,0,0.8,0.4,0.8,0.8c0,0.4-0.4,0.8-0.8,0.8H5.6v0.8c0.9,0.1,1.7,0.5,2.3,1l0.5-0.5 c0.3-0.3,0.8-0.3,1.1,0c0.3,0.3,0.3,0.8,0,1.1L9,4.5c0.5,0.8,0.8,1.7,0.8,2.6c0,2.7-2.2,4.9-4.9,4.9C2.2,12,0,9.8,0,7.1 c0-2.4,1.8-4.5,4.1-4.8V1.5H3.8C3.3,1.5,3,1.2,3,0.8C3,0.4,3.3,0,3.8,0H6z M5.4,4.5c0-0.3-0.3-0.6-0.6-0.6c-0.3,0-0.6,0.3-0.6,0.6v3 c0,0.3,0.2,0.6,0.6,0.6c0.3,0,0.6-0.2,0.6-0.6V4.5z">
                 </path>
               </svg>
               {step === 2 ? "20 seconds left..." : "It only takes a minute!"}
