@@ -1,0 +1,1504 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -webkit-appearance: textfield;
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+body{
+  overflow-x: hidden;
+  min-width: 320px;
+}
+
+h1 {
+  font-size: 32px;
+  font-weight: 700;
+}
+
+.selected {
+  color: gold;
+}
+
+.hero {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+.videoBackground {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 78%;
+  z-index: -1;
+  object-fit: cover;
+}
+
+.videoOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 58vh;
+  background-color: rgba(0, 0, 0, 0.5); 
+  z-index: -1; 
+}
+
+@media (max-width: 768px) {
+  .videoBackground{
+   display: none;
+    }
+    .videoOverlay{
+      display: none;
+    }
+
+    .hero{
+      background-color: black;
+    }
+}
+
+@media (max-width: 480px) {
+
+  .hero{
+    background-color: black;
+    height: 90vh;
+  }
+
+  .videoBackground{
+  display: none;
+  }
+
+  .videoOverlay{
+    display: none;
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+.w-8 {
+  width: 2rem; 
+}
+
+.h-8 {
+  height: 2rem;
+}
+
+.text-accent-default {
+  color: #4fd1c5; 
+}
+
+.fill-beige {
+  fill: #f5f5dc; 
+}
+
+
+.svg-center {
+  display: block;
+  margin: auto;
+}
+
+.LoginSignupBackground{
+  min-width: 320px;
+  background: rgb(29, 62, 10);
+  background: linear-gradient(90deg, rgba(29, 62, 10, 1) 0%, rgba(43, 230, 0, 1) 35%, rgba(21, 79, 14, 1) 100%);
+  margin: 0px;
+}
+
+#facebook-logo:hover {
+  stroke-width: 25px;
+}
+
+#facebook-logo:active {
+  fill: rgb(129, 237, 105);
+  stroke-width: 0px;
+  border-radius: 100%;
+  background-color: rgb(66, 103, 178);
+}
+
+#tiktok-logo {
+  fill: url(#tiktok-logo-gradient)
+}
+
+#tiktok-logo:hover {
+  stroke-width: 25px;
+}
+
+#tiktok-logo:active {
+  fill: rgb(129, 237, 105);
+  stroke-width: 0px;
+  background-image: linear-gradient(90deg, rgba(0, 242, 234, 1) 0%, rgba(0, 0, 0, 1) 50%, rgba(255, 0, 80, 1) 100%);
+  border-radius: 5px;
+}
+
+#instagram-logo {
+  fill: url(#instagram-logo-gradient)
+}
+
+#instagram-logo:hover {
+  stroke-width: 12px;
+}
+
+#instagram-logo:active {
+  fill: rgb(129, 237, 105);
+  stroke-width: 0px;
+  background-image: linear-gradient(45deg, rgb(240, 148, 51) 0%, rgb(230, 104, 60) 25%, rgb(220, 39, 67) 40%, rgb(204, 35, 102) 65%, rgb(188, 24, 136) 80%, rgb(79, 91, 213) 95%);
+  border-radius: 5px;
+}
+
+#stop-color1 {
+  stop-color: rgb(0, 242, 234);
+  stop-opacity: 1;
+}
+
+#stop-color2 {
+  stop-color: rgb(0, 0, 0);
+  stop-opacity: 1;
+}
+
+#stop-color3 {
+  stop-color: rgb(255, 0, 80);
+  stop-opacity: 1;
+}
+
+#ig-stop-color1 {
+  stop-color: rgb(240, 148, 51);
+  stop-opacity: 1;
+}
+
+#ig-stop-color2 {
+  stop-color: rgb(230, 104, 60);
+  stop-opacity: 1;
+}
+
+#ig-stop-color3 {
+  stop-color: rgb(220, 39, 67);
+  stop-opacity: 1;
+}
+
+#ig-stop-color4 {
+  stop-color: rgb(204, 35, 102);
+  stop-opacity: 1;
+}
+
+#ig-stop-color5 {
+  stop-color: rgb(188, 24, 136);
+  stop-opacity: 1;
+}
+
+#ig-stop-color6 {
+  stop-color: rgb(79, 91, 213);
+  stop-opacity: 1;
+}
+
+.Glow {
+  animation: glow 1s ease-in-out infinite alternate;
+}
+
+.TextGlow {
+  animation: textGlow 1s ease-in-out infinite alternate;
+}
+
+@keyframes glow {
+  from {
+    box-shadow: 0 0 2px white, 0 0 5px white, 0 0 8px rgb(20, 110, 0), 0 0 11px rgb(20, 110, 0), 0 0 14px rgb(20, 110, 0), 0 0 17px rgb(20, 110, 0), 0 0 20px rgb(20, 110, 0);
+  }
+
+  to {
+    box-shadow: 0 0 5px white, 0 0 8px rgb(20, 110, 0), 0 0 11px rgb(20, 110, 0), 0 0 14px rgb(20, 110, 0), 0 0 17px rgb(20, 110, 0), 0 0 20px rgb(20, 110, 0), 0 0 23px rgb(20, 110, 0);
+  }
+}
+
+@keyframes textGlow {
+  from {
+    text-shadow: 0 0 2px white, 0 0 3px white, 0 0 4px rgb(20, 110, 0), 0 0 5px rgb(20, 110, 0), 0 0 6px rgb(20, 110, 0), 0 0 7px rgb(20, 110, 0);
+  }
+
+  to {
+    text-shadow: 0 0 3px white, 0 0 4px rgb(20, 110, 0), 0 0 5px rgb(20, 110, 0), 0 0 6px rgb(20, 110, 0), 0 0 7px rgb(20, 110, 0);
+  }
+}
+
+.CheckPriceButton {
+  text-align: center;
+  font-weight: 600;
+  color: rgb(0 0 0);
+  background-color: rgb(255 255 255);
+  padding-right: 1rem;
+  padding-left: 1rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-feature-settings: inherit;
+  font-size: 16px;
+  line-height: inherit;
+  margin: 0;
+  text-decoration: none;
+}
+
+.CheckPriceButton:hover {
+  background-color: rgb(215 215 215);
+  box-shadow: rgba(255, 255, 255, 0.4) 2px 4px 10px 1px;
+}
+
+.CheckPriceButton:active {
+  background-color: rgb(174 174 174);
+  box-shadow: rgba(255, 255, 255, 0.4) 2px 4px 10px 1px;
+}
+
+.GenderDropdown {
+  tab-size: 4;
+  box-sizing: border-box;
+  border: 0 solid #e5e7eb;
+  font-family: inherit;
+  font-feature-settings: inherit;
+  font-size: 100%;
+  font-weight: inherit;
+  line-height: inherit;
+  color: inherit;
+  margin: 0;
+  padding: 14px;
+  text-transform: none;
+  width: 280px;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
+.LoginButton {
+  text-align: center;
+  font-weight: 600;
+  color: rgb(255 255 255);
+  background-color: rgb(20, 110, 0);
+  padding-right: 1rem;
+  padding-left: 1rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-feature-settings: inherit;
+  font-size: 16px;
+  line-height: inherit;
+  margin: 0;
+  text-decoration: none;
+  line-height: 40px;
+  max-height: 58px;
+}
+
+.LoginButton:hover {
+  background-color: rgb(29 149 2);
+  box-shadow: rgba(255, 255, 255, 0.4) 2px 4px 10px 1px;
+}
+
+.LoginButton:active {
+  background-color: rgb(36 190 1);
+  box-shadow: rgba(255, 255, 255, 0.4) 2px 4px 10px 1px;
+}
+
+.HeaderBar {
+  position: sticky;
+  top: 0;
+  z-index: 10000;
+  width: 100%;
+
+  tab-size: 4;
+  font-feature-settings: normal;
+  font-variation-settings: normal;
+  line-height: inherit;
+  box-sizing: border-box;
+  border: 0 solid #e5e7eb;
+  background-color: rgb(0 0 0);
+}
+
+.SocialLinksSection {
+  tab-size: 4;
+  font-feature-settings: normal;
+  font-variation-settings: normal;
+  line-height: inherit;
+  box-sizing: border-box;
+  border: 0 solid #e5e7eb;
+  align-items: center;
+  gap: 1rem;
+  display: flex;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.SignupInHeader {
+  tab-size: 4;
+  box-sizing: border-box;
+  border: 0 solid #e5e7eb;
+  font-feature-settings: inherit;
+  font-variation-settings: inherit;
+  font-size: 100%;
+  line-height: inherit;
+  margin: 0;
+  text-transform: none;
+  -webkit-appearance: button;
+  appearance: button;
+  background-image: none;
+  cursor: pointer;
+  border-radius: 6px;
+  background-color: white;
+  padding-top: .5rem;
+  padding-bottom: .5rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  font-weight: 700;
+  color: black;
+}
+
+.SignupLoginSection {
+  tab-size: 4;
+  font-feature-settings: normal;
+  font-variation-settings: normal;
+  line-height: inherit;
+  box-sizing: border-box;
+  border: 0 solid #e5e7eb;
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  color: white;
+}
+
+.SignupInHeader:hover {
+  background-color: rgb(129, 237, 105);
+}
+
+.SignupInHeader:active {
+  background-color: rgb(20, 110, 0);
+  color: white;
+}
+
+.LoginInHeader {
+  tab-size: 4;
+  box-sizing: border-box;
+  border: 0 solid #e5e7eb;
+  font-feature-settings: inherit;
+  font-variation-settings: inherit;
+  font-size: 100%;
+  line-height: inherit;
+  color: white;
+  margin: 0;
+  padding: 0;
+  text-transform: none;
+  -webkit-appearance: button;
+  appearance: button;
+  background-color: transparent;
+  background-image: none;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.LoginInHeader:hover {
+  color: rgb(129, 237, 105);
+}
+
+.LoginInHeader:active {
+  color: rgb(20, 110, 0);
+}
+
+.FormContainer {
+  tab-size: 4;
+  font-feature-settings: normal;
+  line-height: inherit;
+  box-sizing: border-box;
+  padding-top: 50px;
+  border: 0 solid #e5e7eb;
+  display: flex;
+  justify-content: center;
+}
+
+.SignUpForm {
+  color: #121212;
+  font-weight: 600;
+  line-height: 1.47;
+  text-align: left;
+  box-sizing: border-box;
+  font-size: 100%;
+  margin: 0;
+  vertical-align: baseline;
+  max-width: 967px !important;
+  background: #FFFF;
+  border: 1px solid #5621AA;
+  border-radius: 10px;
+  box-shadow: 10px 10px 0px 0px rgba(0, 0, 0, 1);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: max-content;
+  min-width: 320px;
+  padding-left: 25px;
+  padding-right: 25px;
+  padding-top: 0;
+  padding-bottom: 0;
+  margin: 20px;
+}
+
+.FormHeader {
+  font-size: 16px;
+  color: #fff;
+  line-height: 1.5;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 720px;
+  display: flex;
+  width: 100%;
+}
+
+.ProgressBarWrapper {
+  color: #fff;
+  line-height: 1.5;
+  padding: 0;
+  box-sizing: border-box;
+  background: #e4e4e4;
+  text-align: center;
+  font-size: 1rem;
+  letter-spacing: .025em;
+  width: 100%;
+  position: relative;
+  border: 0;
+  height: 6px;
+  margin-bottom: 2em;
+  background-color: #eee;
+  display: block;
+  margin-top: 25px;
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+.ProgressBar {
+  color: #fff;
+  line-height: 1.5;
+  text-align: center;
+  font-size: 1rem;
+  letter-spacing: .025em;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  background: rgb(29, 62, 10);
+  background: linear-gradient(90deg, rgba(29, 62, 10, 1) 0%, rgba(43, 230, 0, 1) 35%, rgba(21, 79, 14, 1) 100%);
+  top: 0;
+  left: 0;
+  border-radius: 0;
+  position: relative;
+  height: 100%;
+  box-shadow: none;
+  background-color: #4CD6BC;
+  min-width: 10px !important;
+  transition: width 1s ease-out 0s;
+}
+
+.ProgressBarText {
+  line-height: 1.5;
+  letter-spacing: .025em;
+  box-sizing: border-box;
+  color: #000;
+  position: relative;
+  padding: .025em;
+  text-align: center;
+  margin: 0 auto;
+  display: block !important;
+  margin-top: 0.5em;
+  font-size: 12px;
+}
+
+.ProgressIndicatorImage {
+  content: '';
+  display: block;
+  width: 50px;
+  height: 28px;
+  border-radius: 0;
+  background: transparent url(data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20xmlns%3Axlink%3D%22http%3A//www.w3.org/1999/xlink%22%20width%3D%2262%22%20height%3D%2235%22%3E%3Cdefs%3E%3Ccircle%20id%3D%22a%22%20cx%3D%2245%22%20cy%3D%2223%22%20r%3D%225%22/%3E%3C/defs%3E%3Cg%20fill%3D%22none%22%20transform%3D%22translate%282%202%29%22%3E%3Cuse%20fill%3D%22%23FFF%22%20stroke%3D%22%23FFF%22%20stroke-width%3D%2210%22%20xlink%3Ahref%3D%22%23a%22/%3E%3Cuse%20stroke%3D%22%23545454%22%20stroke-width%3D%224%22%20xlink%3Ahref%3D%22%23a%22/%3E%3Ccircle%20cx%3D%2213%22%20cy%3D%2223%22%20r%3D%225%22%20fill%3D%22%23FFF%22%20stroke%3D%22%23545454%22%20stroke-width%3D%224%22/%3E%3Cpath%20stroke%3D%22%23545454%22%20stroke-width%3D%224%22%20d%3D%22M0%2017V9L12.2%208%2016.4%200h21l4.3%209%2016.3.8V17%22/%3E%3C/g%3E%3C/svg%3E) no-repeat center / auto;
+  position: absolute;
+  top: -17px !important;
+  right: -22px !important;
+  background-size: contain;
+  z-index: 3;
+}
+
+.LoginForm{
+  tab-size: 4;
+  font-feature-settings: normal;
+  line-height: inherit;
+  box-sizing: border-box;
+  border: 0 solid #e5e7eb;
+  max-width: 330px;
+}
+
+.InputBox {
+  font-weight: 400;
+  font-size: 1rem;
+  line-height: 1.4375em;
+  color: rgba(0, 0, 0, 0.87);
+  box-sizing: border-box;
+  cursor: text;
+  display: inline-flex;
+  align-items: center;
+  position: relative;
+  background-color: rgb(251, 251, 251);
+  border: 1px solid rgb(225, 225, 225);
+  box-shadow: rgba(33, 33, 33, 0.1) 0px 2px 5px;
+  overflow: hidden;
+  border-radius: 4px;
+  height: 60px;
+}
+
+.InputBoxExtraShadow {
+  box-shadow: rgba(33, 33, 33, 0.2) 0px 4px 10px;
+}
+
+.InputBoxPrimaryBorderColour {
+  border: 1px solid rgb(20, 110, 0);
+}
+
+.BackButton {
+  width: 20%;
+  text-align: center;
+  font-weight: 700;
+  color: rgb(20, 110, 0);
+  background-color: rgb(255 255 255);
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-feature-settings: inherit;
+  box-shadow: rgba(0, 0, 0, 0.25) 1px 2px 5px 1px;
+  border-radius: 6px;
+  font-size: 18px;
+  margin-bottom: 1.2rem;
+  margin-right: 1rem;
+  text-decoration: none;
+  line-height: 40px;
+}
+
+.BackButton:hover {
+  background-color: rgb(215 215 215);
+  box-shadow: rgba(255, 255, 255, 0.4) 2px 4px 10px 1px;
+}
+
+.BackButton:active {
+  background-color: rgb(174 174 174);
+  box-shadow: rgba(255, 255, 255, 0.4) 2px 4px 10px 1px;
+}
+
+.InputBoxWithActionIcon {
+  font-weight: 400;
+  font-size: 1rem;
+  line-height: 1.4375em;
+  color: rgba(0, 0, 0, 0.87);
+  box-sizing: border-box;
+  cursor: text;
+  display: inline-flex;
+  align-items: center;
+  position: relative;
+  background-color: rgb(251, 251, 251);
+  border: 1px solid rgb(225, 225, 225);
+  box-shadow: rgba(33, 33, 33, 0.1) 0px 2px 5px;
+  overflow: hidden;
+  border-radius: 4px;
+  height: 60px;
+}
+
+.InputBoxWithActionIcon:hover {
+  border-color: rgb(20, 110, 0);
+}
+
+.InputBoxWithActionIconSelected {
+  box-shadow: rgba(33, 33, 33, 0.2) 0px 4px 10px;
+  border-color: rgb(20, 110, 0);
+}
+
+.ActionIconPrimaryColour {
+  fill: rgb(20, 110, 0);
+}
+
+.RemoveStopButtonWrapper {
+  tab-size: 4;
+  font-feature-settings: normal;
+  line-height: inherit;
+  box-sizing: border-box;
+}
+
+.RemoveStopButton {
+  tab-size: 4;
+  box-sizing: border-box;
+  font-family: inherit;
+  font-feature-settings: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  margin: 0;
+  text-transform: none;
+  -webkit-appearance: button;
+  background-image: none;
+  cursor: pointer;
+  border-radius: .375rem;
+  background-color: white;
+  padding-top: .625rem;
+  padding-bottom: .625rem;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  font-size: 29px;
+  color: rgb(20, 110, 0);
+}
+
+.RemoveStopButton:hover {
+  background-color: rgb(215 215 215);
+  box-shadow: rgba(255, 255, 255, 0.4) 2px 4px 10px 1px;
+}
+
+.RemoveStopButton:active {
+  background-color: rgb(174 174 174);
+  box-shadow: rgba(255, 255, 255, 0.4) 2px 4px 10px 1px;
+}
+
+.AddStopButtonWrapper {
+  tab-size: 4;
+  font-feature-settings: normal;
+  line-height: inherit;
+  box-sizing: border-box;
+}
+
+.AddStopButton {
+  tab-size: 4;
+  box-sizing: border-box;
+  font-family: inherit;
+  font-feature-settings: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  margin: 0;
+  text-transform: none;
+  -webkit-appearance: button;
+  background-image: none;
+  cursor: pointer;
+  border-radius: .375rem;
+  background-color: rgb(20, 110, 0);
+  padding-top: .625rem;
+  padding-bottom: .625rem;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+  font-size: 29px;
+  color: white;
+}
+
+.AddStopButton:hover {
+  background-color: rgb(29 149 2);
+  box-shadow: rgba(255, 255, 255, 0.4) 2px 4px 10px 1px;
+}
+
+.AddStopButton:active {
+  background-color: rgb(36 190 1);
+  box-shadow: rgba(255, 255, 255, 0.4) 2px 4px 10px 1px;
+}
+
+.BookApplyBtnGroupWrapper {
+  display: block;
+  tab-size: 4;
+  font-feature-settings: normal;
+  font-variation-settings: normal;
+  line-height: inherit;
+  box-sizing: border-box;
+  border: 0 solid #e5e7eb;
+}
+
+.BookApplyBtnGroup {
+  display: none;
+  tab-size: 4;
+  font-feature-settings: normal;
+  font-variation-settings: normal;
+  line-height: inherit;
+  box-sizing: border-box;
+  border: 0 solid #e5e7eb;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  align-items: center;
+  gap: 1.25rem;
+  font-weight: 700;
+  color: white;
+}
+.ShortApplyText {
+  display: none;
+}
+
+.FullApplyText {
+  display: none;
+}
+
+.ShortRideText {
+  display: none;
+}
+
+.FullRideText {
+  display: none;
+}
+
+.BookApplyBtnGroup>a:hover {
+  color: rgb(129, 237, 105);
+}
+
+.BookApplyBtnGroup>a:active {
+  color: rgb(20, 110, 0);
+}
+
+.HomeBookApplySection {
+  tab-size: 4;
+  font-feature-settings: normal;
+  font-variation-settings: normal;
+  line-height: inherit;
+  box-sizing: border-box;
+  border: 0 solid #e5e7eb;
+  display: flex;
+  align-items: center;
+}
+
+.ManagementItemsContainer {
+  tab-size: 4;
+  font-feature-settings: normal;
+  font-variation-settings: normal;
+  line-height: inherit;
+  box-sizing: border-box;
+  border: 0 solid #e5e7eb;
+  display: flex;
+  height: 10vh;
+  width: 95%;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.TopSection {
+  background-color: #000000;
+  padding-top: 0;
+  padding-bottom: 0;
+  display: flex;
+  position: relative;
+  width: 100%;
+  height: auto;
+  min-height: auto;
+  margin: 0 auto;
+}
+
+.RequestedPassengerCount {
+  tab-size: 4;
+  box-sizing: border-box;
+  border: 0 solid #e5e7eb;
+  font-family: inherit;
+  font-feature-settings: inherit;
+  font-size: 100%;
+  font-weight: inherit;
+  line-height: inherit;
+  color: black;
+  margin: 0;
+  padding: 0;
+  width: 40px;
+  border-radius: 4px;
+  border-width: 2px;
+  border-color: rgb(0 0 0);
+  padding-top: .25rem;
+  padding-bottom: .25rem;
+  text-align: center;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  margin-left: 10px;
+}
+
+
+.PricePreviewResult {
+  tab-size: 4;
+  font-feature-settings: normal;
+  line-height: inherit;
+  box-sizing: border-box;
+  border: 0 solid #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: .375rem;
+  border-width: 1px;
+  border-color: rgb(129, 237, 105);
+  padding-top: .5rem;
+  padding-bottom: .5rem;
+  padding-left: .75rem;
+  padding-right: .75rem;
+  width: 100%;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+
+.MiddleSection {
+  background-color: #ffffff;
+  padding-top: 0;
+  padding-bottom: 0;
+  display: flex;
+  position: relative;
+  width: 100%;
+  height: auto;
+  min-height: auto;
+  margin: 0 auto;
+}
+
+.CarImageWrapper {
+  align-self: center;
+  display: grid;
+  width: 100%;
+  cursor: default;
+  height: 650px;
+}
+
+.JoinTheTeamWrapper {
+  width: 100%;
+  align-self: center;
+  display: grid;
+}
+
+.ApplyNowButton {
+  text-align: center;
+  font-weight: 600;
+  color: rgb(255 255 255);
+  background-color: rgb(20, 110, 0);
+  border-radius: 6px;
+  cursor: pointer;
+  font-feature-settings: inherit;
+  font-variation-settings: inherit;
+  font-size: 16px;
+  line-height: inherit;
+  padding-top: 14px;
+  padding-bottom: 14px;
+  padding-left: 25px;
+  padding-right: 25px;
+  margin: 0;
+  max-width: max-content;
+  text-decoration: none;
+  line-height: 20px;
+}
+
+.ApplyNowButton:hover {
+  background-color: rgb(29 149 2);
+  box-shadow: rgba(0, 0, 0, 0.4) 2px 4px 10px 1px;
+}
+
+.ApplyNowButton:active {
+  background-color: rgb(36 190 1);
+  box-shadow: rgba(0, 0, 0, 0.4) 2px 4px 10px 1px;
+}
+
+
+
+.InnerTopSection {
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  display: flex;
+  position: relative;
+  width: 100%;
+  height: auto;
+  margin: 0 auto;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.ChildOfInnerTopSection {
+  width: 100%;
+  max-width: 100%;
+  margin-right: auto;
+  margin-left: auto;
+  padding-top: 0;
+  padding-bottom: 0;
+  align-self: flex-start;
+}
+
+.MainContainerTopSection {
+  color: #ffffff;
+  background-color: transparent;
+}
+
+.WrapperOfFormAndDriversPanel {
+  display: grid;
+  height: 100%;
+  justify-items: inherit;
+}
+
+.SafetyInformation {
+  align-self: center;
+  display: grid;
+  width: 100%;
+  cursor: default;
+}
+
+.BahamasImages {
+  align-self: center;
+  display: grid;
+  width: 100%;
+  cursor: default;
+  height: 900px;
+}
+
+.AdvertisementDetails {
+  font-size: 18px;
+  font-weight: 650;
+  color: rgb(129, 237, 105);
+  margin: 15px 0;
+}
+
+.BookingPrompt {
+  font-size: 16px;
+  font-weight: 600;
+  color: white;
+  margin: 15px 0;
+}
+
+.BottomSection {
+  background: rgb(2, 0, 36);
+  background: linear-gradient(90deg, rgba(2, 0, 36, 1) 0%, rgba(20, 110, 0, 1) 55%, rgba(175, 237, 105, 1) 100%);
+  padding-top: 0;
+  padding-bottom: 0;
+  display: flex;
+  position: relative;
+  width: 100%;
+  height: auto;
+  min-height: auto;
+  margin: 0 auto;
+}
+
+.BottomSection>div>div>div>div>div.BahamasImages>img {
+  width: 450px;
+  border: none;
+  height: auto;
+}
+
+.Label {
+  font-weight: 400;
+  padding: 0px;
+  display: block;
+  transform-origin: left top;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  transform: translate(0px, 20px) scale(1);
+  transition: color 400ms cubic-bezier(0, 0, 0.2, 1) 0ms, transform 400ms cubic-bezier(0, 0, 0.2, 1) 0ms, max-width 400ms cubic-bezier(0, 0, 0.2, 1) 0ms;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 80%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+  margin-top: -2px;
+  margin-right: 1.2rem;
+  font-size: 16px;
+  margin-left: 1.2rem;
+  color: rgb(0, 0, 0);
+  line-height: 1.6;
+}
+
+.AnimatedLabel {
+  line-height: 1.4375em;
+  padding: 0px;
+  display: block;
+  transform-origin: left top;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  transform: translate(0px, -1.5px) scale(0.75);
+  transition: color 400ms cubic-bezier(0, 0, 0.2, 1) 0ms, transform 400ms cubic-bezier(0, 0, 0.2, 1) 0ms, max-width 400ms cubic-bezier(0, 0, 0.2, 1) 0ms;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  height: 100%;
+  max-width: 120%;
+  z-index: 1;
+  pointer-events: none;
+  margin-right: 1.2rem;
+  font-size: 16px;
+  margin-left: 1.2rem;
+  margin-top: 9px;
+  font-weight: 700;
+  color: rgb(20, 110, 0);
+}
+
+.LabelWithActionIcon {
+  padding: 0px;
+  display: block;
+  transform-origin: left top;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  transform: translate(0px, -1.5px) scale(0.75);
+  transition: color 200ms cubic-bezier(0, 0, 0.2, 1) 0ms, transform 200ms cubic-bezier(0, 0, 0.2, 1) 0ms, max-width 200ms cubic-bezier(0, 0, 0.2, 1) 0ms;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  height: 100%;
+  max-width: 120%;
+  z-index: 1;
+  pointer-events: none;
+  margin-right: 1.2rem;
+  margin-left: 1.2rem;
+  color: rgb(0, 0, 0);
+  font-size: 16px;
+  line-height: 1.6;
+  margin-top: 9px;
+  font-weight: 700
+}
+
+.LabelPrimaryColour {
+  padding: 0px;
+  display: block;
+  transform-origin: left top;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  height: 100%;
+  max-width: 120%;
+  z-index: 1;
+  pointer-events: none;
+  margin-right: 1.2rem;
+  font-size: 16px;
+  margin-left: 1.2rem;
+  line-height: 1.6;
+  color: rgb(20, 110, 0);
+  margin-top: 9px;
+  font-weight: 700;
+}
+
+@media (max-width: 400px) {
+  .Label, .AnimatedLabel, .LabelWithActionIcon, .LabelWithError {
+    font-size: 14px;
+  }
+  .StandardInput, .StandardInputWithActionIcon, .StandardInputWithError {
+    font-size: 14px;
+  }
+}
+
+.ActionIconWrapper {
+  font-weight: 400;
+  font-size: 1rem;
+  line-height: 1.4375em;
+  cursor: text;
+  display: flex;
+  height: 0.01em;
+  max-height: 2em;
+  align-items: center;
+  white-space: nowrap;
+  color: black;
+  margin-right: 0.6rem;
+  margin-left: 1.2rem;
+  margin-top: 16px;
+}
+
+.CountryFlagElement {
+  tab-size: 4;
+  font-feature-settings: normal;
+  line-height: inherit;
+  box-sizing: border-box;
+  border: 0 solid #e5e7eb;
+  text-align: center;
+}
+
+.CountryFlagDropdown {
+  tab-size: 4;
+  box-sizing: border-box;
+  border: 0 solid #e5e7eb;
+  font-family: inherit;
+  font-feature-settings: inherit;
+  font-size: 100%;
+  font-weight: inherit;
+  line-height: inherit;
+  color: inherit;
+  margin: 0;
+  padding: 0;
+  text-transform: none;
+  margin-left: .5rem;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
+.StandardInput {
+  font: inherit;
+  letter-spacing: inherit;
+  color: black;
+  border: 0px;
+  box-sizing: content-box;
+  background: none;
+  height: 1.4375em;
+  margin: 0px;
+  display: block;
+  min-width: 0px;
+  width: 100%;
+  padding: 18px 1.2rem 9px 1.2rem;
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.StandardInput:focus {
+  outline: none;
+}
+
+.StandardInputWithActionIcon {
+  font: inherit;
+  letter-spacing: inherit;
+  color: currentcolor;
+  border: 0px;
+  box-sizing: content-box;
+  background: none;
+  height: 1.4375em;
+  margin: 0px;
+  display: block;
+  min-width: 0px;
+  width: 100%;
+  font-weight: 700;
+  font-size: 16px;
+  outline: 0px;
+  padding: 28px 55px 11px 1.2rem;
+  padding-left: 0px;
+}
+
+.DriversPanelWrapper {
+  align-self: center;
+  display: grid;
+  order: 2;
+  width: 100%;
+  cursor: default;
+  height: 650px;
+}
+
+#watermark-ort-logo {
+  position: absolute;
+  width: 100%;
+  height: auto;
+}
+
+.ColouredPhotoGroup{
+  width: 10%;
+}
+
+.ColouredPhotoField {
+  position: absolute;
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+  transition: all 0.375s cubic-bezier(0.4, 0, 0.2, 1);
+  opacity: 1;
+}
+
+#driver-image{
+  width: 100%;
+  height: 100%;
+}
+
+.ColouredPhotoField:not(:hover) #driver-image {
+  opacity: 0.75;
+}
+
+.ColouredPhotoField:hover #driver-image {
+  opacity: 1;
+}
+
+.ResetPasswordLink {
+  margin: 6px;
+  text-align: center;
+  color: rgb(20, 110, 0);
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.ResetPasswordLink:hover {
+  color: rgb(29 149 2);
+  font-weight: 600;
+}
+
+.ResetPasswordLink:active {
+  color: rgb(36 190 1);
+  font-weight: 600;
+}
+
+.LoginPriceCheckButtonGroup>* {
+  margin-top: 10px;
+  max-width: 390px;
+}
+
+.ColouredPhotoBlock {
+  float: left;
+  display: block;
+  position: relative;
+  width: 100%;
+  padding-bottom: 100%;
+}
+
+.ColouredPhotoBlock:hover div {
+  transform: scale(2);
+  border-radius: 3px;
+  z-index: 4;
+  opacity: 1;
+}
+
+.ColouredPhotoBlock:not(hover) div {
+  opacity: 0.55;
+}
+
+#colour-options-grid>.DocsColourTrackerPanel {
+  overflow-y: hidden;
+  overflow-x: auto;
+  max-width: 680px;
+  min-width: 300px;
+}
+
+button#colour-options-grid {
+  background: black;
+  box-shadow: 6px 6px 5px rgb(129, 237, 105);
+  border: 2px solid rgb(129, 237, 105);
+  border-radius: 5px;
+  top: 105px;
+  width: 95vw;
+  max-width: 500px;
+  min-width: 300px;
+}
+
+.loggedIn {
+  width: 100%;
+}
+
+.DriverPhotoBlockTextLoggedIn{
+  color: rgb(20, 110, 0);
+}
+
+@media (min-width: 1136px) {
+  .MainContainerTopSection {
+    padding-top: 64px;
+    padding-right: 64px;
+    padding-bottom: 64px;
+    padding-left: 64px;
+  }
+
+  .ChildOfInnerTopSection {
+    max-width: 1280px;
+  }
+
+  .DriversPanelWrapper {
+    padding-right: 20px;
+    padding-left: 20px;
+    grid-column: 7 / span 6;
+  }
+
+  .WrapperOfFormAndDriversPanel {
+    grid-column-gap: 36px;
+    grid-row-gap: 36px;
+    grid-template-columns: repeat(12, 2fr);
+  }
+
+  .BookingsForm {
+    grid-column: 1 / span 5;
+  }
+
+  .JoinTheTeamWrapper {
+    grid-column: 8 / span 5;
+    order: 2;
+  }
+
+  .CarImageWrapper {
+    display: grid;
+    grid-column: 1/8;
+    order: 1;
+    min-width: 620px;
+  }
+
+  .BahamasImages {
+    grid-column: 8 / span 5;
+    order: 2;
+  }
+
+  .SafetyInformation {
+    display: grid;
+    grid-column: 1/8;
+    order: 1;
+    height: 900px;
+  }
+}
+
+@media (max-width: 1135px) {
+  .MainContainerTopSection {
+    padding-top: 56px;
+    padding-right: 32px;
+    padding-bottom: 56px;
+    padding-left: 32px;
+  }
+
+  .BookingsForm {
+    grid-column: 1/-1;
+  }
+
+  .DriversPanelWrapper {
+    grid-column: 1/-1;
+  }
+
+  .JoinTheTeamWrapper {
+    grid-column: 1/-1;
+    order: 1;
+  }
+
+  .CarImageWrapper {
+    display: grid;
+    grid-column: 1/-1;
+    order: 2;
+    min-width: 400px;
+  }
+
+  .BahamasImages {
+    grid-column: 1/-1;
+    order: 2;
+  }
+
+  .SafetyInformation {
+    grid-column: 1/-1;
+    order: 1;
+    height: 100%;
+  }
+}
+
+@media (min-width: 550px) {
+  .BookApplyBtnGroup {
+    display: flex;
+  }
+  .SocialLinksSection {
+    display: flex;
+    flex-direction: row;
+  }
+  .ShortApplyText {
+    display: inline-block;
+    text-align: center;
+  }
+  .ShortRideText {
+    display: inline-block;
+    text-align: center;
+  }
+  .FullApplyText {
+    display: none;
+  }
+  .FullRideText {
+    display: none;
+  }
+}
+
+@media (min-width: 640px) {
+  .ChildOfInnerTopSection {
+    max-width: 100%;
+  }
+  .SocialLinksSection {
+    display: flex;
+    flex-direction: row;
+  }
+  .ShortApplyText {
+    display: none;
+  }
+  .ShortRideText {
+    display: none;
+  }
+  .FullApplyText {
+    display: inline-block;
+    text-align: center;
+  }
+  .FullRideText {
+    display: inline-block;
+    text-align: center;
+  }
+}
+
+@media (max-width: 639px) {
+  .SocialLinksSection {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+  }
+}
+
+@media (min-width: 600px) {
+  .WrapperOfFormAndDriversPanel {
+    grid-column-gap: 36px;
+    grid-row-gap: 36px;
+    grid-template-columns: repeat(8, 1fr);
+  }
+
+  .LoginPriceCheckButtonGroup {
+    max-width: 100%;
+
+  }
+}
+
+@media (max-width: 599px) {
+  .MainContainerTopSection {
+    padding-top: 40px;
+    padding-right: 24px;
+    padding-bottom: 40px;
+    padding-left: 24px;
+  }
+
+  .LoginPriceCheckButtonGroup {
+    max-width: calc(100vw - 48px);
+  }
+
+  .CarImageWrapper {
+    grid-column: 1/-1;
+    order: 2;
+  }
+
+  .SafetyInformation {
+    grid-column: 1/-1;
+    order: 1;
+    height: 100%;
+  }
+}
+
+@media (max-width: 450px) {
+  .BottomSection>div>div>div>div>div.BahamasImages>img {
+    width: 90vw;
+  }
+}
+
+@media (max-width: 435px) {
+  .LogoInHeader {
+    width: 66px;
+    height: 51px;
+  }
+}
+
+@media (min-width: 320px) {
+  .ChildOfInnerTopSection {
+    max-width: 100%;
+  }
+
+  .WrapperOfFormAndDriversPanel {
+    grid-column-gap: 16px;
+    grid-row-gap: 36px;
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
