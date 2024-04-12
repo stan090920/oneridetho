@@ -17,7 +17,7 @@ const Contact: React.FC<ContactProps> = ({
   setEmail,
   setPassword,
   setPhoneNumber,
-}) => {
+}: ContactProps) => {
   const [countryCode, setCountryCode] = useState("1242");
   const [phoneNumber, setPhoneNumberState] = useState("1242");
   const [emailError, setEmailError] = useState("");
