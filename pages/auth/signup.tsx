@@ -398,7 +398,7 @@ const BasicInfo: React.FC<BasicInfoProps> = ({
 
 const Signup = () => {
   const [step, setStep] = useState(1);
-  const { email, setEmail } = useAuth();
+  const { email, setEmail } = useState("");
   const { phoneNumber, setPhoneNumber } = useAuth();
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
