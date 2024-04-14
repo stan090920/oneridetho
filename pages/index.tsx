@@ -81,12 +81,24 @@ export default function Home() {
                   </div>
                   
                   <br/>
-                  <Estimate />
+                  {isLoggedIn ? (
+                    <>
+                      <Book />
+                    </>
+                  ) : (
+                    <>
+                      <Estimate />
+                    </>
+                  )}
 
                 </div>
-                <div className="DriversPanelWrapper">
-                  <DriversPhotoBlockPanel />
-                </div>
+                {!isLoggedIn ? (
+                  <>
+                    <div className="DriversPanelWrapper">
+                      <DriversPhotoBlockPanel />
+                    </div>
+                  </>
+                ) : (<></>)}
               </div>
             </div>
           </div>

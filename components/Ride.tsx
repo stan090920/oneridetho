@@ -76,7 +76,7 @@ function SimpleMap({
   if (!isLoaded) return <div>Loading Map..</div>;
 
   return (
-    <div className="sm:h-[78vh] sm:w-[65%] h-full w-full sm:relative fixed top-0 left-0 sm:z-[1] z-[-1]">
+    <div className="sm:h-[78vh] sm:w-[100%] h-full w-full sm:relative fixed top-0 left-0 sm:z-[1] z-[-1]">
       <GoogleMap
         mapContainerStyle={{ width: "100%", height: "100%" }}
         center={{ lat: 25.06, lng: -77.345 }}
@@ -605,75 +605,32 @@ const Ride = () => {
   };
   
   return (
-    <div className="sm:flex justify-between sm:bg-none bg-black sm:py-0 py-4 sm:pl-0 sm:pr-0 pl-3 pr-3 rounded-md sm:relative sm:top-0 relative top-[390px] space-x-4">
-      <div className="space-y-4">
+    <div className="flex flex-wrap">
+      <div className="w-full lg:w-1/2">
+        <div className="space-y-4 max-w-[500px]">
 
-        <div className="sm:pt-5 text-white font-bold text-[18px]">Book Your Ride</div>
-        
-        <div className="flex space-x-4">
-          <div className="inline-flex flex-col relative min-w-0 p-0 m-0 border-0 align-top w-full">
-            <label id="pickupInputLabel" className="LabelWithActionIcon">
-              Enter Pickup Location
-            </label>
-            <div id="pickupInputBox" className="InputBoxWithActionIcon">
-              <div className="ActionIconWrapper">
-                <svg
-                  id="pickupLocationActionIcon" viewBox="0 0 24 24" fill="black" focusable="false" role="button"
-                  className="font-normal text-base leading-6 inline-block fill-current text-current h-4 w-3.5 cursor-pointer"
-                  onClick={getUserLocation}
-                  >
-                  <title>Use current location</title>
-                  <path d="M10.5 13.5.5 11 21 3l-8 20.5-2.5-10Z"></path>
-                </svg>
-                <svg 
-                  id="pickupClearActionIcon" focusable="false" aria-hidden="true" viewBox="2 2 20 20" role="button"
-                  style={{ display: 'none'}}
-                  className="font-normal text-base leading-6 inline-block fill-current text-current h-4 w-3.5 cursor-pointer"
-                  onClick={() => clearInputField('pickupLocationInput','pickupLocationActionIcon', 'pickupClearActionIcon')}
-                  >
-                  <title>Clear entry</title>
-                  <path d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z">
-                  </path>
-                </svg>
-              </div>
-              <input
-                id="pickupLocationInput"
-                ref={pickupInputRef}
-                placeholder=""
-                className="StandardInputWithActionIcon"
-                onFocus={() => onFocusHandlerForInputWithActionIcon('pickupInputLabel', 'pickupInputBox', 'pickupLocationActionIcon', 'pickupClearActionIcon')}
-                onBlur={() => onBlurHandlerForInputWithActionIcon('pickupInputLabel', 'pickupInputBox', 'pickupClearActionIcon', 'pickupLocationActionIcon')}
-                onChange={(e) => onChangeHandlerForInputWithActionIcon(e.target ,'pickupLocationActionIcon', 'pickupClearActionIcon')}
-              />
-            </div>
-          </div>
-
-          <div className="AddStopButtonWrapper">
-            <button onClick={addStop} className="AddStopButton">+</button>
-          </div>
-        </div>
-
-        {stops.map((stop, index) => (
-          <div key={index} className="flex space-x-4">
+          <div className="sm:pt-5 text-white font-bold text-[18px]">Book Your Ride</div>
+          
+          <div className="flex space-x-4">
             <div className="inline-flex flex-col relative min-w-0 p-0 m-0 border-0 align-top w-full">
-              <label id="stopInputLabel" className="LabelWithActionIcon">
-                Add a stop
+              <label id="pickupInputLabel" className="LabelWithActionIcon">
+                Enter Pickup Location
               </label>
-              <div id="stopInputBox" className="InputBoxWithActionIcon">
+              <div id="pickupInputBox" className="InputBoxWithActionIcon">
                 <div className="ActionIconWrapper">
-                  <svg 
-                    id="stopLocationActionIcon" viewBox="0 0 24 24" fill="black" focusable="false" role="button"
+                  <svg
+                    id="pickupLocationActionIcon" viewBox="0 0 24 24" fill="black" focusable="false" role="button"
                     className="font-normal text-base leading-6 inline-block fill-current text-current h-4 w-3.5 cursor-pointer"
                     onClick={getUserLocation}
                     >
                     <title>Use current location</title>
                     <path d="M10.5 13.5.5 11 21 3l-8 20.5-2.5-10Z"></path>
                   </svg>
-                  <svg
-                    id="stopClearActionIcon" focusable="false" aria-hidden="true" viewBox="2 2 20 20" role="button"
-                    className="font-normal text-base leading-6 inline-block fill-current text-current h-4 w-3.5 cursor-pointer"
+                  <svg 
+                    id="pickupClearActionIcon" focusable="false" aria-hidden="true" viewBox="2 2 20 20" role="button"
                     style={{ display: 'none'}}
-                    onClick={() => clearInputField('stopLocationInput', 'stopLocationActionIcon', 'stopClearActionIcon')}
+                    className="font-normal text-base leading-6 inline-block fill-current text-current h-4 w-3.5 cursor-pointer"
+                    onClick={() => clearInputField('pickupLocationInput','pickupLocationActionIcon', 'pickupClearActionIcon')}
                     >
                     <title>Clear entry</title>
                     <path d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z">
@@ -681,127 +638,176 @@ const Ride = () => {
                   </svg>
                 </div>
                 <input
-                  id="stopLocationInput"
-                  ref={(el) => assignRef(el, index)}
+                  id="pickupLocationInput"
+                  ref={pickupInputRef}
                   placeholder=""
                   className="StandardInputWithActionIcon"
-                  onFocus={() => onFocusHandlerForInputWithActionIcon('stopInputLabel', 'stopInputBox', 'stopLocationActionIcon', 'stopClearActionIcon')}
-                  onBlur={() => onBlurHandlerForInputWithActionIcon('stopInputLabel', 'stopInputBox', 'stopClearActionIcon', 'stopLocationActionIcon')}
-                  onInput={(e) => onChangeHandlerForInputWithActionIcon(e.target as HTMLInputElement, 'stopLocationActionIcon', 'stopClearActionIcon')}
+                  onFocus={() => onFocusHandlerForInputWithActionIcon('pickupInputLabel', 'pickupInputBox', 'pickupLocationActionIcon', 'pickupClearActionIcon')}
+                  onBlur={() => onBlurHandlerForInputWithActionIcon('pickupInputLabel', 'pickupInputBox', 'pickupClearActionIcon', 'pickupLocationActionIcon')}
+                  onChange={(e) => onChangeHandlerForInputWithActionIcon(e.target ,'pickupLocationActionIcon', 'pickupClearActionIcon')}
                 />
               </div>
             </div>
 
-            <div className="RemoveStopButtonWrapper">
-              <button onClick={() => removeStop(index)} className="RemoveStopButton">-</button>
+            <div className="AddStopButtonWrapper">
+              <button onClick={addStop} className="AddStopButton">+</button>
             </div>
           </div>
-        ))}
 
-        <div className="inline-flex flex-col relative min-w-0 p-0 m-0 border-0 align-top w-full">
-          <label id="dropoffInputLabel" className="LabelWithActionIcon">
-            Enter Dropoff Location
-          </label>
-          <div id="dropoffInputBox" className="InputBoxWithActionIcon">
-            <div className="ActionIconWrapper">
-              <svg
-                id="dropoffLocationActionIcon" viewBox="0 0 24 24" fill="black" focusable="false" role="button"
-                className="font-normal text-base leading-6 inline-block fill-current text-current h-4 w-3.5 cursor-pointer"
-                onClick={getUserLocation}
-                >
-                <title>Use current location</title>
-                <path d="M10.5 13.5.5 11 21 3l-8 20.5-2.5-10Z"></path>
-              </svg>
-              <svg 
-                id="dropoffClearActionIcon" focusable="false" aria-hidden="true" viewBox="2 2 20 20" role="button"
-                style={{ display: 'none'}}
-                className="font-normal text-base leading-6 inline-block fill-current text-current h-4 w-3.5 cursor-pointer"
-                onClick={() => clearInputField('dropoffLocationInput','dropoffLocationActionIcon', 'dropoffClearActionIcon')}
-                >
-                <title>Clear entry</title>
-                <path d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z">
-                </path>
-              </svg>
+          {stops.map((stop, index) => (
+            <div key={index} className="flex space-x-4">
+              <div className="inline-flex flex-col relative min-w-0 p-0 m-0 border-0 align-top w-full">
+                <label id="stopInputLabel" className="LabelWithActionIcon">
+                  Add a stop
+                </label>
+                <div id="stopInputBox" className="InputBoxWithActionIcon">
+                  <div className="ActionIconWrapper">
+                    <svg 
+                      id="stopLocationActionIcon" viewBox="0 0 24 24" fill="black" focusable="false" role="button"
+                      className="font-normal text-base leading-6 inline-block fill-current text-current h-4 w-3.5 cursor-pointer"
+                      onClick={getUserLocation}
+                      >
+                      <title>Use current location</title>
+                      <path d="M10.5 13.5.5 11 21 3l-8 20.5-2.5-10Z"></path>
+                    </svg>
+                    <svg
+                      id="stopClearActionIcon" focusable="false" aria-hidden="true" viewBox="2 2 20 20" role="button"
+                      className="font-normal text-base leading-6 inline-block fill-current text-current h-4 w-3.5 cursor-pointer"
+                      style={{ display: 'none'}}
+                      onClick={() => clearInputField('stopLocationInput', 'stopLocationActionIcon', 'stopClearActionIcon')}
+                      >
+                      <title>Clear entry</title>
+                      <path d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z">
+                      </path>
+                    </svg>
+                  </div>
+                  <input
+                    id="stopLocationInput"
+                    ref={(el) => assignRef(el, index)}
+                    placeholder=""
+                    className="StandardInputWithActionIcon"
+                    onFocus={() => onFocusHandlerForInputWithActionIcon('stopInputLabel', 'stopInputBox', 'stopLocationActionIcon', 'stopClearActionIcon')}
+                    onBlur={() => onBlurHandlerForInputWithActionIcon('stopInputLabel', 'stopInputBox', 'stopClearActionIcon', 'stopLocationActionIcon')}
+                    onInput={(e) => onChangeHandlerForInputWithActionIcon(e.target as HTMLInputElement, 'stopLocationActionIcon', 'stopClearActionIcon')}
+                  />
+                </div>
+              </div>
+
+              <div className="RemoveStopButtonWrapper">
+                <button onClick={() => removeStop(index)} className="RemoveStopButton">-</button>
+              </div>
             </div>
-            <input
-              id="dropoffLocationInput"
-              ref={dropoffInputRef}
-              placeholder=""
-              className="StandardInputWithActionIcon"
-              onFocus={() => onFocusHandlerForInputWithActionIcon('dropoffInputLabel', 'dropoffInputBox', 'dropoffLocationActionIcon', 'dropoffClearActionIcon')}
-              onBlur={() => onBlurHandlerForInputWithActionIcon('dropoffInputLabel', 'dropoffInputBox', 'dropoffClearActionIcon', 'dropoffLocationActionIcon')}
-              onChange={(e) => onChangeHandlerForInputWithActionIcon(e.target,'dropoffLocationActionIcon', 'dropoffClearActionIcon')}
-            />
-          </div>
-        </div>
-        
-        <br/>
-        <div className="PricePreviewResult">
-          <div className="flex">
-            <Image src={dollar} alt="dollar" />
-            <div className="m-1 text-base font-semibold py-3.5 px-2.5 text-white">
-              Ride Fare: ${fare}
-            </div>
-          </div>
-          <div className="flex items-center gap-2 w-[26%]">
-            <div>
-              <IoMdPerson size={24} style={{ color: 'white' }}/>
-            </div>
-            <div>
+          ))}
+
+          <div className="inline-flex flex-col relative min-w-0 p-0 m-0 border-0 align-top w-full">
+            <label id="dropoffInputLabel" className="LabelWithActionIcon">
+              Enter Dropoff Location
+            </label>
+            <div id="dropoffInputBox" className="InputBoxWithActionIcon">
+              <div className="ActionIconWrapper">
+                <svg
+                  id="dropoffLocationActionIcon" viewBox="0 0 24 24" fill="black" focusable="false" role="button"
+                  className="font-normal text-base leading-6 inline-block fill-current text-current h-4 w-3.5 cursor-pointer"
+                  onClick={getUserLocation}
+                  >
+                  <title>Use current location</title>
+                  <path d="M10.5 13.5.5 11 21 3l-8 20.5-2.5-10Z"></path>
+                </svg>
+                <svg 
+                  id="dropoffClearActionIcon" focusable="false" aria-hidden="true" viewBox="2 2 20 20" role="button"
+                  style={{ display: 'none'}}
+                  className="font-normal text-base leading-6 inline-block fill-current text-current h-4 w-3.5 cursor-pointer"
+                  onClick={() => clearInputField('dropoffLocationInput','dropoffLocationActionIcon', 'dropoffClearActionIcon')}
+                  >
+                  <title>Clear entry</title>
+                  <path d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z">
+                  </path>
+                </svg>
+              </div>
               <input
-                type="number"
-                className="RequestedPassengerCount"
-                value={passengers} min="1" max="4"
-                onChange={(e) => {
-                  const newPassengerCount = Math.max(1, Math.min(4, parseInt(e.target.value)));
-                  setPassengers(newPassengerCount);
-                }}
+                id="dropoffLocationInput"
+                ref={dropoffInputRef}
+                placeholder=""
+                className="StandardInputWithActionIcon"
+                onFocus={() => onFocusHandlerForInputWithActionIcon('dropoffInputLabel', 'dropoffInputBox', 'dropoffLocationActionIcon', 'dropoffClearActionIcon')}
+                onBlur={() => onBlurHandlerForInputWithActionIcon('dropoffInputLabel', 'dropoffInputBox', 'dropoffClearActionIcon', 'dropoffLocationActionIcon')}
+                onChange={(e) => onChangeHandlerForInputWithActionIcon(e.target,'dropoffLocationActionIcon', 'dropoffClearActionIcon')}
               />
             </div>
           </div>
-        </div>
-
-        {pickupCoordinates && dropoffCoordinates && fare && (
-          <div className="LoginPriceCheckButtonGroup w-full flex flex-col items-center m-0 p-0">
-            <div className="m-1 text-base font-semibold text-white w-full">
-              Total Distance: {distance}
+          
+          <br/>
+          <div className="PricePreviewResult">
+            <div className="flex">
+              <Image src={dollar} alt="dollar" />
+              <div className="m-1 text-base font-semibold py-3.5 px-2.5 text-white">
+                Ride Fare: ${fare}
+              </div>
             </div>
-            <button
-              onClick={handleBooking}
-              className="LoginButton mt-3 block w-full py-2 px-4"
-            >
-              Book Now
-            </button>
-            <button
-              className="CheckPriceButton mt-3 block w-full py-2 px-4"
-              onClick={handleScheduleClick}
-            >
-              Schedule for Later
-            </button>
+            <div className="flex items-center gap-2 w-[26%]">
+              <div>
+                <IoMdPerson size={24} style={{ color: 'white' }}/>
+              </div>
+              <div>
+                <input
+                  type="number"
+                  className="RequestedPassengerCount"
+                  value={passengers} min="1" max="4"
+                  onChange={(e) => {
+                    const newPassengerCount = Math.max(1, Math.min(4, parseInt(e.target.value)));
+                    setPassengers(newPassengerCount);
+                  }}
+                />
+              </div>
+            </div>
           </div>
-        )}
-        {showScheduleInput && (
-          <div>
-            <input
-              type="datetime-local"
-              value={scheduledPickupTime}
-              onChange={(e) => setScheduledPickupTime(e.target.value)}
-              className="outline-none bg-gray-200 py-3 pl-2 rounded-md"
-            />
-            <button
-              onClick={handleScheduleForLater}
-              className="py-2.5 bg-black text-white pl-4 pr-4 rounded-md ml-2 mt-2"
-            >
-              Confirm
-            </button>
-          </div>
-        )}
+
+          {pickupCoordinates && dropoffCoordinates && fare && (
+            <div className="LoginPriceCheckButtonGroup w-full flex flex-col items-center m-0 p-0">
+              <div className="m-1 text-base font-semibold text-white w-full">
+                Total Distance: {distance}
+              </div>
+              <button
+                onClick={handleBooking}
+                className="LoginButton mt-3 block w-full py-2 px-4"
+              >
+                Book Now
+              </button>
+              <button
+                className="CheckPriceButton mt-3 block w-full py-2 px-4"
+                onClick={handleScheduleClick}
+              >
+                Schedule for Later
+              </button>
+            </div>
+          )}
+          {showScheduleInput && (
+            <div>
+              <input
+                type="datetime-local"
+                value={scheduledPickupTime}
+                onChange={(e) => setScheduledPickupTime(e.target.value)}
+                className="outline-none bg-gray-200 py-3 pl-2 rounded-md"
+              />
+              <button
+                onClick={handleScheduleForLater}
+                className="py-2.5 bg-black text-white pl-4 pr-4 rounded-md ml-2 mt-2"
+              >
+                Confirm
+              </button>
+            </div>
+          )}
+        </div>
       </div>
-      <SimpleMap
-        pickupCoordinates={pickupCoordinates}
-        dropoffCoordinates={dropoffCoordinates}
-        stops={stops}
-      />
+      <div className="SimpleMap w-full lg:w-1/2">
+        <div className=" w-full h-full">
+          <SimpleMap
+            pickupCoordinates={pickupCoordinates}
+            dropoffCoordinates={dropoffCoordinates}
+            stops={stops}
+          />
+        </div>
+      </div>
     </div>
   );
 };
