@@ -295,8 +295,8 @@ const Navbar = () => {
               {/*<Link href="/" onClick={handleBookARideClick}>
                 <li className="text-black hover:bg-gray-200 w-full sm:hidden">
                   Book a Ride
-              </li>*/}
-              </Link>
+                </li>
+              </Link>*/}
               <Link href="https://whatsform.com/AnbVNN">
                 <li className="text-black hover:bg-gray-200 w-full sm:hidden">
                   Drive
