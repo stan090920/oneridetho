@@ -70,7 +70,6 @@ app.post("/send_recovery_email", (req, res) => {
     .catch((error) => res.status(500).send(error.message));
 });
 
-
 app.listen(() => {
   console.log("Server is running");
 });
