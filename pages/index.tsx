@@ -81,26 +81,12 @@ export default function Home() {
                   </div>
                   
                   <br/>
-                  {isLoggedIn ? (
-                    <>
-                      <Book />
-                    </>
-                  ) : (
-                    <>
-                      <Estimate />
-                    </>
-                  )}
+                  <Estimate />
 
                 </div>
-
-                {!isLoggedIn ? (
-                  <>
-                    <div className="DriversPanelWrapper">
-                      <DriversPhotoBlockPanel />
-                    </div>
-                  </>
-                ) : (<></>)}
-
+                <div className="DriversPanelWrapper">
+                  <DriversPhotoBlockPanel />
+                </div>
               </div>
             </div>
           </div>
@@ -112,18 +98,9 @@ export default function Home() {
           <div className="ChildOfInnerTopSection">
             <div className="MainContainerTopSection p-0 m-0 pb-0">
               <div className="WrapperOfFormAndDriversPanel">
-
-                {!isLoggedIn ? (
-                  <div className="CarImageWrapper">
-                    <img style={{width: '100%', height: '100%', border: 'none'}} src="https://assets.zyrosite.com/cdn-cgi/image/format=auto,w=2880,fit=crop/Yan65RR0gxi1B5qE/uber-3d-suv-3d-model-b3b22979a3-AoP69WBzLVI8lb8L.jpg" alt="car"></img>
-                  </div>
-                ) : (
-                  <>
-                    <div className=" p-6 pt-12 align-middle">
-                      <DriversPhotoBlockPanel />
-                    </div>
-                  </>
-                )}
+                <div className="CarImageWrapper">
+                  <img style={{width: '100%', height: '100%', border: 'none'}} src="https://assets.zyrosite.com/cdn-cgi/image/format=auto,w=2880,fit=crop/Yan65RR0gxi1B5qE/uber-3d-suv-3d-model-b3b22979a3-AoP69WBzLVI8lb8L.jpg" alt="car"></img>
+                </div>
                 
 
                 <div className="JoinTheTeamWrapper">
@@ -194,7 +171,8 @@ export default function Home() {
             </div>
           </div>
         </div>
-        <Mobilesoc />
+        <br/>
+        {/*<Mobilesoc />*/}
       </section>
     </>
   );

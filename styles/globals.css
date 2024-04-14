@@ -17,7 +17,7 @@ input[type=number] {
   appearance: textfield;
 }
 
-body{
+body {
   overflow-x: hidden;
   min-width: 320px;
 }
@@ -53,35 +53,36 @@ h1 {
   left: 0;
   width: 100%;
   height: 58vh;
-  background-color: rgba(0, 0, 0, 0.5); 
-  z-index: -1; 
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: -1;
 }
 
 @media (max-width: 768px) {
-  .videoBackground{
-   display: none;
-    }
-    .videoOverlay{
-      display: none;
-    }
+  .videoBackground {
+    display: none;
+  }
 
-    .hero{
-      background-color: black;
-    }
+  .videoOverlay {
+    display: none;
+  }
+
+  .hero {
+    background-color: black;
+  }
 }
 
 @media (max-width: 480px) {
 
-  .hero{
+  .hero {
     background-color: black;
     height: 90vh;
   }
 
-  .videoBackground{
-  display: none;
+  .videoBackground {
+    display: none;
   }
 
-  .videoOverlay{
+  .videoOverlay {
     display: none;
   }
 }
@@ -90,6 +91,7 @@ h1 {
   0% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(360deg);
   }
@@ -100,7 +102,7 @@ h1 {
 }
 
 .w-8 {
-  width: 2rem; 
+  width: 2rem;
 }
 
 .h-8 {
@@ -108,11 +110,11 @@ h1 {
 }
 
 .text-accent-default {
-  color: #4fd1c5; 
+  color: #4fd1c5;
 }
 
 .fill-beige {
-  fill: #f5f5dc; 
+  fill: #f5f5dc;
 }
 
 
@@ -121,7 +123,7 @@ h1 {
   margin: auto;
 }
 
-.LoginSignupBackground{
+.LoginSignupBackground {
   min-width: 320px;
   background: rgb(29, 62, 10);
   background: linear-gradient(90deg, rgba(29, 62, 10, 1) 0%, rgba(43, 230, 0, 1) 35%, rgba(21, 79, 14, 1) 100%);
@@ -543,7 +545,7 @@ h1 {
   z-index: 3;
 }
 
-.LoginForm{
+.LoginForm {
   tab-size: 4;
   font-feature-settings: normal;
   line-height: inherit;
@@ -743,6 +745,7 @@ h1 {
   font-weight: 700;
   color: white;
 }
+
 .ShortApplyText {
   display: none;
 }
@@ -940,7 +943,6 @@ h1 {
 
 .WrapperOfFormAndDriversPanel {
   display: grid;
-  height: 100%;
   justify-items: inherit;
 }
 
@@ -1091,10 +1093,17 @@ h1 {
 }
 
 @media (max-width: 400px) {
-  .Label, .AnimatedLabel, .LabelWithActionIcon, .LabelWithError {
+
+  .Label,
+  .AnimatedLabel,
+  .LabelWithActionIcon,
+  .LabelWithError {
     font-size: 14px;
   }
-  .StandardInput, .StandardInputWithActionIcon, .StandardInputWithError {
+
+  .StandardInput,
+  .StandardInputWithActionIcon,
+  .StandardInputWithError {
     font-size: 14px;
   }
 }
@@ -1186,9 +1195,8 @@ h1 {
   align-self: center;
   display: grid;
   order: 2;
-  width: 100%;
+  width: 80%;
   cursor: default;
-  height: 650px;
 }
 
 #watermark-ort-logo {
@@ -1197,7 +1205,7 @@ h1 {
   height: auto;
 }
 
-.ColouredPhotoGroup{
+.ColouredPhotoGroup {
   width: 10%;
 }
 
@@ -1210,7 +1218,7 @@ h1 {
   opacity: 1;
 }
 
-#driver-image{
+#driver-image {
   width: 100%;
   height: 100%;
 }
@@ -1288,7 +1296,7 @@ button#colour-options-grid {
   width: 100%;
 }
 
-.DriverPhotoBlockTextLoggedIn{
+.DriverPhotoBlockTextLoggedIn {
   color: rgb(20, 110, 0);
 }
 
@@ -1389,21 +1397,26 @@ button#colour-options-grid {
   .BookApplyBtnGroup {
     display: flex;
   }
+
   .SocialLinksSection {
     display: flex;
     flex-direction: row;
   }
+
   .ShortApplyText {
     display: inline-block;
     text-align: center;
   }
+
   .ShortRideText {
     display: inline-block;
     text-align: center;
   }
+
   .FullApplyText {
     display: none;
   }
+
   .FullRideText {
     display: none;
   }
@@ -1413,20 +1426,25 @@ button#colour-options-grid {
   .ChildOfInnerTopSection {
     max-width: 100%;
   }
+
   .SocialLinksSection {
     display: flex;
     flex-direction: row;
   }
+
   .ShortApplyText {
     display: none;
   }
+
   .ShortRideText {
     display: none;
   }
+
   .FullApplyText {
     display: inline-block;
     text-align: center;
   }
+
   .FullRideText {
     display: inline-block;
     text-align: center;
@@ -1438,6 +1456,10 @@ button#colour-options-grid {
     display: flex;
     flex-direction: row;
     justify-content: center;
+  }
+
+  .DriversPanelWrapper {
+    display: none;
   }
 }
 
@@ -1475,6 +1497,10 @@ button#colour-options-grid {
     grid-column: 1/-1;
     order: 1;
     height: 100%;
+  }
+
+  .MiddleSection {
+    display: none;
   }
 }
 
