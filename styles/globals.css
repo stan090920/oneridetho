@@ -1195,7 +1195,8 @@ h1 {
   align-self: center;
   display: grid;
   order: 2;
-  width: 80%;
+  width: 100%;
+  max-width: 550px;
   cursor: default;
 }
 
