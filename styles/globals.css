@@ -1465,6 +1465,11 @@ button#colour-options-grid {
   .SimpleMap {
     display: none;
   }
+  
+  h1 {
+    font-size: 24px;
+    font-weight: 700;
+  }
 }
 
 @media (min-width: 600px) {
