@@ -263,7 +263,7 @@ const Navbar = () => {
         </Link>
       </>
       ) : (
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-3 relative">
         <div  onClick={toggleProfileOptions} className="cursor-pointer">
           <Image
             src={
@@ -283,7 +283,7 @@ const Navbar = () => {
         </div>
 
         {showProfileOptions && (
-          <div className="absolute bg-white text-black p-2 rounded shadow mt-16 ml-80 z-50">
+          <div className="absolute bg-white text-black p-2 rounded shadow sm:mt-[120px] mt-[160px] ">
             <button onClick={handleViewProfile}>View Profile</button>
             <button onClick={toggleWebcam}>Upload Profile</button>
           </div>
