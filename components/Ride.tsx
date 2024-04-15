@@ -146,7 +146,7 @@ const Ride = () => {
     const ratePerMile = 2;
     const distanceCharge = distance * ratePerMile;
     const passengerCharge = (passengers - 1) * 2;
-    const stopCharge = stops * 1;
+    const stopCharge = stops * 5;
 
     const currentHour = new Date().getHours();
     const isNightFee = currentHour >= 23 || currentHour < 6;
