@@ -283,14 +283,14 @@ const Navbar = () => {
         </div>
 
         {showProfileOptions && (
-          <div className="absolute bg-white text-black p-2 rounded shadow sm:mt-[120px] mt-[160px] ">
+          <div className="absolute bg-white text-black p-2 rounded shadow sm:mt-[120px] mt-[160px] w-[60%]">
             <button onClick={handleViewProfile}>View Profile</button>
             <button onClick={toggleWebcam}>Upload Profile</button>
           </div>
         )}
 
         {dropdownOpen && (
-          <div className="absolute bg-white p-2 rounded shadow sm:mt-[120px] mt-[160px]  sm:w-[10%] w-[50%] sm:ml-[50px] ml-[80px] z-10">
+          <div className="absolute bg-white p-2 rounded shadow sm:mt-[120px] mt-[160px] max-w-[200px] sm:w-auto sm:ml-[50px] ml-[80px]">
             <ul>
               {/*<Link href="/" onClick={handleBookARideClick}>
                 <li className="text-black hover:bg-gray-200 w-full sm:hidden">
