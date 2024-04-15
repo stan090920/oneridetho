@@ -221,7 +221,7 @@ const Estimate = () => {
             const address = await reverseGeocode(currentLocation);
             if (pickupInputRef.current) {
               const formattedAddress = address.split(", ").slice(-2).join(", ");
-              pickupInputRef.current.value = formattedAddress;
+              pickupInputRef.current.value = address;
             }
           } catch (error) {
             console.error("Error getting address:", error);
