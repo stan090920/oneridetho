@@ -69,7 +69,7 @@ export default function Home() {
                           </div>
                         </div>
                       </div>
-                      <div>
+                      <div className="HideOnMobile">
                         <div>
                           <div>
                             <p className="BookingPrompt">Book a ride, nice and quick!</p>
