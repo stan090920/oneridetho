@@ -146,7 +146,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="BottomSection">
+      <section className="BottomSection HideOnMobile">
         <div className="InnerTopSection">
           <div className="ChildOfInnerTopSection">
             <div className="MainContainerTopSection">
