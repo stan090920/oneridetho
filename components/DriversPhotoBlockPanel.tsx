@@ -58,6 +58,8 @@ const DriversPhotoBlockPanel: React.FC = () => {
                     type="button"
                     aria-label="color-button"
                     id="colour-options-grid"
+                    className='sm:max-w-none'
+                    style={{ maxWidth: '100%' }}
                     onClick={blockFieldClickHandler}
                 >
                     <div className="relative">
