@@ -1458,10 +1458,6 @@ button#colour-options-grid {
     justify-content: center;
   }
 
-  .DriversPanelWrapper {
-    display: none;
-  }
-
   .SimpleMap {
     display: none;
   }
