@@ -92,13 +92,9 @@ export default function Home() {
                   )}
 
                 </div>
-                {!isLoggedIn ? (
-                  <>
-                    <div className="DriversPanelWrapper">
-                      <DriversPhotoBlockPanel />
-                    </div>
-                  </>
-                ) : (<></>)}
+                  <div className="DriversPanelWrapper sm:hidden">
+                    <DriversPhotoBlockPanel />
+                  </div>
               </div>
             </div>
           </div>
