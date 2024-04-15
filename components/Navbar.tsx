@@ -290,7 +290,7 @@ const Navbar = () => {
         )}
 
         {dropdownOpen && (
-          <div className="absolute bg-white p-2 rounded shadow sm:mt-[120px] mt-[160px]  sm:w-[10%] w-[30%] sm:ml-[50px] ml-[80px] z-10">
+          <div className="absolute bg-white p-2 rounded shadow sm:mt-[120px] mt-[160px]  sm:w-[10%] w-[40%] sm:ml-[50px] ml-[80px] z-10">
             <ul>
               {/*<Link href="/" onClick={handleBookARideClick}>
                 <li className="text-black hover:bg-gray-200 w-full sm:hidden">
