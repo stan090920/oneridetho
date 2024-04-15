@@ -51,7 +51,7 @@ const DriversPhotoBlockPanel: React.FC = () => {
 
     return (
         <div className="min-w-[320px] h-screen border-none">
-            <h1 className={`${isLoggedIn ? 'DriverPhotoBlockTextLoggedIn' : ''}`}>The Team - Meet Our Drivers</h1>
+            <h1>The Team - Meet Our Drivers</h1>
             <br/>
             <div id="colour-options-grid">
                 <button
