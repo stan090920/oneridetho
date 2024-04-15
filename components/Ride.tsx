@@ -426,8 +426,9 @@ const Ride = () => {
           try {
             const address = await reverseGeocode(currentLocation);
             if (pickupInputRef.current) {
-              const formattedAddress = address.split(", ").slice(-2).join(", ");
-              pickupInputRef.current.value = address;
+              const parts = address.split(',');
+              const croppedAddress = parts.slice(1).join(',').trim();
+              pickupInputRef.current.value = croppedAddress;
             }
           } catch (error) {
             console.error("Error getting address:", error);
