@@ -19,6 +19,7 @@ const Navbar = () => {
   const [showUploadPrompt, setShowUploadPrompt] = useState(false);
 
   const isLoggedIn = session != null;
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (session && !session.user.image) {
@@ -106,6 +107,12 @@ const Navbar = () => {
   };
   
   
+  const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      handleFileUpload(file);
+    }
+  };
 
   const handleFileUpload = async (file: File) => {
     setIsLoading(true);
@@ -157,7 +164,8 @@ const Navbar = () => {
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center">
           <div className="popup bg-white p-4 rounded">
             <p>Please upload a profile image.</p>
-            <button onClick={toggleWebcam} className="py-2 px-4 bg-blue-500 text-white rounded-md mt-2">Upload Image</button>
+            <button onClick={() => fileInputRef.current?.click()} className="py-2 px-4 bg-blue-500 text-white rounded-md mt-2">Upload Image</button>
+            <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleFileInputChange} />
           </div>
         </div>
       )}
@@ -297,7 +305,8 @@ const Navbar = () => {
         {showProfileOptions && (
           <div className="ProfileOptionsContainer absolute bg-white text-black p-2 rounded shadow sm:mt-[120px] mt-[160px] w-[60%]">
             <button onClick={handleViewProfile}>View Profile</button>
-            <button onClick={toggleWebcam}>Upload Profile</button>
+            <button onClick={() => fileInputRef.current?.click()}>Upload Profile</button>
+            <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleFileInputChange} />
           </div>
         )}
 
