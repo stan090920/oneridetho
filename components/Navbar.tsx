@@ -32,7 +32,7 @@ const Navbar = () => {
 
   const toggleProfileOptions = () => {
     setShowProfileOptions(!showProfileOptions);
-    setViewProfilePic(false); 
+    setDropdownOpen(false);
   };
 
   const handleViewProfile = () => {
@@ -42,6 +42,7 @@ const Navbar = () => {
 
   const handleDropdown = () => {
     setDropdownOpen(!dropdownOpen);
+    setShowProfileOptions(false);
   };
 
   const handleLogout = () => {
@@ -136,7 +137,18 @@ const Navbar = () => {
     }
   };
 
- 
+   useEffect(() => {
+    const handleScroll = () => {
+      setShowProfileOptions(false);
+      setDropdownOpen(false);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   return (
     <div className="HeaderBar" >
@@ -283,20 +295,21 @@ const Navbar = () => {
         </div>
 
         {showProfileOptions && (
-          <div className="absolute bg-white text-black p-2 rounded shadow sm:mt-[120px] mt-[160px] w-[60%]">
+          <div className="ProfileOptionsContainer absolute bg-white text-black p-2 rounded shadow sm:mt-[120px] mt-[160px] w-[60%]">
             <button onClick={handleViewProfile}>View Profile</button>
             <button onClick={toggleWebcam}>Upload Profile</button>
           </div>
         )}
 
+        
         {dropdownOpen && (
-          <div className="absolute bg-white p-2 rounded shadow sm:mt-[120px] mt-[160px] max-w-[200px] sm:w-auto sm:ml-[50px] ml-[80px]">
+          <div className="DropdownContainer absolute bg-white p-2 rounded shadow sm:mt-[120px] mt-[160px] max-w-[200px] sm:w-auto sm:ml-[50px] ml-[80px]">
             <ul>
               {/*<Link href="/" onClick={handleBookARideClick}>
                 <li className="text-black hover:bg-gray-200 w-full sm:hidden">
                   Book a Ride
                 </li>
-              </Link>*/}
+                </Link>*/}
               <Link href="https://whatsform.com/AnbVNN">
                 <li className="text-black hover:bg-gray-200 w-full sm:hidden">
                   Drive
