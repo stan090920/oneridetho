@@ -152,14 +152,24 @@ const Confirmation = () => {
 
   const timeUpMessage = timeLeft === 0 ? "We're still looking for your driver. Please hold on a moment longer." : `Estimated time to match you with a driver: ${formatTime()}`;
 
+  const cancelRide = async () => {
+    try {
+      await axios.post(`/api/rides/cancel/${rideId}`);
+      alert("Ride has been canceled");
+      router.push('/');
+    } catch (error) {
+      console.error("Error cancelling ride:", error);
+    }
+  };
+
   return (
     <div className='text-center '>
-        <div className='fixed bottom-0 z-10 bg-white rounded-t-[8px]  py-5'>
-      <h1>Your ride is confirmed. {timeUpMessage}</h1>
-      <p>We appreciate your patience. You'll be notified as soon as a driver is matched to your ride.</p>
+      <div className='fixed bottom-0 z-10 bg-white rounded-t-[8px]  py-5'>
+        <h1>Your ride is confirmed. {timeUpMessage}</h1>
+        <p>We appreciate your patience. You'll be notified as soon as a driver is matched to your ride.</p>
       </div>
+      <button className="bg-red-500 py-3 pl-2 pr-2 rounded-md text-white" onClick={cancelRide}>Cancel Ride</button>
       <DriverMap driverIds={driverIds} />
-
     </div>
   );
 };

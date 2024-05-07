@@ -134,6 +134,8 @@ const Navbar = () => {
         if (updatedSession) {
           updatedSession.user.image = data.imageUrl;
         }
+
+        setShowUploadPrompt(false);
       } else {
         console.error("Failed to upload photo");
       }

@@ -21,6 +21,7 @@ const Contact: React.FC<ContactProps> = ({
   const [countryCode, setCountryCode] = useState("1242");
   const [phoneNumber, setPhoneNumberState] = useState("1242");
   const [emailError, setEmailError] = useState("");
+  const [phoneNumberError, setPhoneNumberError] = useState("");
 
   const handleCountryChange = (e: any) => {
     const selectedCountry = e.target.value;
@@ -34,7 +35,21 @@ const Contact: React.FC<ContactProps> = ({
     setPhoneNumberState(prefix);
   };
 
-  const handlePhoneNumberChange = (e: any) => {
+  const checkPhoneNumberExists = async (phoneNumber: string) => {
+    try {
+      const response = await fetch(`/api/check-phone?phone=${phoneNumber}`);
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const data = await response.json();
+      return data.phoneExists;
+    } catch (error) {
+      console.error("Error fetching phone number:", error);
+      return false;
+    }
+  };
+
+  const handlePhoneNumberChange = async (e: any) => {
     let inputNumber = e.target.value.slice(countryCode.length);
     if (inputNumber.length > 10 - countryCode.length) {
       inputNumber = inputNumber.slice(0, 11 - countryCode.length);
@@ -42,6 +57,14 @@ const Contact: React.FC<ContactProps> = ({
     const fullPhoneNumber = countryCode + inputNumber;
     setPhoneNumberState(fullPhoneNumber);
     setPhoneNumber(fullPhoneNumber);
+
+    const isPhoneNumberTaken = await checkPhoneNumberExists(fullPhoneNumber);
+
+    if (isPhoneNumberTaken) {
+      setPhoneNumberError("Phone number is already in use");
+    } else {
+      setPhoneNumberError("");
+    }
   };
 
   const checkEmailExists = async (email: any) => {
@@ -236,6 +259,9 @@ const Contact: React.FC<ContactProps> = ({
                 onFocus={() => onFocusHandlerForInputWithActionIcon('standardInputLabelWithActionIcon2', 'standardInputBoxWithActionIcon2', 'clearIconForInputWithActionIcon')}
                 onBlur={() => onBlurHandlerForInputWithActionIcon('standardInputLabelWithActionIcon2', 'standardInputBoxWithActionIcon2', 'clearIconForInputWithActionIcon')}
               />
+              {phoneNumberError && (
+                <div className="text-red-500 text-sm">{phoneNumberError}</div>
+              )}
             </div>
           </div>
         </div>
