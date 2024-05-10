@@ -95,6 +95,7 @@ function SimpleMap({
   );
 }
 
+
 const Ride = () => {
   const [distance, setDistance] = useState<string | null>(null);
   const [passengers, setPassengers] = useState(1);
