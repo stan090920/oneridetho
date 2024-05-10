@@ -255,9 +255,10 @@ const Ride = () => {
       alert("Please fill in all fields");
       return;
     }
+
     const pickupLocation = pickupInputRef.current?.value;
     const dropoffLocation = dropoffInputRef.current?.value;
-    
+
     const rideDetails = {
       userId: session?.user.id,
       pickupLocation: pickupInputRef.current?.value,
@@ -269,31 +270,58 @@ const Ride = () => {
     };
 
     try {
-      const response = await fetch("/api/schedule", {
+      // Check for overlapping rides
+      const overlapResponse = await fetch("/api/check-overlap", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(rideDetails),
+        body: JSON.stringify({ scheduledPickupTime }),
       });
 
-      if (response.ok) {
-        const data = await response.json();
-        console.log("Scheduled ride successfully:", data);
-    
-        router.push({
-          pathname: "/checkout",
-          query: {
-              pickup: pickupLocation,
-              dropoff: dropoffLocation,
-              fare: fare,
-              passengers: passengers,
-              stops: encodeURIComponent(JSON.stringify(stops)),
-              isScheduled: true,
-          },
-      });
+      // Log the overlapResponse for debugging
+      console.log("Overlap Response:", overlapResponse);
+
+      if (overlapResponse.ok) {
+        const overlapData = await overlapResponse.json();
+        
+        console.log("Overlap Data:", overlapData); // Log parsed JSON data
+
+        if (overlapData.hasOverlap) {
+          // Handle overlapping rides
+          alert("There are overlapping rides. Please choose a different pickup time.");
+          return;
+        } else {
+          // No overlapping rides, proceed with scheduling
+          const response = await fetch("/api/schedule", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(rideDetails),
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+            console.log("Scheduled ride successfully:", data);
+
+            router.push({
+              pathname: "/checkout",
+              query: {
+                pickup: pickupLocation,
+                dropoff: dropoffLocation,
+                fare: fare,
+                passengers: passengers,
+                stops: encodeURIComponent(JSON.stringify(stops)),
+                isScheduled: true,
+              },
+            });
+          } else {
+            console.error("Failed to schedule ride:", await response.text());
+          }
+        }
       } else {
-        console.error("Failed to schedule ride:", await response.text());
+        console.error("Error checking for overlap:", await overlapResponse.text());
       }
     } catch (error) {
       console.error("Error during scheduling:", error);
@@ -767,7 +795,7 @@ const Ride = () => {
           {pickupCoordinates && dropoffCoordinates && fare && (
             <div className="LoginPriceCheckButtonGroup w-full flex flex-col items-center m-0 p-0">
               <div className="m-1 text-base font-semibold text-white w-full">
-                Total Distance: {distance}
+                Total Distance: {distance} miles
               </div>
               <button
                 onClick={handleBooking}
@@ -784,16 +812,16 @@ const Ride = () => {
             </div>
           )}
           {showScheduleInput && (
-            <div>
+            <div className="LoginPriceCheckButtonGroup w-full flex flex-row justify-center m-0 p-0">
               <input
                 type="datetime-local"
                 value={scheduledPickupTime}
                 onChange={(e) => setScheduledPickupTime(e.target.value)}
-                className="outline-none bg-gray-200 py-3 pl-2 rounded-md"
+                className="outline-none bg-gray-200 py-3 pl-2 rounded-md text-gray-700 font-bold"
               />
               <button
                 onClick={handleScheduleForLater}
-                className="py-2.5 bg-black text-white pl-4 pr-4 rounded-md ml-2 mt-2"
+                className="py-2.5 bg-white text-gray-700 font-bold pl-4 pr-4 rounded-md ml-2 mt-2"
               >
                 Confirm
               </button>
