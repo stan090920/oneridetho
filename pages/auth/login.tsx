@@ -11,6 +11,7 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const router = useRouter();
   const [loginError, setLoginError] = useState('');
+  const [emailError, setEmailError] = useState("");
 
 
   const checkEmailExists = async (email: any) => {
@@ -42,21 +43,31 @@ export default function Login() {
     try {
       const emailExist = await checkEmailExists(email);
       if (!emailExist) {
-        alert("Email does not exist. Please Sign Up.");
+        setEmailError("Email does not exist. Please Sign Up.");
         return;
+      }
+      else{
+        setEmailError("");
       }
     } catch (error) {
       console.error("Error checking email existence:", error);
-      alert("Failed to check email existence. Please try again.");
+      setEmailError("Failed to check email existence. Please try again.");
       return;
     }
 
+    const sendEmail = async ({ OTP, recipient_email }: { OTP: string, recipient_email: string }) => {
+      try {
+        const response = await axios.post('/api/send-email', { OTP, recipient_email });
+        return response.data;
+      } catch (error) {
+        throw error;
+      }
+    };
+
     // Send recovery email
     try {
-      await axios.post("https://oneridetho.vercel.app/send_recovery_email", {
-        OTP,
-        recipient_email: email,
-      });
+      await sendEmail({ OTP, recipient_email: email });
+
       router.push('/PasswordResetParent');
     } catch (error) {
       console.error("Error sending recovery email:", error);
@@ -64,6 +75,10 @@ export default function Login() {
     }
   };
 
+  const handleForgotPassword = async (e: FormEvent) => {
+    e.preventDefault();
+    navigateToOtp();
+  };
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -159,7 +174,7 @@ export default function Login() {
         <br/>
         <div className="w-full mr-0 grid">
           <button type="submit" className="LoginButton" >Login</button>
-          <button onClick={navigateToOtp} className="ResetPasswordLink">Forgot your password? We've got you</button>
+          <button onClick={handleForgotPassword} className="ResetPasswordLink">Forgot your password? We've got you</button>
         </div>
         {/* 
         <div className="mt-5">
@@ -171,6 +186,7 @@ export default function Login() {
           </div>
         */}
         {loginError && <div className="text-red-500">{loginError}</div>}
+        {emailError && <div className="text-red-500">{emailError}</div>}
       </form>
     </div>
   );
