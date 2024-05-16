@@ -5,7 +5,6 @@ import { useSession } from "next-auth/react";
 import { useEffect, useRef, useState } from "react";
 import { Spinner } from "@/components/Spinner";
 
-
 interface Stop {
   lat: number;
   lng: number;
@@ -28,10 +27,9 @@ const Checkout = () => {
   const [showProfilePhotoMessage, setShowProfilePhotoMessage] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  
   const [stopsWithAddress, setStopsWithAddress] = useState<Stop[]>([]);
   const [paymentMethod, setPaymentMethod] = useState('');
-
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     let stops: Stop[] = [];
@@ -53,19 +51,18 @@ const Checkout = () => {
     fetchAddresses();
   }, [stopsQuery]);
 
-
   const handleEdit = () => {
     router.push("/book?editing=true");
   };
-
-  const [isLoading, setIsLoading] = useState(false);
 
   const handleCheckout = async () => {
     setIsLoading(true);
     if (!paymentMethod) {
       console.error('No payment method selected.');
+      setIsLoading(false);
       return;
     }
+
     try {
       const bookingData = {
         pickupLocation: pickup,
@@ -82,21 +79,20 @@ const Checkout = () => {
         alert('Ride scheduled successfully!');
         router.push('/'); 
         return;
-    }
-  
+      }
+
       const response = await axios.post('/api/bookings', bookingData);
       const { rideId } = response.data;
-  
-      router.push(`rides/[rideId]?rideId=${rideId}`);
+
+      setIsLoading(false);
+      router.push(`/rides/${rideId}`);
     } catch (error) {
       console.error('Error during booking:', error);
+      setIsLoading(false);
     }
-    setIsLoading(false);
   };
 
-  const handleFileChange = async (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
       const formData = new FormData();
@@ -108,12 +104,13 @@ const Checkout = () => {
       });
 
       if (response.ok) {
+        console.log("Photo uploaded successfully");
       } else {
         console.error("Failed to upload photo");
       }
     }
   };
-  
+
   useEffect(() => {
     if (typeof window !== "undefined" && !window.paypal) {
       loadPayPalSdk();
@@ -134,14 +131,12 @@ const Checkout = () => {
     };
     document.body.appendChild(script);
   };
+
   const renderPayPalButton = () => {
-    console.log("Rendering PayPal button with fare:", fare); 
-  
     if (!window.paypal || !document.getElementById("paypal-button-container")) {
       console.error("PayPal button cannot be rendered yet.");
       return;
     }
-  
 
     const paypalButtonContainer = document.getElementById("paypal-button-container");
     if (!paypalButtonContainer) {
@@ -150,7 +145,6 @@ const Checkout = () => {
     }
 
     if (paypalButtonContainer.childElementCount > 0) {
- 
       return;
     }
 
@@ -170,17 +164,17 @@ const Checkout = () => {
           setPaymentMethod('Card'); 
         });
       },
-      onError: (err:any) => {
+      onError: (err: any) => {
         console.error('Payment Error:', err);
       }
     }).render('#paypal-button-container');
   };
+
   useEffect(() => {
     if (paypalSdkReady) {
       renderPayPalButton();
     }
   }, [paypalSdkReady]);
-  
 
   useEffect(() => {
     if (status === 'loading') return; 
@@ -190,9 +184,9 @@ const Checkout = () => {
       setShowProfilePhotoMessage(true); 
     }
   }, [session, status, router]);
-  
+
   if (status === 'loading') {
-      return <div>Loading...</div>;
+    return <div>Loading...</div>;
   }
 
   const cashPaymentMessages = (
@@ -202,43 +196,29 @@ const Checkout = () => {
       <p>Drivers do not carry change.</p>
     </div>
   );
-  
 
   return (
     <div className="px-2 mt-5">
       <h1 className="font-bold text-[32px]">Checkout</h1>
-     
-      <div >
-         {/*
-   <div id="paypal-button-container">
-   </div>
-  */}
-    {/*
-        <div>
-          <button className="py-3 bg-black text-white pl-4 pr-4 rounded-md mt-5">
-            Pay with Cash
-          </button>
-        </div>
-      */}
+      <div>
         <div>
           <button className="py-3 bg-black text-white pl-4 pr-4 rounded-md mt-5 sm:w-auto w-full text-center"
-           onClick={() => handlePaymentMethodChange('Cash')}
+            onClick={() => handlePaymentMethodChange('Cash')}
           >
             Pay with Cash
           </button>
         </div>
-
       </div>
       <div className="border rounded-md sm:w-[450px] w-[370px] sm:h-[28vh] h-[30vh] px-2 mt-5 pt-5 space-y-2">
-      <p className="font-bold">Pickup Location: <span className="font-normal">{pickup}</span></p>
-      <p className="font-bold">Dropoff Location: <span className="font-normal">{dropoff}</span></p>
-      {stopsWithAddress.map((stop, index) => (
+        <p className="font-bold">Pickup Location: <span className="font-normal">{pickup}</span></p>
+        <p className="font-bold">Dropoff Location: <span className="font-normal">{dropoff}</span></p>
+        {stopsWithAddress.map((stop, index) => (
           <p key={index} className="font-bold">Stop {index + 1}: 
             <span className="font-normal">{stop.address || 'Loading address...'}</span>
           </p>
         ))}
-      <p className="font-bold">Fare: $<span className="font-normal">{fare}</span></p>
-      <p className="flex items-center gap-4"> <IoMdPerson size={24} /> {passengers}</p>
+        <p className="font-bold">Fare: $<span className="font-normal">{fare}</span></p>
+        <p className="flex items-center gap-4"><IoMdPerson size={24} /> {passengers}</p>
       </div>
       <div className="flex items-center gap-3">
         <div>
@@ -250,32 +230,30 @@ const Checkout = () => {
           </button>
         </div>
         {paymentMethod && (
-        <div>
-          <button className="py-3 bg-black text-white pl-12 pr-12 rounded-md mt-5"
-          onClick={handleCheckout}
-          >
- {isLoading ? <Spinner /> : 'Confirm Ride'}
-          </button>
-        </div>
+          <div>
+            <button className="py-3 bg-black text-white pl-12 pr-12 rounded-md mt-5"
+              onClick={handleCheckout}
+              disabled={isLoading}
+            >
+              {isLoading ? <Spinner /> : 'Confirm Ride'}
+            </button>
+          </div>
         )}
       </div>
       {paymentMethod === 'Cash' && cashPaymentMessages}
       {showProfilePhotoMessage && (
         <div className="mt-5 p-4 bg-red-100 border border-red-400 text-red-700 sm:w-[50%]">
-          <p>Please upload a valid  photo to proceed.</p>
+          <p>Please upload a valid photo to proceed.</p>
           <input type="file" 
-                id="fileUpload"
-                className="mt-2"
-                onChange={handleFileChange}
-                ref={fileInputRef}
-           />
+            id="fileUpload"
+            className="mt-2"
+            onChange={handleFileChange}
+            ref={fileInputRef}
+          />
         </div>
       )}
-
     </div>
   );
 };
-
-
 
 export default Checkout;
