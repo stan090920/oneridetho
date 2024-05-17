@@ -143,6 +143,7 @@ const Navbar = () => {
       console.error("Error uploading photo:", error);
     } finally {
       setIsLoading(false);
+      setShowUploadPrompt(false);
     }
   };
 
@@ -162,7 +163,7 @@ const Navbar = () => {
   return (
     <div className="HeaderBar" >
 
-      {showUploadPrompt && (
+      {showUploadPrompt && !isLoading &&  (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center">
           <div className="popup bg-white p-4 rounded">
             <p>Please upload a profile image.</p>
