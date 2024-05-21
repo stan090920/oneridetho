@@ -1,8 +1,10 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import prisma from '../../lib/prisma';
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
 
 export default async function handle(req: NextApiRequest, res: NextApiResponse) {
-  const { rideId, rating, comment  } = req.body;
+  const { rideId, rating, comment } = req.body;
 
   try {
     const ride = await prisma.ride.findUnique({ where: { id: rideId }, include: { driver: true } });
@@ -29,20 +31,22 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
       return res.status(500).json({ error: "Error calculating new average rating" });
     }
 
-    await prisma.driver.update({
-      where: { id: driverId as number },
-      data: {
-        rating: newAverageRating,
-      },
-    });
-
-    await prisma.rating.create({
-      data: {
-        value: parsedRating,
-        comment: comment,
-        driver: { connect: { id: driverId as number } },
-      },
-    });
+    await prisma.$transaction([
+      prisma.driver.update({
+        where: { id: driverId as number },
+        data: {
+          rating: newAverageRating,
+          numberOfRatings: numberOfRatings + 1,
+        },
+      }),
+      prisma.rating.create({
+        data: {
+          value: parsedRating,
+          comment: comment,
+          driver: { connect: { id: driverId as number } },
+        },
+      }),
+    ]);
 
     res.status(200).json({ message: "Rating updated successfully" });
   } catch (error) {
