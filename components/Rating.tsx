@@ -7,6 +7,7 @@ interface RatingProps {
   rideId: number; 
 }
 
+
 const Rating: React.FC<RatingProps> = ({ rideId }) => {
   const [rating, setRating] = useState<number>(0);  
   const [comment, setComment] = useState<string>(''); 
