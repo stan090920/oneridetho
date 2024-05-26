@@ -4,9 +4,12 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "./auth/[...nextauth]";
 import twilio from "twilio";
 import { NextResponse } from "next/server";
+import axios from 'axios'; 
+import sendDriverAlertEmail from '../../sendDriverAlertEmail';
 
 const prisma = new PrismaClient();
 const twilioClient = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
+
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const session = await getServerSession(req, res, authOptions);
@@ -31,6 +34,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       fare,
       passengerCount,
       paymentMethod,
+      emails,
     } = req.body;
 
     if (stops && stops.length > 3) {
@@ -65,24 +69,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       },
     });
 
-    /*
-    const drivers = await prisma.driver.findMany({
-      select: {
-        phone: true
-      }
-    });
-    const driverNumbers = drivers.map(driver => driver.phone).filter(phone => phone !== null);
-
-    */
-
-     /*const dispatchers = ["12424212170", "12424701747", "12428086851", "12428108059"]; */
-    const driverNumbers = ["12424212170", "12424701747", "12428086851", "12428108059"] 
-    const messageBody = `${user.name} has scheduled a ride!
+    const driverNumbers = ["12424212170", "12424701747", "12428086851", "12428108059"];
+    const messageBody = `${user.name} has booked a ride!
 Pickup: ${pickupLocation},
 Drop-off: ${dropoffLocation},
 Stops: ${stops.map((stop: { address: any; }) => stop.address).join(', ')},
 Passengers: ${passengerCount},
-View details: https://driver-oneridetho.vercel.app/dashboard?rideId=${ride.id}`;
+View details: https://oneridetho-driver.vercel.app/dashboard?rideId=${ride.id}`;
 
     for (const number of driverNumbers) {
       try {
@@ -97,14 +90,21 @@ View details: https://driver-oneridetho.vercel.app/dashboard?rideId=${ride.id}`;
       }      
     }
 
+    // Send emails to drivers
+    try {
+      await sendDriverAlertEmail(emails , messageBody);
+    } catch (emailError) {
+      console.error("Error sending emails:", emailError);
+      res.status(500).json({ message: "Failed to send emails" });
+    }
+
     res.status(200).json({
       message: "Ride booked successfully!",
       rideId: ride.id,
     });
   } catch (error) {
-    console.log(error) 
+    console.log(error);
     const message = error instanceof Error ? error.message : "Unexpected Error";
-    return NextResponse.json({ message }, { status: 500 })
-   
+    return NextResponse.json({ message }, { status: 500 });
   }
 }

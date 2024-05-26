@@ -1,17 +1,20 @@
 import prisma from "@/lib/prisma";
 import { NextApiRequest, NextApiResponse } from "next";
 import twilio from 'twilio';
+import axios from 'axios';
+import sendDriverAlertEmail from '../../sendDriverAlertEmail';
 
 const twilioClient = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
-const fromPhone = process.env.TWILIO_PHONE_NUMBER; 
+const fromPhone = process.env.TWILIO_PHONE_NUMBER;
 
-const notificationNumbers =["12424212170", "12424701747", "12428086851", "12428108059"];
+const notificationNumbers = ["12424212170", "12424701747", "12428086851", "12428108059"];
 
+type Driver = {
+  id: number;
+  email: string;
+};
 
-export default async function handle(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+export default async function handle(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === "POST") {
     const {
       userId,
@@ -69,7 +72,7 @@ export default async function handle(
       Pickup Location: ${pickupLocation}\n
       Drop-off Location: ${dropoffLocation}\n
       Passengers: ${passengerCount}\n
-      View Details: https://driver-oneridetho.vercel.app/dashboard?rideId=${scheduledRide.id}`;
+      View Details: https://oneridetho-driver.vercel.app/dashboard?rideId=${scheduledRide.id}`;
 
       notificationNumbers.forEach(async (number) => {
         try {
@@ -82,6 +85,25 @@ export default async function handle(
           console.error('Error sending SMS:', error);
         }
       });
+
+      // Fetch the driver emails using Axios
+      let driverEmails: string[] = [];
+      try {
+        const response = await axios.get<Driver[]>('api/getDriversEmails');
+        driverEmails = response.data.map((driver: Driver) => driver.email);
+      } catch (emailFetchError) {
+        console.error('Error fetching driver emails:', emailFetchError);
+        res.status(500).json({ message: "Failed to fetch driver emails" });
+        return;
+      }
+
+      // Call the email sending function
+      try {
+        await sendDriverAlertEmail(driverEmails, messageBody);
+      } catch (emailError) {
+        console.error("Error sending emails:", emailError);
+        res.status(500).json({ message: "Failed to send emails" });
+      }
 
       res.status(200).json(scheduledRide);
     } catch (error) {

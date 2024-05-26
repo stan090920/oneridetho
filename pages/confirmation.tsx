@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
-import { useRouter } from 'next/router';
 import useSWR from 'swr';
+import { useRouter } from 'next/router';
+import { Spinner } from '../components/Spinner';
 
 const mapContainerStyle = {
   width: '100%',
@@ -22,67 +23,68 @@ interface DriverMapProps {
 }
 
 const mapOptions = {
-    streetViewControl: false,
-    scaleControl: false,
-    mapTypeControl: false,
-    panControl: false,
-    zoomControl: false,
-    rotateControl: false,
-    fullscreenControl: false
-  };
-  
-  const fetcher = (url: string) => fetch(url).then((res) => res.json());
+  streetViewControl: false,
+  scaleControl: false,
+  mapTypeControl: false,
+  panControl: false,
+  zoomControl: false,
+  rotateControl: false,
+  fullscreenControl: false,
+};
 
-  const useDriverLocation = (driverId: number) => {
-    const { data, error } = useSWR<{ lat: number, lng: number }>(`/api/drivers/location/${driverId}`, fetcher);
-  
-    return {
-      location: data,
-      isLoading: !error && !data,
-      isError: error
-    };
+const fetcher = (url: string) => fetch(url).then((res) => res.json());
+
+const useDriverLocation = (driverId: number) => {
+  const { data, error } = useSWR<{ lat: number, lng: number }>(`/api/drivers/location/${driverId}`, fetcher);
+
+  return {
+    location: data,
+    isLoading: !error && !data,
+    isError: error
   };
-  
-  interface DriverMapProps {
-    driverIds: number[];
-  }
-  
-  const DriverMap = ({ driverIds }: DriverMapProps) => {
-    const driverIconUrl = "https://res.cloudinary.com/dxmrcocqb/image/upload/v1703094607/Haunted_House_Group_kxxb3v.png";
-    
-    const [driverLocations, setDriverLocations] = useState<Location[]>([]);
-  
-    useEffect(() => {
-        driverIds.forEach((id) => {
-          fetch(`/api/drivers/location/${id}`)
-            .then(response => response.json())
-            .then(data => {
-              if (data && !isNaN(data.lat) && !isNaN(data.lng)) {
-                setDriverLocations(prevLocations => {
-               
-                  const exists = prevLocations.some(loc => loc.id === id);
-                  if (!exists) {
-                    return [...prevLocations, { id, lat: data.lat, lng: data.lng }];
-                  }
-                  return prevLocations;
-                });
+};
+
+interface DriverMapProps {
+  driverIds: number[];
+  isLoading: boolean;
+}
+
+const DriverMap = ({ driverIds }: DriverMapProps) => {
+  const driverIconUrl = "https://res.cloudinary.com/dxmrcocqb/image/upload/v1703094607/Haunted_House_Group_kxxb3v.png";
+
+  const [driverLocations, setDriverLocations] = useState<Location[]>([]);
+
+  useEffect(() => {
+    driverIds.forEach((id) => {
+      fetch(`/api/drivers/location/${id}`)
+        .then(response => response.json())
+        .then(data => {
+          if (data && !isNaN(data.lat) && !isNaN(data.lng)) {
+            setDriverLocations(prevLocations => {
+
+              const exists = prevLocations.some(loc => loc.id === id);
+              if (!exists) {
+                return [...prevLocations, { id, lat: data.lat, lng: data.lng }];
               }
-            })
-            .catch(error => console.error('Error fetching location:', error));
-        });
-      }, [driverIds]);
+              return prevLocations;
+            });
+          }
+        })
+        .catch(error => console.error('Error fetching location:', error));
+    });
+  }, [driverIds]);
 
   return (
     <LoadScript googleMapsApiKey={process.env.API_KEY as string}>
-      <GoogleMap mapContainerStyle={mapContainerStyle} center={center} zoom={12}  options={mapOptions}>
-      {driverLocations.map((location) => (
+      <GoogleMap mapContainerStyle={mapContainerStyle} center={center} zoom={12} options={mapOptions}>
+        {driverLocations.map((location) => (
           <Marker
             key={location.id}
             position={{ lat: location.lat, lng: location.lng }}
             icon={{
-                url: driverIconUrl,
-                scaledSize: new google.maps.Size(50, 50)
-              }}
+              url: driverIconUrl,
+              scaledSize: new google.maps.Size(50, 50)
+            }}
           />
         ))}
       </GoogleMap>
@@ -93,8 +95,9 @@ const mapOptions = {
 const Confirmation = () => {
   const [timeLeft, setTimeLeft] = useState(300);
   const router = useRouter();
-  const { rideId } = router.query; 
+  const { rideId } = router.query;
   const [driverIds, setDriverIds] = useState<number[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchDriverIds = async () => {
@@ -102,6 +105,7 @@ const Confirmation = () => {
         const response = await fetch('/api/drivers/list');
         const data = await response.json();
         setDriverIds(data);
+        setIsLoading(false);
       } catch (error) {
         console.error('Error fetching driver IDs:', error);
       }
@@ -119,7 +123,7 @@ const Confirmation = () => {
       const response = await axios.get(`/api/rides/${rideId}`);
       if (response.data.isAccepted) {
         clearInterval(statusCheckInterval.current);
-        router.push(`/rides/${rideId}`); 
+        router.push(`/rides/${rideId}`);
       }
     } catch (error) {
       console.error('Error checking ride status:', error);
@@ -136,7 +140,7 @@ const Confirmation = () => {
       setTimeLeft(prevTime => prevTime - 1);
     }, 1000);
 
-    statusCheckInterval.current = setInterval(checkRideStatus, 5000); 
+    statusCheckInterval.current = setInterval(checkRideStatus, 5000);
 
     return () => {
       clearInterval(intervalId);
@@ -163,13 +167,21 @@ const Confirmation = () => {
   };
 
   return (
-    <div className='text-center '>
-      <div className='fixed bottom-0 z-10 bg-white rounded-t-[8px]  py-5'>
+    <div className='flex flex-col h-screen text-center'>
+      {/* Spinner section */}
+      <div className='flex items-center justify-center top-0 w-full h-4/5 fixed overflow-hidden'>
+        <div className="spinner"></div>
+      </div>
+
+      {/* Information section */}
+      <div className='fixed bottom-0 bg-white rounded-t-[8px] w-full py-5 px-0.5'>
         <h1>Your ride is confirmed. {timeUpMessage}</h1>
         <p>We appreciate your patience. You'll be notified as soon as a driver is matched to your ride.</p>
+        <button className="bg-red-500 py-3 pl-2 pr-2 rounded-md text-white" onClick={cancelRide}>Cancel Ride</button>
       </div>
-      <button className="bg-red-500 py-3 pl-2 pr-2 rounded-md text-white" onClick={cancelRide}>Cancel Ride</button>
-      <DriverMap driverIds={driverIds} />
+
+      {/* Driver Map */}
+      {/*} <DriverMap driverIds={driverIds} isLoading={isLoading} /> */}
     </div>
   );
 };

@@ -17,6 +17,11 @@ declare global {
   }
 }
 
+type Driver = {
+  id: number;
+  email: string;
+};
+
 const Checkout = () => {
   const router = useRouter();
   const { pickup, dropoff, fare, passengers, stops: stopsQuery, isScheduled } = router.query;
@@ -64,16 +69,20 @@ const Checkout = () => {
     }
 
     try {
+      // Fetch driver emails
+      const driverEmailsResponse = await axios.get('/api/getDriversEmails');
+      const driverEmails = driverEmailsResponse.data.map((driver: Driver) => driver.email);
+
       const bookingData = {
         pickupLocation: pickup,
         dropoffLocation: dropoff,
         fare: fare,
         passengerCount: passengers,
         stops: stopsWithAddress,
-        paymentMethod: paymentMethod, 
+        paymentMethod: paymentMethod,
+        emails: driverEmails,
       };
 
-      console.log("Booking data being sent:", bookingData);
 
       if (isScheduled) {
         alert('Ride scheduled successfully!');

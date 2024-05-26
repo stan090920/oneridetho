@@ -60,31 +60,17 @@ const Navbar = () => {
   const capture = React.useCallback(() => {
     if (webcamRef.current) {
       const imageSrc = webcamRef.current.getScreenshot();
-  
       if (imageSrc) {
         const img = document.createElement('img');
         img.src = imageSrc;
-  
         img.onload = () => {
-          const canvas = document.createElement('canvas');
-          const ctx = canvas.getContext('2d');
-  
-         
-          const desiredWidth = 500;
-          const desiredHeight = 500;
-  
-          if (ctx) {
-            canvas.width = desiredWidth;
-            canvas.height = desiredHeight;
-  
-    
-            ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, desiredWidth, desiredHeight);
-  
-            canvas.toBlob(blob => {
+          const canvas = cropImageToSquare(img);
+          if (canvas) {
+            canvas.toBlob((blob) => {
               if (blob) {
-                const file = new File([blob], "profile.jpg", { type: "image/jpeg" });
+                const file = new File([blob], 'profile.jpg', { type: 'image/jpeg' });
                 handleFileUpload(file);
-                setIsWebcamVisible(false); 
+                setIsWebcamVisible(false);
               }
             }, 'image/jpeg');
           }
@@ -92,7 +78,7 @@ const Navbar = () => {
       }
     }
   }, [webcamRef]);
-  
+
   const handleBookARideClick = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
     if (!isLoggedIn) {
       // Open the login page
@@ -110,8 +96,49 @@ const Navbar = () => {
   const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      handleFileUpload(file);
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const img = document.createElement('img');
+        img.src = event.target?.result as string;
+        img.onload = () => {
+          const canvas = cropImageToSquare(img);
+          if (canvas) {
+            canvas.toBlob((blob) => {
+              if (blob) {
+                const squareFile = new File([blob], 'profile.jpg', { type: 'image/jpeg' });
+                handleFileUpload(squareFile);
+              }
+            }, 'image/jpeg');
+          }
+        };
+      };
+      reader.readAsDataURL(file);
     }
+  };
+
+
+  const cropImageToSquare = (img: HTMLImageElement) => {
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    const size = Math.min(img.width, img.height);
+
+    if (ctx) {
+      canvas.width = size;
+      canvas.height = size;
+      ctx.drawImage(
+        img,
+        (img.width - size) / 2,
+        (img.height - size) / 2,
+        size,
+        size,
+        0,
+        0,
+        size,
+        size
+      );
+      return canvas;
+    }
+    return null;
   };
 
   const handleFileUpload = async (file: File) => {
@@ -144,6 +171,7 @@ const Navbar = () => {
     } finally {
       setIsLoading(false);
       setShowUploadPrompt(false);
+      window.location.reload();
     }
   };
 
@@ -296,13 +324,14 @@ const Navbar = () => {
             alt="pfp"
             height={50}
             width={50}
+            style={{ objectFit: "cover" }}
             className="rounded-full object-cover"
           />
         </div>
 
 
         <div onClick={handleDropdown} className="cursor-pointer bg-white py-2 pr-4 pl-4 text-black rounded-full">
-          {session.user?.name}
+          {session.user?.name?.split(" ")[0]}
         </div>
 
         {showProfileOptions && (

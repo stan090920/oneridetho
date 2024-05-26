@@ -1301,6 +1301,27 @@ button#colour-options-grid {
   color: rgb(20, 110, 0);
 }
 
+.spinner {
+  width: 70px;
+  height: 70px;
+
+  border: 9px solid #0000001a;
+  border-radius: 50%;
+  border-right-color: #0484ec;
+
+  animation: spin 1s ease infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
 @media (min-width: 1136px) {
   .MainContainerTopSection {
     padding-top: 64px;
@@ -1538,3 +1559,4 @@ button#colour-options-grid {
     grid-template-columns: repeat(4, 1fr);
   }
 }
+

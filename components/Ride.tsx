@@ -10,6 +10,7 @@ import router from "next/router";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import dollar from "../assets/dollar-bill.png";
+import axios from 'axios';
 
 interface Coordinates {
   lat: number;
@@ -106,6 +107,7 @@ const Ride = () => {
   const [showScheduleInput, setShowScheduleInput] = useState(false);
   const [stops, setStops] = useState<Coordinates[]>([]);
   const stopInputRefs = useRef<HTMLInputElement[]>([]);
+  const [isAvailable, setIsAvailable] = useState(true);
 
   const addStop = () => {
     if (!dropoffCoordinates) {
@@ -170,8 +172,10 @@ const Ride = () => {
       stops.some((stop) => !stop.lat || !stop.lng)
     ) {
       console.error("Invalid coordinates for calculation");
+      setIsAvailable(false);
       return;
     }
+    setIsAvailable(true);
 
     const directionsService = new window.google.maps.DirectionsService();
 
@@ -208,9 +212,14 @@ const Ride = () => {
 
         const distanceInMiles = totalDistance / 1609.34;
         setDistance(distanceInMiles.toFixed(2));
-        setFare(calculateFare(distanceInMiles, passengers, stops.length));
+        const fare = calculateFare(distanceInMiles, passengers, stops.length);
+        setFare(fare);
+        setIsAvailable(true);
       } else {
         console.error("Error calculating route:", status);
+        setDistance(null);
+        setFare("");
+        setIsAvailable(false);
       }
     });
   };
@@ -219,32 +228,50 @@ const Ride = () => {
     handleCalculateDistance();
   }, [pickupCoordinates, dropoffCoordinates, passengers, stops, stops.length]);
 
-  const handleBooking = () => {
+  const handleBooking = async () => {
     const pickupLocation = pickupInputRef.current?.value;
     const dropoffLocation = dropoffInputRef.current?.value;
 
-    if (pickupLocation && dropoffLocation) {
-      localStorage.setItem(
-        "rideDetails",
-        JSON.stringify({
-          pickup: pickupLocation,
-          dropoff: dropoffLocation,
-          fare: fare,
-          stops,
-          passengers: passengers,
-        })
-      );
+    try {
+      if (pickupLocation && dropoffLocation) {
+        // Check for active rides
+        const activeRideResponse = await axios.get("/api/check-active-ride", {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
 
-      router.push({
-        pathname: "/checkout",
-        query: {
-          pickup: pickupLocation,
-          dropoff: dropoffLocation,
-          fare: fare,
-          passengers: passengers,
-          stops: encodeURIComponent(JSON.stringify(stops)),
-        },
-      });
+        if (activeRideResponse.data.hasActiveRide) {
+          alert("You already have an active ride. Please complete or cancel it before booking a new one.");
+          return;
+        }
+
+        // Proceed with booking if no active ride
+        localStorage.setItem(
+          "rideDetails",
+          JSON.stringify({
+            pickup: pickupLocation,
+            dropoff: dropoffLocation,
+            fare: fare,
+            stops,
+            passengers: passengers,
+          })
+        );
+
+        router.push({
+          pathname: "/checkout",
+          query: {
+            pickup: pickupLocation,
+            dropoff: dropoffLocation,
+            fare: fare,
+            passengers: passengers,
+            stops: encodeURIComponent(JSON.stringify(stops)),
+          },
+        });
+      }
+    }catch (error) {
+      console.error("Error checking for active ride:", error);
+      alert("An error occurred while checking for active rides. Please try again.");
     }
   };
 
@@ -811,6 +838,13 @@ const Ride = () => {
               </button>
             </div>
           )}
+
+          {pickupCoordinates && dropoffCoordinates && !isAvailable && (
+            <div className="text-center text-red-600">
+              <p>Ride unavailable for set pickup and dropoff locations.</p>
+            </div>
+          )}
+
           {showScheduleInput && (
             <div className="LoginPriceCheckButtonGroup w-full flex flex-row justify-center m-0 p-0">
               <input

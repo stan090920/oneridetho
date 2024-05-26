@@ -181,7 +181,7 @@ const RideDetails = () => {
 
   const mapContainerStyle = {
     width: '100%',
-    height: '90vh',
+    height: '55vh',
   };
 
   const mapOptions = {
@@ -211,57 +211,70 @@ const RideDetails = () => {
   }
 
   return (
-    <div className='relative'>
-
+    <div className='relative h-full'>
       {ride ? (
         ride.driver ? (
-          <div>
-            <div>
+          <div className="flex flex-col h-full">
+            <div className="flex-grow relative">
+              {eta && (
+                <div className='absolute bottom-20 z-10 bg-white py-2 px-4 rounded-md flex ml-10'>
+                  {eta}
+                </div>
+              )}
+              {mapLocation && (
+                <LoadScript googleMapsApiKey={process.env.API_KEY || ""}>
+                  <GoogleMap
+                    mapContainerStyle={mapContainerStyle}
+                    center={mapLocation}
+                    zoom={15}
+                    onLoad={onMapLoad}
+                    options={mapOptions}
+                  >
+                    {renderDriverMarker()}
+                    <Marker position={mapLocation} label={ride.status === 'InProgress' ? "Dropoff" : "Pickup"} />
+                    {directions && <DirectionsRenderer directions={directions} />}
+                  </GoogleMap>
+                </LoadScript>
+              )}
+            </div>
+            <div className="relative z-10 bg-white py-4 px-4 rounded-t-lg flex flex-col max-w-[375px]">
+              <div className="flex items-center gap-4">
+                <div className="flex flex-col items-center">
+                  <Image
+                    src={ride.driver.photoUrl || "https://res.cloudinary.com/dxmrcocqb/image/upload/v1700749220/Social_Media_Chatting_Online_Blank_Profile_Picture_Head_And_Body_Icon_People_Standing_Icon_Grey_Background_generated_qnojdz.jpg"}
+                    alt="driver"
+                    width={60}
+                    height={60}
+                    className="rounded-full border"
+                    style={{ objectFit: "cover" }}
+                  />
+                  <div className="flex items-center mt-2">
+                    <span className="text-yellow-500">{ride.driver.rating.toFixed(1)}</span>
+                    <HiMiniStar className="ml-1 text-yellow-500" />
+                  </div>
+                </div>
+                <Image
+                  src={ride.driver.carImageUrl}
+                  alt="car"
+                  width={180}
+                  height={180}
+                  className="rounded-lg"
+                />
+                <div className="ml-4">
+                  <p className="text-gray-500 text-lg">{ride.driver.name?.split(" ")[0]}</p>
+                  <p className="font-bold text-xl">{ride.driver.licensePlate}</p>
+                  <p className="text-gray-500 text-lg">{ride.driver.carType}</p>
+                </div>
+              </div>
 
-            {eta && (
-      <div className='absolute bottom-[220px] z-10 bg-white py-2 pl-2 pr-2 rounded-md flex ml-[310px]'>
-       {eta}
-      </div>
-    )}
-              </div>
-            <div className="bottom-0 absolute z-10 bg-white py-2 px-2 rounded-t-[12px]">
-              <div className="flex items-center">
-                <div className="mt-20 rounded-full flex items-center gap-2">
-                  {ride.driver.rating} <span><HiMiniStar /></span>
-                </div>
-                <Image src={ride.driver.photoUrl || "https://res.cloudinary.com/dxmrcocqb/image/upload/v1700749220/Social_Media_Chatting_Online_Blank_Profile_Picture_Head_And_Body_Icon_People_Standing_Icon_Grey_Background_generated_qnojdz.jpg"} alt="driver" width={70} height={70} className="rounded-full absolute border-r border-black" />
-                <Image src={ride.driver.carImageUrl} alt="car" width={225} height={225} />
-                <div className="ml-[30px]">
-                  <p className="text-gray-500 text-[18px]">{ride.driver.name}</p>
-                  <p className="font-bold text-[24px]">{ride.driver.licensePlate}</p>
-                  <p className="text-gray-500 text-[18px]">{ride.driver.carType}</p>
-                </div>
-              </div>
-              <div className="flex items-center justify-between w-[98%]">
-                <a href="https://wa.me/12428221495">
+              <div className="flex items-center justify-between w-full mt-4">
+                <a href="https://wa.me/12428221495" className="flex flex-col items-center">
                   <div>Customer Service</div>
-                  <p className="underline text-blue-400 text-[18px]">822-1495</p>
+                  <p className="underline text-blue-400 text-lg">822-1495</p>
                 </a>
-                <div>
-                  <button className="bg-red-500 py-3 pl-2 pr-2 rounded-md text-white" onClick={cancelRide}>Cancel Ride</button>
-                </div>
+                <button className="bg-red-500 py-2 px-4 rounded-md text-white" onClick={cancelRide}>Cancel Ride</button>
               </div>
             </div>
-            {mapLocation && (
-        <LoadScript googleMapsApiKey={process.env.API_KEY || ""}>
-          <GoogleMap
-            mapContainerStyle={mapContainerStyle}
-            center={mapLocation}
-            zoom={15}
-            onLoad={onMapLoad}
-            options={mapOptions}
-          >
-            {renderDriverMarker()}
-            <Marker position={mapLocation} label={ride.status === 'InProgress' ? "Dropoff" : "Pickup"} />
-            {directions && <DirectionsRenderer directions={directions} />}
-          </GoogleMap>
-        </LoadScript>
-      )}
           </div>
         ) : (
           <Confirmation />
@@ -269,7 +282,6 @@ const RideDetails = () => {
       ) : (
         <p>No ride details available.</p>
       )}
-   
     </div>
   );
 };

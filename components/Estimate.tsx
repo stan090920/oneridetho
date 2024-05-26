@@ -22,6 +22,7 @@ const Estimate = () => {
   const [fare, setFare] = useState("");
   const [pickupClicked, setPickupClicked] = useState(false);
   const [userLocation, setUserLocation] = useState<Coordinates | null>(null);
+  const [isAvailable, setIsAvailable] = useState(true);
 
   const { data: session } = useSession();
   const isLoggedIn = session != null;
@@ -44,21 +45,20 @@ const Estimate = () => {
   const pickupInputRef = useRef<HTMLInputElement>(null);
   const dropoffInputRef = useRef<HTMLInputElement>(null);
 
-
-  const calculateFare = (distance: number, passengers: number): string => {
+  const calculateFare = (
+    distance: number,
+    passengers: number
+  ): string => {
     const baseFare = 10;
     const ratePerMile = 2;
     const distanceCharge = distance * ratePerMile;
     const passengerCharge = (passengers - 1) * 2;
 
     const currentHour = new Date().getHours();
-
     const isNightFee = currentHour >= 23 || currentHour < 6;
-
     const nightFee = isNightFee ? 5 : 0;
 
     const totalFare = baseFare + distanceCharge + passengerCharge + nightFee;
-
     return totalFare.toFixed(2);
   };
 
@@ -84,14 +84,19 @@ const Estimate = () => {
               if (element.status === "OK" && element.distance) {
                 const distanceInMiles = element.distance.value / 1609.34;
                 setFare(calculateFare(distanceInMiles, passengers));
+                setIsAvailable(true);
               } else {
                 console.error("Invalid element status or distance is missing");
+                setIsAvailable(false);
+                setFare("");
               }
             } else {
               console.error("No elements in the response");
+              setFare("");
             }
           } else {
             console.error("Error was: " + status);
+            setFare("");
           }
         }
       );
@@ -502,6 +507,11 @@ const Estimate = () => {
 
         <br/>
         <div>
+          {pickupCoordinates && dropoffCoordinates && !isAvailable && (
+            <div className="text-center text-red-600">
+              <p>Ride unavailable for set pickup and dropoff locations.</p>
+            </div>
+          )}
           <div className="LoginPriceCheckButtonGroup w-full flex flex-col items-center m-0 p-0">
             <a 
               className="CheckPriceButton mt-3 block w-full py-2 px-4"
@@ -515,16 +525,6 @@ const Estimate = () => {
               >
                 Login & Book Now
             </a>
-            
-            {!isLoggedIn ? (
-              <>
-                
-              </>
-            ) : (
-              <>
-                
-              </>
-            )}
           </div>
         </div>
       </div>
