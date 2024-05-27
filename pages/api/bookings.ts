@@ -4,7 +4,6 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "./auth/[...nextauth]";
 import twilio from "twilio";
 import { NextResponse } from "next/server";
-import axios from 'axios'; 
 import sendDriverAlertEmail from '../../sendDriverAlertEmail';
 
 const prisma = new PrismaClient();

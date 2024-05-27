@@ -3,7 +3,6 @@ import axios from 'axios';
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 import useSWR from 'swr';
 import { useRouter } from 'next/router';
-import { Spinner } from '../components/Spinner';
 
 const mapContainerStyle = {
   width: '100%',

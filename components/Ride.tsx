@@ -11,11 +11,17 @@ import { useSession } from "next-auth/react";
 import Image from "next/image";
 import dollar from "../assets/dollar-bill.png";
 import axios from 'axios';
+import { Spinner } from '../components/Spinner';
 
 interface Coordinates {
   lat: number;
   lng: number;
 }
+
+type Driver = {
+  id: number;
+  email: string;
+};
 
 function SimpleMap({
     pickupCoordinates,
@@ -108,6 +114,7 @@ const Ride = () => {
   const [stops, setStops] = useState<Coordinates[]>([]);
   const stopInputRefs = useRef<HTMLInputElement[]>([]);
   const [isAvailable, setIsAvailable] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   const addStop = () => {
     if (!dropoffCoordinates) {
@@ -283,6 +290,7 @@ const Ride = () => {
       return;
     }
 
+    setIsLoading(true); 
     const pickupLocation = pickupInputRef.current?.value;
     const dropoffLocation = dropoffInputRef.current?.value;
 
@@ -312,20 +320,25 @@ const Ride = () => {
       if (overlapResponse.ok) {
         const overlapData = await overlapResponse.json();
         
-        console.log("Overlap Data:", overlapData); // Log parsed JSON data
-
         if (overlapData.hasOverlap) {
           // Handle overlapping rides
           alert("There are overlapping rides. Please choose a different pickup time.");
+          setIsLoading(false);
           return;
         } else {
           // No overlapping rides, proceed with scheduling
+
+          // Fetch driver emails
+          const driverEmailsResponse = await axios.get('/api/getDriversEmails');
+          const driverEmails = driverEmailsResponse.data.map((driver: Driver) => driver.email);
+
+
           const response = await fetch("/api/schedule", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify(rideDetails),
+            body: JSON.stringify({ ...rideDetails, driverEmails }),
           });
 
           if (response.ok) {
@@ -341,6 +354,7 @@ const Ride = () => {
                 passengers: passengers,
                 stops: encodeURIComponent(JSON.stringify(stops)),
                 isScheduled: true,
+                pickupTime: scheduledPickupTime
               },
             });
           } else {
@@ -352,6 +366,8 @@ const Ride = () => {
       }
     } catch (error) {
       console.error("Error during scheduling:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -857,7 +873,7 @@ const Ride = () => {
                 onClick={handleScheduleForLater}
                 className="py-2.5 bg-white text-gray-700 font-bold pl-4 pr-4 rounded-md ml-2 mt-2"
               >
-                Confirm
+                {isLoading ? <Spinner /> : 'Confirm'}
               </button>
             </div>
           )}

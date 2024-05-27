@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import { IoMdPerson } from "react-icons/io";
 import axios from "axios";
 import { useSession } from "next-auth/react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useMemo } from "react";
 import { Spinner } from "@/components/Spinner";
 
 interface Stop {
@@ -24,7 +24,7 @@ type Driver = {
 
 const Checkout = () => {
   const router = useRouter();
-  const { pickup, dropoff, fare, passengers, stops: stopsQuery, isScheduled } = router.query;
+  const { pickup, dropoff, fare, passengers, stops: stopsQuery, isScheduled, pickupTime } = router.query;
   const [isPayPalReady, setPayPalReady] = useState(false);
   const [paypalSdkReady, setPaypalSdkReady] = useState(false);
  
@@ -35,6 +35,24 @@ const Checkout = () => {
   const [stopsWithAddress, setStopsWithAddress] = useState<Stop[]>([]);
   const [paymentMethod, setPaymentMethod] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+
+  // Memoize the formatted pickup time to avoid unnecessary recalculations
+  const formattedPickupTime = useMemo(() => {
+    if (typeof pickupTime === 'string') {
+      const pickupDate = new Date(pickupTime);
+      const options: Intl.DateTimeFormatOptions = {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        hour12: true
+      };
+      return new Intl.DateTimeFormat('en-US', options).format(pickupDate);
+    }
+    return null;
+  }, [pickupTime]);
+
 
   useEffect(() => {
     let stops: Stop[] = [];
@@ -218,7 +236,7 @@ const Checkout = () => {
           </button>
         </div>
       </div>
-      <div className="border rounded-md sm:w-[450px] w-[370px] sm:h-[28vh] h-[30vh] px-2 mt-5 pt-5 space-y-2">
+      <div className="border rounded-md sm:w-[450px] w-[360px] max-h-[40vh] px-2 mt-5 pt-5 space-y-2 overflow-auto">
         <p className="font-bold">Pickup Location: <span className="font-normal">{pickup}</span></p>
         <p className="font-bold">Dropoff Location: <span className="font-normal">{dropoff}</span></p>
         {stopsWithAddress.map((stop, index) => (
@@ -226,6 +244,7 @@ const Checkout = () => {
             <span className="font-normal">{stop.address || 'Loading address...'}</span>
           </p>
         ))}
+        {isScheduled && <p className="font-bold">Pickup Time: <span className="font-normal">{formattedPickupTime}</span></p>}
         <p className="font-bold">Fare: $<span className="font-normal">{fare}</span></p>
         <p className="flex items-center gap-4"><IoMdPerson size={24} /> {passengers}</p>
       </div>

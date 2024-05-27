@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import useSWR from 'swr';
 import axios from 'axios';
+import { useRouter } from 'next/router';
 
 const fetcher = (url: string) => axios.get(url).then(res => res.data);
 
@@ -34,9 +35,24 @@ interface Ride {
   user: User;
 }
 
+// Function to format date and time
+export const formatDateTime = (dateTimeString: string): string => {
+  const dateTime = new Date(dateTimeString);
+  const options: Intl.DateTimeFormatOptions = {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+    hour12: true,
+  };
+  return new Intl.DateTimeFormat('en-US', options).format(dateTime);
+};
+
 const Rides = () => {
   const { data: rides, error, mutate } = useSWR<Ride[]>('/api/rides', fetcher);
   const [showInProgress, setShowInProgress] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     // Check if there are any rides in progress
@@ -58,8 +74,8 @@ const Rides = () => {
     try {
       await axios.post(`/api/rides/cancel/${rideId}`);
       alert("Ride has been canceled");
-      // Revalidate data to reflect the change
-      mutate();
+      // Reload the page to reflect the change
+      router.reload();
     } catch (error) {
       console.error("Error cancelling ride:", error);
     }
@@ -105,14 +121,15 @@ const Rides = () => {
                   <p>Pickup: {ride.pickupLocation}</p>
                   <p>Dropoff: {ride.dropoffLocation}</p>
                   <p>Fare: ${ride.fare}</p>
-                  <p>Status: <span className={`text-${ride.status === 'Completed' ? 'green' : 'red'}-600`}>{ride.status}</span></p>
+                  <p>Status: <span className={`${ride.status === 'Completed' ? 'text-green-600' : 'text-red-600'}`}>{ride.status}</span></p>
                   {ride.isScheduled && ride.status !== 'Cancelled' && (
+                    <><p>Pickup Time: {formatDateTime(ride.pickupTime)}</p>
                     <button
                       onClick={() => cancelRide(ride.id)}
                       className="mt-2 bg-red-500 text-white py-1 px-3 rounded"
                     >
                       Cancel Ride
-                    </button>
+                    </button></>
                   )}
                 </div>
               ))}
