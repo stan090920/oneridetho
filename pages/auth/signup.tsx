@@ -441,6 +441,18 @@ const Signup = () => {
 
   const nextStep = async () => {
     if (step === 2) {
+      if (!name.trim()) {
+        setErrorMessage("Name cannot be empty.");
+        return;
+      }
+
+      if (!dob) {
+        setErrorMessage("Date of birth cannot be empty.");
+        return;
+      }
+      
+      setErrorMessage("");
+
       const dobDate = new Date(dob);
       const currentDate = new Date();
       let age = currentDate.getFullYear() - dobDate.getFullYear();
@@ -501,7 +513,7 @@ const Signup = () => {
         )}
 
         <div className="w-full mr-0 grid">
-          {errorMessage && <div className="error-message">{errorMessage}</div>}
+          {errorMessage && <div className="error-message text-center">{errorMessage}</div>}
           <div className="flex w-full">
             {step === 2 && (
               <a className="BackButton" onClick={previousStep}>
