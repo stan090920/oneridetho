@@ -440,7 +440,26 @@ const Signup = () => {
   };
 
   const nextStep = async () => {
-    if (step === 2) {
+    if (step === 1) {
+      if (!email.trim()) {
+        setErrorMessage("Email cannot be empty.");
+        return;
+      }
+
+      if (!phoneNumber.trim()) {
+        setErrorMessage("Phone number cannot be empty.");
+        return;
+      }
+
+      if (!password.trim()) {
+        setErrorMessage("Password cannot be empty.");
+        return;
+      }
+
+      setErrorMessage("");
+      setStep(step + 1);
+    }
+    else if (step === 2) {
       if (!name.trim()) {
         setErrorMessage("Name cannot be empty.");
         return;
