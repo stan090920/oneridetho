@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import useSWR from 'swr';
 import axios from 'axios';
 import { useRouter } from 'next/router';
@@ -112,6 +112,12 @@ const Rides = () => {
               <p>Dropoff: {rideInProgress.dropoffLocation}</p>
               <p>Fare: ${rideInProgress.fare}</p>
               <p>Status: <span className="text-red-600">{rideInProgress.status}</span></p>
+              <button
+                onClick={() => router.push(`/rides/${rideInProgress.id}`)}
+                className="mt-2 bg-blue-500 text-white py-1 px-3 rounded"
+              >
+                View Ride
+              </button>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -123,13 +129,23 @@ const Rides = () => {
                   <p>Fare: ${ride.fare}</p>
                   <p>Status: <span className={`${ride.status === 'Completed' ? 'text-green-600' : 'text-red-600'}`}>{ride.status}</span></p>
                   {ride.isScheduled && ride.status !== 'Cancelled' && (
-                    <><p>Pickup Time: {formatDateTime(ride.pickupTime)}</p>
+                    <>
+                      <p>Pickup Time: {formatDateTime(ride.pickupTime)}</p>
+                      <button
+                        onClick={() => cancelRide(ride.id)}
+                        className="mt-2 bg-red-500 text-white py-1 px-3 rounded"
+                      >
+                        Cancel Ride
+                      </button>
+                    </>
+                  )}
+                  {ride.status === 'Requested' && (
                     <button
-                      onClick={() => cancelRide(ride.id)}
-                      className="mt-2 bg-red-500 text-white py-1 px-3 rounded"
+                      onClick={() => router.push(`/rides/${ride.id}`)}
+                      className="mt-2 bg-blue-500 text-white py-1 px-3 rounded"
                     >
-                      Cancel Ride
-                    </button></>
+                      View Ride
+                    </button>
                   )}
                 </div>
               ))}
@@ -139,6 +155,6 @@ const Rides = () => {
       )}
     </div>
   );
-}
+};
 
 export default Rides;
