@@ -159,7 +159,9 @@ const Ride = () => {
     const stopCharge = stops * 5;
 
     const currentHour = new Date().getHours();
-    const isNightFee = currentHour >= 0 || currentHour < 6;
+    console.log(`Current hour: ${currentHour}`);
+    const isNightFee = currentHour >= 0 && currentHour < 6;
+    console.log(`Is night fee applicable? ${isNightFee}`);
     const nightFee = isNightFee ? 5 : 0;
 
     const totalFare = baseFare + distanceCharge + passengerCharge + nightFee + stopCharge;
