@@ -218,7 +218,7 @@ const RideDetails = () => {
             <div className="flex-grow relative">
               {eta && (
                 <div className='absolute bottom-20 z-10 bg-white py-2 px-4 rounded-md flex ml-10'>
-                  {eta}
+                  Your driver's ETA is {eta}
                 </div>
               )}
               {mapLocation && (

@@ -20,7 +20,7 @@ export default async function handler(
       });
 
     
-      if (ride.driver && ride.driver.phone) {
+      if (ride.driver?.phone) {
         await twilioClient.messages.create({
           body: `Ride with ${ride.user.name} has been cancelled.`,
           from: process.env.TWILIO_PHONE_NUMBER,

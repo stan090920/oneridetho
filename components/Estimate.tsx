@@ -407,7 +407,8 @@ const Estimate = () => {
               <div className="ActionIconWrapper">
                 <svg
                   id="pickupLocationActionIcon" viewBox="0 0 24 24" fill="black" focusable="false" role="button"
-                  className="font-normal text-base leading-6 inline-block fill-current text-current h-4 w-3.5 cursor-pointer"
+                  className="font-normal text-base leading-6 inline-block fill-current text-current h-6 w-5 cursor-pointer"
+                  style={{ color: 'green' }}
                   onClick={getUserLocation}
                   >
                   <title>Use current location</title>
@@ -447,7 +448,8 @@ const Estimate = () => {
               <div className="ActionIconWrapper">
                 <svg
                   id="dropoffLocationActionIcon" viewBox="0 0 24 24" fill="black" focusable="false" role="button"
-                  className="font-normal text-base leading-6 inline-block fill-current text-current h-4 w-3.5 cursor-pointer"
+                  className="font-normal text-base leading-6 inline-block fill-current text-current h-6 w-5 cursor-pointer"
+                  style={{ color: 'green' }}
                   onClick={getUserLocation}
                   >
                   <title>Use current location</title>

@@ -167,9 +167,12 @@ const Confirmation = () => {
 
   return (
     <div className='flex flex-col h-screen text-center'>
-      {/* Spinner section */}
       <div className='flex items-center justify-center top-0 w-full h-4/5 fixed overflow-hidden'>
-        <div className="spinner"></div>
+        <div className="ProgressBarWrapper max-w-xl" data-progress-bar="true" data-show-progress-string="true" data-progress-text="Progress:">
+          <div className="ProgressBar" data-progress-bar-visual="true" style={{ width: `${((300 - timeLeft) / 300) * 100}%`, transition: "width 1s ease-out 0s", backgroundColor: '#4CAF50', height: '10px' }}>
+            <div className="ProgressIndicatorImage"></div>
+          </div>
+        </div>
       </div>
 
       {/* Information section */}
