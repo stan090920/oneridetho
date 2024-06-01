@@ -73,8 +73,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 Pickup: ${pickupLocation},
 Drop-off: ${dropoffLocation},
 Stops: ${stops.map((stop: { address: any; }) => stop.address).join(', ')},
-Passengers: ${passengerCount},
-View details: https://oneridetho-driver.vercel.app/dashboard?rideId=${ride.id}`;
+Passengers: ${passengerCount}`;
 
     for (const number of driverNumbers) {
       try {

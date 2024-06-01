@@ -66,8 +66,7 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
       Pickup Time: ${formattedPickupTime}.\n
       Pickup Location: ${pickupLocation},\n
       Drop-off Location: ${dropoffLocation},\n
-      Passengers: ${passengerCount}.\n
-      View Details: https://oneridetho-driver.vercel.app/dashboard?rideId=${scheduledRide.id}`;
+      Passengers: ${passengerCount}.`;
 
       notificationNumbers.forEach(async (number) => {
         try {
