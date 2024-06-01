@@ -159,9 +159,7 @@ const Ride = () => {
     const stopCharge = stops * 5;
 
     const currentHour = new Date().getHours();
-    console.log(`Current hour: ${currentHour}`);
     const isNightFee = currentHour >= 0 && currentHour < 6;
-    console.log(`Is night fee applicable? ${isNightFee}`);
     const nightFee = isNightFee ? 5 : 0;
 
     const totalFare = baseFare + distanceCharge + passengerCharge + nightFee + stopCharge;
@@ -284,8 +282,6 @@ const Ride = () => {
     }
   };
 
-  const { data: session } = useSession();
-
   const handleScheduleForLater = async () => {
     if (!pickupCoordinates || !dropoffCoordinates || !scheduledPickupTime) {
       alert("Please fill in all fields");
@@ -295,16 +291,6 @@ const Ride = () => {
     setIsLoading(true); 
     const pickupLocation = pickupInputRef.current?.value;
     const dropoffLocation = dropoffInputRef.current?.value;
-
-    const rideDetails = {
-      userId: session?.user.id,
-      pickupLocation: pickupInputRef.current?.value,
-      dropoffLocation: dropoffInputRef.current?.value,
-      scheduledPickupTime,
-      fare: fare,
-      passengerCount: passengers,
-      paymentMethod: "Cash",
-    };
 
     try {
       // Check for overlapping rides
@@ -316,9 +302,6 @@ const Ride = () => {
         body: JSON.stringify({ scheduledPickupTime }),
       });
 
-      // Log the overlapResponse for debugging
-      console.log("Overlap Response:", overlapResponse);
-
       if (overlapResponse.ok) {
         const overlapData = await overlapResponse.json();
         
@@ -329,39 +312,29 @@ const Ride = () => {
           return;
         } else {
           // No overlapping rides, proceed with scheduling
+          localStorage.setItem(
+            "rideDetails",
+            JSON.stringify({
+              pickup: pickupLocation,
+              dropoff: dropoffLocation,
+              fare: fare,
+              stops,
+              passengers: passengers,
+            })
+          );
 
-          // Fetch driver emails
-          const driverEmailsResponse = await axios.get('/api/getDriversEmails');
-          const driverEmails = driverEmailsResponse.data.map((driver: Driver) => driver.email);
-
-
-          const response = await fetch("/api/schedule", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
+          router.push({
+            pathname: "/checkout",
+            query: {
+              pickup: pickupLocation,
+              dropoff: dropoffLocation,
+              fare: fare,
+              passengers: passengers,
+              stops: encodeURIComponent(JSON.stringify(stops)),
+              isScheduled: true,
+              pickupTime: scheduledPickupTime
             },
-            body: JSON.stringify({ ...rideDetails, driverEmails }),
           });
-
-          if (response.ok) {
-            const data = await response.json();
-            console.log("Scheduled ride successfully:", data);
-
-            router.push({
-              pathname: "/checkout",
-              query: {
-                pickup: pickupLocation,
-                dropoff: dropoffLocation,
-                fare: fare,
-                passengers: passengers,
-                stops: encodeURIComponent(JSON.stringify(stops)),
-                isScheduled: true,
-                pickupTime: scheduledPickupTime
-              },
-            });
-          } else {
-            console.error("Failed to schedule ride:", await response.text());
-          }
         }
       } else {
         console.error("Error checking for overlap:", await overlapResponse.text());

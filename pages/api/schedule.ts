@@ -18,7 +18,7 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
       fare,
       passengerCount,
       paymentMethod,
-      driverEmails,
+      emails,
     } = req.body;
 
     const parsedUserId = parseInt(userId);
@@ -63,10 +63,10 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
       const formattedPickupTime = `${scheduledPickupDateTime.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })} ${scheduledPickupDateTime.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })}`;
 
       const messageBody = `${user.name} has scheduled a ride!\n
-      Pickup Time: ${formattedPickupTime}\n
-      Pickup Location: ${pickupLocation}\n
-      Drop-off Location: ${dropoffLocation}\n
-      Passengers: ${passengerCount}\n
+      Pickup Time: ${formattedPickupTime}.\n
+      Pickup Location: ${pickupLocation},\n
+      Drop-off Location: ${dropoffLocation},\n
+      Passengers: ${passengerCount}.\n
       View Details: https://oneridetho-driver.vercel.app/dashboard?rideId=${scheduledRide.id}`;
 
       notificationNumbers.forEach(async (number) => {
@@ -83,7 +83,7 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
 
       // Call the email sending function
       try {
-        await sendDriverAlertEmail(driverEmails, messageBody);
+        await sendDriverAlertEmail(emails, messageBody);
       } catch (emailError) {
         console.error("Error sending emails:", emailError);
         res.status(500).json({ message: "Failed to send emails" });

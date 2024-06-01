@@ -91,28 +91,54 @@ const Checkout = () => {
       const driverEmailsResponse = await axios.get('/api/getDriversEmails');
       const driverEmails = driverEmailsResponse.data.map((driver: Driver) => driver.email);
 
-      const bookingData = {
-        pickupLocation: pickup,
-        dropoffLocation: dropoff,
-        fare: fare,
-        passengerCount: passengers,
-        stops: stopsWithAddress,
-        paymentMethod: paymentMethod,
-        emails: driverEmails,
-      };
+      if (!isScheduled) {
+        const bookingData = {
+          pickupLocation: pickup,
+          dropoffLocation: dropoff,
+          fare: fare,
+          passengerCount: passengers,
+          stops: stopsWithAddress,
+          paymentMethod: paymentMethod,
+          emails: driverEmails,
+        };
 
+        const response = await axios.post('/api/bookings', bookingData);
+        const { rideId } = response.data;
 
-      if (isScheduled) {
-        alert('Ride scheduled successfully!');
-        router.push('/'); 
-        return;
+        router.push(`/rides/${rideId}`);
+        setIsLoading(false);
+      } else {
+        const scheduledBookingData = {
+          userId: session?.user.id,
+          pickupLocation: pickup,
+          dropoffLocation: dropoff,
+          scheduledPickupTime: pickupTime,
+          fare: fare,
+          passengerCount: passengers,
+          stops: stopsWithAddress,
+          paymentMethod: paymentMethod,
+          emails: driverEmails,
+        };
+
+        const response = await fetch("/api/schedule", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(scheduledBookingData),
+        });
+
+        if (response.ok) {
+          alert('Ride scheduled successfully!');
+          setIsLoading(false);
+          router.push('/'); 
+          return;
+        } else {
+          setIsLoading(false);
+          console.error("Failed to schedule ride:", await response.text());
+        }
       }
 
-      const response = await axios.post('/api/bookings', bookingData);
-      const { rideId } = response.data;
-
-      setIsLoading(false);
-      router.push(`/rides/${rideId}`);
     } catch (error) {
       console.error('Error during booking:', error);
       setIsLoading(false);

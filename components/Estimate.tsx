@@ -55,7 +55,7 @@ const Estimate = () => {
     const passengerCharge = (passengers - 1) * 2;
 
     const currentHour = new Date().getHours();
-    const isNightFee = currentHour >= 23 || currentHour < 6;
+    const isNightFee = currentHour >= 23 && currentHour < 6;
     const nightFee = isNightFee ? 5 : 0;
 
     const totalFare = baseFare + distanceCharge + passengerCharge + nightFee;
