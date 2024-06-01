@@ -17,7 +17,7 @@ const Book = () => {
     }
 
     return (
-        <div className="bg-black">
+        <div className="bg-black h-[90vh] overflow-hidden px-2 pt-2">
            <Ride />
         </div>
     );
