@@ -115,6 +115,14 @@ const Ride = () => {
   const stopInputRefs = useRef<HTMLInputElement[]>([]);
   const [isAvailable, setIsAvailable] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+  const [minTime, setMinTime] = useState('');
+
+  useEffect(() => {
+    const now = new Date();
+    const oneHourFromNow = new Date(now.getTime() + 60 * 60 * 1000);
+    const formattedMinTime = oneHourFromNow.toISOString().slice(0, 16); // Format to 'YYYY-MM-DDTHH:mm'
+    setMinTime(formattedMinTime);
+  }, []);
 
   const addStop = () => {
     if (!dropoffCoordinates) {
@@ -289,6 +297,18 @@ const Ride = () => {
     }
 
     setIsLoading(true); 
+
+    const now = new Date();
+    const oneHourFromNow = new Date(now.getTime() + 60 * 60 * 1000);
+    const selectedPickupTime = new Date(scheduledPickupTime);
+
+    // Check if the scheduled pickup time is at least 1 hour from now
+    if (selectedPickupTime < oneHourFromNow) {
+      alert("Please select a pickup time at least 1 hour from now.");
+      setIsLoading(false); 
+      return;
+    }
+
     const pickupLocation = pickupInputRef.current?.value;
     const dropoffLocation = dropoffInputRef.current?.value;
 
@@ -844,6 +864,7 @@ const Ride = () => {
                 value={scheduledPickupTime}
                 onChange={(e) => setScheduledPickupTime(e.target.value)}
                 className="outline-none bg-gray-200 py-3 pl-2 rounded-md text-gray-700 font-bold"
+                min={minTime}
               />
               <button
                 onClick={handleScheduleForLater}
