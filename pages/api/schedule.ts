@@ -1,12 +1,6 @@
 import prisma from "@/lib/prisma";
 import { NextApiRequest, NextApiResponse } from "next";
-import twilio from 'twilio';
 import sendDriverAlertEmail from '../../sendDriverAlertEmail';
-
-const twilioClient = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
-const fromPhone = process.env.TWILIO_PHONE_NUMBER;
-
-const notificationNumbers = ["12424212170", "12424701747", "12428086851", "12428108059"];
 
 export default async function handle(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === "POST") {
@@ -67,18 +61,6 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
       Pickup Location: ${pickupLocation},\n
       Drop-off Location: ${dropoffLocation},\n
       Passengers: ${passengerCount}.`;
-
-      notificationNumbers.forEach(async (number) => {
-        try {
-          await twilioClient.messages.create({
-            body: messageBody,
-            from: fromPhone,
-            to: number,
-          });
-        } catch (error) {
-          console.error('Error sending SMS:', error);
-        }
-      });
 
       // Call the email sending function
       try {

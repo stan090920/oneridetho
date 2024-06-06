@@ -83,7 +83,7 @@ function SimpleMap({
   if (!isLoaded) return <div>Loading Map..</div>;
 
   return (
-    <div className="sm:h-[78vh] sm:w-[100%] h-full w-full sm:relative fixed top-0 left-0 sm:z-[1] z-[-1]">
+    <div className="sm:h-[78vh] h-64 w-full relative sm:z-[1]">
       <GoogleMap
         mapContainerStyle={{ width: "100%", height: "100%" }}
         center={{ lat: 25.06, lng: -77.345 }}
@@ -170,7 +170,7 @@ const Ride = () => {
     const isNightFee = currentHour >= 0 && currentHour < 6;
     const nightFee = isNightFee ? 5 : 0;
 
-    const totalFare = baseFare + distanceCharge + passengerCharge + nightFee + stopCharge;
+    const totalFare = baseFare + distanceCharge + passengerCharge + nightFee + stopCharge - ratePerMile;
     return totalFare.toFixed(2);
   };
 
@@ -876,8 +876,8 @@ const Ride = () => {
           )}
         </div>
       </div>
-      <div className="SimpleMap w-full lg:w-1/2">
-        <div className=" w-full h-full">
+      <div className="SimpleMap w-full lg:w-1/2 sm:py-0 py-10">
+        <div className="map-container w-full h-64 lg:h-full">
           <SimpleMap
             pickupCoordinates={pickupCoordinates}
             dropoffCoordinates={dropoffCoordinates}

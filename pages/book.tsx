@@ -16,8 +16,10 @@ const Book = () => {
         return <div>Loading Map...</div>;
     }
 
+    // h-[90vh] overflow-hidden px-2 pt-2
+
     return (
-        <div className="bg-black h-[90vh] overflow-hidden px-2 pt-2">
+        <div className="bg-black ">
            <Ride />
         </div>
     );

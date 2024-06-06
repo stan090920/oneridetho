@@ -1322,6 +1322,15 @@ button#colour-options-grid {
   }
 }
 
+.SimpleMap {
+  display: block;
+}
+
+.map-container {
+  height: 400px;
+  width: 100%;
+}
+
 @media (min-width: 1136px) {
   .MainContainerTopSection {
     padding-top: 64px;
@@ -1478,10 +1487,6 @@ button#colour-options-grid {
     display: flex;
     flex-direction: row;
     justify-content: center;
-  }
-
-  .SimpleMap {
-    display: none;
   }
   
   .HideOnMobile{

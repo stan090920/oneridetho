@@ -2,12 +2,10 @@ import { PrismaClient } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getServerSession } from "next-auth";
 import { authOptions } from "./auth/[...nextauth]";
-import twilio from "twilio";
 import { NextResponse } from "next/server";
 import sendDriverAlertEmail from '../../sendDriverAlertEmail';
 
 const prisma = new PrismaClient();
-const twilioClient = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
 
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -68,25 +66,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       },
     });
 
-    const driverNumbers = ["12424212170", "12424701747", "12428086851", "12428108059"];
     const messageBody = `${user.name} has booked a ride!
 Pickup: ${pickupLocation},
 Drop-off: ${dropoffLocation},
 Stops: ${stops.map((stop: { address: any; }) => stop.address).join(', ')},
 Passengers: ${passengerCount}`;
 
-    for (const number of driverNumbers) {
-      try {
-        await twilioClient.messages.create({
-          from: process.env.TWILIO_PHONE_NUMBER,
-          body: messageBody,
-          to: number,
-        });
-      } catch (error) {
-        console.error("Error in booking ride:", (error as Error).message);
-        res.status(500).json({ message: "Internal Server Error" });
-      }      
-    }
 
     // Send emails to drivers
     try {

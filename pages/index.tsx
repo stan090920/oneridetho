@@ -92,9 +92,11 @@ export default function Home() {
                   )}
 
                 </div>
-                  <div className="DriversPanelWrapper sm:hidden">
+                {!isLoggedIn && (
+                  <div className="DriversPanelWrapper">
                     <DriversPhotoBlockPanel />
                   </div>
+                )}
               </div>
             </div>
           </div>
