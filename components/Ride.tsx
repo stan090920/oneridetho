@@ -2,7 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import {
   useLoadScript,
   GoogleMap,
+  DirectionsService,
   DirectionsRenderer,
+  Libraries,
   InfoWindow,
 } from "@react-google-maps/api";
 import { IoMdPerson } from "react-icons/io";
@@ -13,25 +15,79 @@ import dollar from "../assets/dollar-bill.png";
 import axios from 'axios';
 import { Spinner } from '../components/Spinner';
 
-interface Coordinates {
-  lat: number;
-  lng: number;
-}
-
 type Driver = {
   id: number;
   email: string;
 };
 
-function SimpleMap({
-    pickupCoordinates,
-    dropoffCoordinates,
-    stops,
-  }: {
-    pickupCoordinates: Coordinates | null;
-    dropoffCoordinates: Coordinates | null;
-    stops: Coordinates[];
-  }) {
+interface Coordinates {
+  lat: number;
+  lng: number;
+}
+
+interface SimpleMapProps {
+  pickupCoordinates: Coordinates | null;
+  dropoffCoordinates: Coordinates | null;
+  stops: Coordinates[];
+}
+
+
+const directionsRendererOptions = {
+  polylineOptions: {
+    strokeColor: '#FF0000',
+    strokeOpacity: 0.8,
+    strokeWeight: 5,
+  },
+};
+  
+const libraries: Libraries = ["places", "geocoding"];
+
+function Directions({ pickupCoordinates, dropoffCoordinates, stops }: Readonly<SimpleMapProps>) {
+  const [directions, setDirections] = useState<google.maps.DirectionsResult | null>(null);
+  const count = useRef(0);
+
+  useEffect(() => {
+    count.current = 0;
+  }, [pickupCoordinates?.lat, pickupCoordinates?.lng, dropoffCoordinates?.lat, dropoffCoordinates?.lng]);
+
+  const directionsCallback = (
+    result: google.maps.DirectionsResult | null,
+    status: google.maps.DirectionsStatus
+  ) => {
+    if (status === "OK" && count.current === 0) {
+      count.current += 1;
+      setDirections(result);
+    } else {
+      console.error(`Error fetching directions: ${status}`);
+    }
+  };
+
+  return (
+    <>
+      {pickupCoordinates && dropoffCoordinates && (
+        <DirectionsService
+          options={{
+            origin: { lat: pickupCoordinates.lat, lng: pickupCoordinates.lng },
+            destination: { lat: dropoffCoordinates.lat, lng: dropoffCoordinates.lng },
+            waypoints: stops.map((stop) => ({
+              location: new google.maps.LatLng(stop.lat, stop.lng),
+              stopover: true,
+            })),
+            optimizeWaypoints: true,
+            travelMode: google.maps.TravelMode.DRIVING,
+          }}
+          callback={directionsCallback}
+        />
+      )}
+      {directions && (
+        <DirectionsRenderer directions={directions} options={directionsRendererOptions} />
+      )}
+    </>
+  );
+}
+
+  
+function SimpleMap({pickupCoordinates, dropoffCoordinates, stops}: Readonly<SimpleMapProps>) {
   const mapOptions = {
     fullscreenControl: false,
     mapTypeControl: false,
@@ -39,64 +95,27 @@ function SimpleMap({
 
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: process.env.API_KEY || "",
-    libraries: ["places", "geocoding"],
+    libraries: libraries,
   });
 
-  const [directionsResult, setDirectionsResult] = useState<any | null>(null);
-
-  const directionsRendererOptions = {
-    polylineOptions: {
-      strokeColor: "#FF0000",
-      strokeOpacity: 0.8,
-      strokeWeight: 5,
-    },
-  };
-
-  useEffect(() => {
-    if (pickupCoordinates && dropoffCoordinates) {
-      const directionsService = new window.google.maps.DirectionsService();
-
-      const waypoints = stops.map((stop) => ({
-        location: new window.google.maps.LatLng(stop.lat, stop.lng),
-        stopover: true,
-      }));
-
-      const request = {
-        origin: pickupCoordinates,
-        destination: dropoffCoordinates,
-        waypoints: waypoints,
-        optimizeWaypoints: true,
-        travelMode: window.google.maps.TravelMode.DRIVING,
-      };
-
-      directionsService.route(request, (result, status) => {
-        if (status === window.google.maps.DirectionsStatus.OK) {
-          setDirectionsResult(result);
-        } else {
-          console.error(`Error fetching directions: ${status}`);
-          setDirectionsResult(null);
-        }
-      });
-    }
-  }, [pickupCoordinates, dropoffCoordinates, stops]);
-
-  if (!isLoaded) return <div>Loading Map..</div>;
+  if (!isLoaded) return <div>Loading Map...</div>;
+  if (loadError) return <div>Error loading maps</div>;
 
   return (
     <div className="sm:h-[78vh] h-64 w-full relative sm:z-[1]">
       <GoogleMap
         mapContainerStyle={{ width: "100%", height: "100%" }}
-        center={{ lat: 25.06, lng: -77.345 }}
+        center={pickupCoordinates || { lat: 25.06, lng: -77.345 }}
         zoom={13}
         options={mapOptions}
       >
-        {directionsResult && (
-          <DirectionsRenderer
-            directions={directionsResult}
-            options={directionsRendererOptions}
+        {pickupCoordinates && dropoffCoordinates && (
+          <Directions
+            pickupCoordinates={pickupCoordinates}
+            dropoffCoordinates={dropoffCoordinates}
+            stops={stops}
           />
         )}
-
       </GoogleMap>
     </div>
   );
@@ -149,7 +168,7 @@ const Ride = () => {
 
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: process.env.API_KEY || "",
-    libraries: ["places"],
+    libraries: libraries,
   });
 
   const pickupInputRef = useRef<HTMLInputElement>(null);
