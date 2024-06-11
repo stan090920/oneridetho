@@ -267,7 +267,7 @@ const Ride = () => {
     const dropoffLocation = dropoffInputRef.current?.value;
 
     try {
-      if (pickupLocation && dropoffLocation) {
+      if (pickupLocation && dropoffLocation && pickupCoordinates && dropoffCoordinates) {
         // Check for active rides
         const activeRideResponse = await axios.get("/api/check-active-ride", {
           headers: {
@@ -297,6 +297,8 @@ const Ride = () => {
           query: {
             pickup: pickupLocation,
             dropoff: dropoffLocation,
+            pickupCoordinates: JSON.stringify(pickupCoordinates),
+            dropoffCoordinates: JSON.stringify(dropoffCoordinates),
             fare: fare,
             passengers: passengers,
             stops: encodeURIComponent(JSON.stringify(stops)),
@@ -367,6 +369,8 @@ const Ride = () => {
             query: {
               pickup: pickupLocation,
               dropoff: dropoffLocation,
+              pickupCoordinates: JSON.stringify(pickupCoordinates),
+              dropoffCoordinates: JSON.stringify(dropoffCoordinates),
               fare: fare,
               passengers: passengers,
               stops: encodeURIComponent(JSON.stringify(stops)),

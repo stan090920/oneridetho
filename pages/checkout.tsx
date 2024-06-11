@@ -24,7 +24,7 @@ type Driver = {
 
 const Checkout = () => {
   const router = useRouter();
-  const { pickup, dropoff, fare, passengers, stops: stopsQuery, isScheduled, pickupTime } = router.query;
+  const { pickup, dropoff, pickupCoordinates: pickupCoords, dropoffCoordinates: dropoffCoords, fare, passengers, stops: stopsQuery, isScheduled, pickupTime } = router.query;
   const [isPayPalReady, setPayPalReady] = useState(false);
   const [paypalSdkReady, setPaypalSdkReady] = useState(false);
  
@@ -95,6 +95,8 @@ const Checkout = () => {
         const bookingData = {
           pickupLocation: pickup,
           dropoffLocation: dropoff,
+          pickupCoordinates: JSON.parse(pickupCoords as string),
+          dropoffCoordinates: JSON.parse(dropoffCoords as string),
           fare: fare,
           passengerCount: passengers,
           stops: stopsWithAddress,
@@ -112,6 +114,8 @@ const Checkout = () => {
           userId: session?.user.id,
           pickupLocation: pickup,
           dropoffLocation: dropoff,
+          pickupCoordinates: JSON.parse(pickupCoords as string),
+          dropoffCoordinates: JSON.parse(dropoffCoords as string),
           scheduledPickupTime: pickupTime,
           fare: fare,
           passengerCount: passengers,

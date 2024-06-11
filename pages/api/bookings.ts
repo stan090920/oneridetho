@@ -27,6 +27,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const {
       pickupLocation,
       dropoffLocation,
+      pickupCoordinates,
+      dropoffCoordinates,
       stops,
       fare,
       passengerCount,
@@ -50,8 +52,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const ride = await prisma.ride.create({
       data: {
         userId,
-        pickupLocation,
-        dropoffLocation,
+        pickupLocation: JSON.stringify(pickupCoordinates),
+        dropoffLocation: JSON.stringify(dropoffCoordinates),
         stops: JSON.stringify(stops), 
         pickupTime: new Date(),
         fare: parseFloat(fare),
