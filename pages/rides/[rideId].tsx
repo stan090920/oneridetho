@@ -113,8 +113,8 @@ const RideDetails = () => {
 
   useEffect(() => {
     const fetchLocation = async () => {
-      if (ride && ride.status) {
-        const location = ride.status === 'InProgress' ? ride.dropoffLocation : ride.pickupLocation;
+      if (ride?.status) {
+        const location = ride.status === 'InProgress' ? JSON.parse(ride.dropoffLocation) : JSON.parse(ride.pickupLocation);
 
         if (typeof location === 'object' && 'lat' in location && 'lng' in location) {
           setMapLocation(location);
@@ -140,8 +140,8 @@ const RideDetails = () => {
 
 
   useEffect(() => {
-    if (ride && ride.status) {
-      const location = ride.status === 'InProgress' ? ride.dropoffLocation : ride.pickupLocation;
+    if (ride?.status) {
+      const location = ride.status === 'InProgress' ? JSON.parse(ride.dropoffLocation) : JSON.parse(ride.pickupLocation);
       setMapLocation(location);
     }
   }, [ride]);
