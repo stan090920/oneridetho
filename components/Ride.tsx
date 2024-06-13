@@ -48,7 +48,7 @@ function Directions({ pickupCoordinates, dropoffCoordinates, stops }: Readonly<S
 
   useEffect(() => {
     count.current = 0;
-  }, [pickupCoordinates?.lat, pickupCoordinates?.lng, dropoffCoordinates?.lat, dropoffCoordinates?.lng]);
+  }, [pickupCoordinates?.lat, pickupCoordinates?.lng, dropoffCoordinates?.lat, dropoffCoordinates?.lng, stops]);
 
   const directionsCallback = (
     result: google.maps.DirectionsResult | null,
@@ -57,8 +57,6 @@ function Directions({ pickupCoordinates, dropoffCoordinates, stops }: Readonly<S
     if (status === "OK" && count.current === 0) {
       count.current += 1;
       setDirections(result);
-    } else {
-      console.error(`Error fetching directions: ${status}`);
     }
   };
 

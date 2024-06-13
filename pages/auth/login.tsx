@@ -1,17 +1,28 @@
-import { useState, FormEvent } from 'react';
+import { useState, FormEvent, useEffect } from 'react';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
 import logo from "../../assets/oneridetho_logo_600ppi.png";
 import axios from 'axios';
 import { useAuth } from '@/components/AuthProvider';
+import toast from "react-hot-toast";
+import { emailRegex, passwordRegex } from '@/scripts/RegEx';
+import { GoogleLoginButton } from "react-social-login-buttons";
+import { useGoogleLogin } from "@react-oauth/google";
+//import { LoginSocialFacebook } from "reactjs-social-login";
 
 export default function Login() {
   const { setOTP, email, setEmail } = useAuth();
   const [password, setPassword] = useState('');
   const router = useRouter();
-  const [loginError, setLoginError] = useState('');
-  const [emailError, setEmailError] = useState("");
+  const [emailLabelAnimated, setEmailLabelAnimated] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (email.trim() !== "") {
+      setEmailLabelAnimated(true);
+    }
+  }, [email]);
 
 
   const checkEmailExists = async (email: any) => {
@@ -29,11 +40,15 @@ export default function Login() {
   };
 
   const navigateToOtp = async () => {
-    // Check if email is provided
     if (!email) {
-      alert("Please enter your email");
+      toast.error("Please enter your email");
       return;
     }
+
+    if (loading) return;
+
+    setLoading(true);
+    toast.loading("Sending OTP...");
 
     // Generate OTP
     const OTP = Math.floor(Math.random() * 9000 + 1000).toString();
@@ -43,15 +58,12 @@ export default function Login() {
     try {
       const emailExist = await checkEmailExists(email);
       if (!emailExist) {
-        setEmailError("Email does not exist. Please Sign Up.");
+        toast.error("Email does not exist. Please Sign Up.");
         return;
-      }
-      else{
-        setEmailError("");
       }
     } catch (error) {
       console.error("Error checking email existence:", error);
-      setEmailError("Failed to check email existence. Please try again.");
+      toast.error("Failed to check email existence. Please try again.");
       return;
     }
 
@@ -72,6 +84,9 @@ export default function Login() {
     } catch (error) {
       console.error("Error sending recovery email:", error);
       alert("Failed to send recovery email. Please try again later.");
+    } finally {
+      toast.dismiss();
+      setLoading(false);
     }
   };
 
@@ -82,7 +97,17 @@ export default function Login() {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    setLoginError(''); 
+    if (!emailRegex.test(email)){
+      toast.error("Please enter a valid email address");
+      return;
+    }
+    if (!passwordRegex.test(password)){
+      toast.error(
+        "Password must contain at least 8 characters, one number and one special character"
+      );
+      return;
+    }
+
     const result = await signIn('credentials', {
       redirect: false,
       email,
@@ -90,12 +115,45 @@ export default function Login() {
     });
   
     if (result && !result.error) {
-      console.log('Signed in successfully!');
+      toast.success("Signed in successfully!");
       router.push('/');
     } else if (result) {
-      setLoginError('Email or password is incorrect');
+      toast.error("Email or password is incorrect");
     }
   };
+
+  const handleContinueWithGoogle = useGoogleLogin({
+    onSuccess: async (response: any) => {
+      try {
+        const userData = await axios.get(
+          "https://www.googleapis.com/oauth2/v3/userinfo",
+          {
+            headers: {
+              Authorization: `Bearer ${response.access_token}`,
+            },
+          }
+        );
+
+
+        const fetchedUser = {
+          email: userData.data.email,
+          name: userData.data.name,
+          picture: userData.data.picture,
+        };
+
+        console.log(fetchedUser);
+        toast.success("Signed in successfully!");
+      } catch (error) {
+        console.error(error);
+        toast.error("Failed to fetch user information from Google");
+      }
+    },
+    onError: (error: any) => {
+      console.error(error);
+      toast.error("Google login failed");
+    },
+    scope: "profile email", // Adding the required scopes
+  });
 
   const onFocusHandler = (
     labelId: string, 
@@ -133,13 +191,29 @@ export default function Login() {
 
 
   return (
-    <div className='FormContainer'>
-      <form onSubmit={handleSubmit} className='LoginForm space-y-4'>
-        <div className='text-center flex justify-center'>
-          <Image src={logo} alt='logo' width={330} height={255} draggable="false"/>
+    <div className="FormContainer pt-0">
+      <form onSubmit={handleSubmit} className="LoginForm space-y-4">
+        <div className="text-center flex justify-center pt-5">
+          <Image
+            src={logo}
+            alt="logo"
+            width={150}
+            height={150}
+            draggable="false"
+          />
+        </div>
+        <div className="sm:text-[24px] text-[22px] text-black font-semibold">
+          Log in
         </div>
         <div className="InputWithAnimatedLabel inline-flex flex-col relative min-w-0 p-0 m-0 border-0 align-top w-full">
-          <label id="emailFieldLabel" className="Label">
+          <label
+            id="emailFieldLabel"
+            className={
+              emailLabelAnimated || email.trim() !== ""
+                ? "AnimatedLabel"
+                : "Label"
+            }
+          >
             Email Address
           </label>
           <div id="emailFieldInputBox" className="InputBox">
@@ -147,10 +221,18 @@ export default function Login() {
               type="email"
               className="StandardInput"
               value={email}
-              autoComplete='off'
+              autoComplete="off"
               onChange={(e) => setEmail(e.target.value)}
-              onFocus={() => onFocusHandler('emailFieldLabel', 'emailFieldInputBox')}
-              onBlur={(e) => restoreDefaultLabelStyles(e.target, 'emailFieldLabel', 'emailFieldInputBox')}
+              onFocus={() =>
+                onFocusHandler("emailFieldLabel", "emailFieldInputBox")
+              }
+              onBlur={(e) =>
+                restoreDefaultLabelStyles(
+                  e.target,
+                  "emailFieldLabel",
+                  "emailFieldInputBox"
+                )
+              }
             />
           </div>
         </div>
@@ -165,28 +247,43 @@ export default function Login() {
               className="StandardInput"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              onFocus={() => onFocusHandler('passwordFieldLabel', 'passwordFieldInputBox')}
-              onBlur={(e) => restoreDefaultLabelStyles(e.target, 'passwordFieldLabel', 'passwordFieldInputBox')}
+              onFocus={() =>
+                onFocusHandler("passwordFieldLabel", "passwordFieldInputBox")
+              }
+              onBlur={(e) =>
+                restoreDefaultLabelStyles(
+                  e.target,
+                  "passwordFieldLabel",
+                  "passwordFieldInputBox"
+                )
+              }
             />
           </div>
         </div>
 
-        <br/>
+        <br />
         <div className="w-full mr-0 grid">
-          <button type="submit" className="LoginButton" >Login</button>
-          <button onClick={handleForgotPassword} className="ResetPasswordLink">Forgot your password? We've got you</button>
+          <button type="submit" className="LoginButton">
+            Login
+          </button>
+          <button
+            onClick={handleForgotPassword}
+            className="ResetPasswordLink"
+            disabled={loading}
+          >
+            {loading ? "Sending OTP..." : "Forgot your password? We've got you"}
+          </button>
         </div>
-        {/* 
-        <div className="mt-5">
-            <button 
-              onClick={() => signIn('google', { callbackUrl: '/' })}
-            className="bg-blue-400 py-3 pl-[100px] pr-[70px] text-white rounded-md  ">
-              Login with Google
-            </button>
+
+        <div className="text-center text-sm text-gray-600">Or sign in with</div>
+
+        <div className="flex items-center justify-center space-x-4">
+          <div className="w-full">
+            <GoogleLoginButton onClick={handleContinueWithGoogle}>
+              Google
+            </GoogleLoginButton>
           </div>
-        */}
-        {loginError && <div className="text-red-500">{loginError}</div>}
-        {emailError && <div className="text-red-500">{emailError}</div>}
+        </div>
       </form>
     </div>
   );
