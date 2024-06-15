@@ -108,10 +108,11 @@ export default function Login() {
       return;
     }
 
-    const result = await signIn('credentials', {
+    const result = await signIn("credentials", {
       redirect: false,
       email,
-      password
+      password,
+      provider: "credentials",
     });
   
     if (result && !result.error) {
@@ -124,6 +125,8 @@ export default function Login() {
 
   const handleContinueWithGoogle = useGoogleLogin({
     onSuccess: async (response: any) => {
+      const loadingToastId = toast.loading("Signing in with Google...");
+
       try {
         const userData = await axios.get(
           "https://www.googleapis.com/oauth2/v3/userinfo",
@@ -134,16 +137,38 @@ export default function Login() {
           }
         );
 
-
         const fetchedUser = {
           email: userData.data.email,
           name: userData.data.name,
           picture: userData.data.picture,
         };
 
-        console.log(fetchedUser);
-        toast.success("Signed in successfully!");
+        // Authenticate with NextAuth
+        const result = await signIn("credentials", {
+          redirect: false,
+          email: fetchedUser.email,
+          password: fetchedUser.email,
+          name: fetchedUser.name,
+          photoUrl: fetchedUser.picture,
+          provider: "google",
+        });
+
+        toast.dismiss(loadingToastId);
+
+        if (result && !result.error) {
+          toast.success("Signed in successfully!");
+          router.push("/");
+        } else if (result) {
+          if (result.error === "User already exists with credentials. Please sign in with email and password.") {
+            toast.error(result.error);
+          } else {
+            toast.error(
+              "There was trouble signing you in with Google. Please try again."
+            );
+          }
+        }
       } catch (error) {
+        toast.dismiss(loadingToastId);
         console.error(error);
         toast.error("Failed to fetch user information from Google");
       }
@@ -275,12 +300,12 @@ export default function Login() {
           </button>
         </div>
 
-        <div className="text-center text-sm text-gray-600">Or sign in with</div>
+        <div className="text-center text-sm text-gray-600">Or</div>
 
         <div className="flex items-center justify-center space-x-4">
           <div className="w-full">
             <GoogleLoginButton onClick={handleContinueWithGoogle}>
-              Google
+              Sign in with Google
             </GoogleLoginButton>
           </div>
         </div>

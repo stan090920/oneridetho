@@ -160,27 +160,35 @@ const Contact: React.FC<ContactProps> = ({
 type BasicInfoProps = {
   setName: React.Dispatch<React.SetStateAction<string>>;
   setPhoneNumber: React.Dispatch<React.SetStateAction<string>>;
-  setDob: React.Dispatch<React.SetStateAction<string>>;
+  setPassword: React.Dispatch<React.SetStateAction<string>>;
+  password: string;
   name: string;
   phone: string;
-  dob: string;
 };
 
 const BasicInfo: React.FC<BasicInfoProps> = ({
   setName,
   setPhoneNumber,
-  setDob,
+  setPassword,
+  password,
   name,
   phone,
-  dob,
 }) => {
   const [countryCode, setCountryCode] = useState("1242");
   const [phoneNumber, setPhoneNumberState] = useState("1242");
   const [phoneNumberError, setPhoneNumberError] = useState("");
   const [nameLabelAnimated, setNameLabelAnimated] = useState(false);
+  const [passwordLabelAnimated, setPasswordLabelAnimated] = useState(false);
 
   useEffect(() => {
     // Check if there's already content in the email input on mount
+    if (password.trim() !== "") {
+      setPasswordLabelAnimated(true);
+    }
+  }, [password]);
+
+  useEffect(() => {
+    // Check if there's already content in the name input on mount
     if (name.trim() !== "") {
       setNameLabelAnimated(true);
     }
@@ -337,13 +345,13 @@ const BasicInfo: React.FC<BasicInfoProps> = ({
             <div
               className="ProgressBar"
               data-progress-bar-visual="true"
-              style={{ width: "47%", transition: "width 1s ease-out 0s" }}
+              style={{ width: "60%", transition: "width 1s ease-out 0s" }}
             >
               <div className="ProgressIndicatorImage"></div>
             </div>
             <div className="ProgressBarText" data-progress-bar-text="true">
               <span>Progress:</span>
-              <span>47%</span>
+              <span>60%</span>
             </div>
           </div>
         </div>
@@ -458,146 +466,6 @@ const BasicInfo: React.FC<BasicInfoProps> = ({
 
         <div>
           <div className="InputWithAnimatedLabel inline-flex flex-col relative min-w-0 p-0 m-0 border-0 align-top w-full">
-            <label id="dobFieldLabel" className="LabelWithActionIcon">
-              Date of Birth
-            </label>
-            <div id="dobFieldInputBox" className="InputBox">
-              <input
-                type="date"
-                className="StandardInput"
-                value={dob}
-                onChange={(e) => setDob(e.target.value)}
-                onFocus={() =>
-                  onFocusHandler("dobFieldLabel", "dobFieldInputBox")
-                }
-                onBlur={(e) =>
-                  restoreDefaultLabelStyles(
-                    e.target,
-                    "dobFieldLabel",
-                    "dobFieldInputBox"
-                  )
-                }
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-type OtherInfoProps = {
-  setGender: React.Dispatch<React.SetStateAction<string>>;
-  setPassword: React.Dispatch<React.SetStateAction<string>>;
-  gender: string;
-  password: string;
-};
-
-const OtherInfo: React.FC<OtherInfoProps> = ({
-  setGender,
-  setPassword,
-  gender,
-  password,
-}) => {
-  const [passwordLabelAnimated, setPasswordLabelAnimated] = useState(false);
-
-  useEffect(() => {
-    // Check if there's already content in the email input on mount
-    if (password.trim() !== "") {
-      setPasswordLabelAnimated(true);
-    }
-  }, [password]);
-  
-  const onFocusHandler = (labelId: string, inputBoxId: string) => {
-    const label = document.getElementById(labelId);
-    if (label) {
-      label.classList.remove("Label");
-      label.classList.add("AnimatedLabel");
-    }
-    const inputBox = document.getElementById(inputBoxId);
-    if (inputBox) {
-      inputBox.classList.add("InputBoxExtraShadow");
-      inputBox.classList.add("InputBoxPrimaryBorderColour");
-    }
-  };
-
-  const restoreDefaultLabelStyles = (
-    inputElement: HTMLInputElement,
-    labelId: string,
-    inputBoxId: string
-  ) => {
-    const label = document.getElementById(labelId);
-    const isInputFieldBlank = inputElement.value.trim() === "";
-    if (isInputFieldBlank && label) {
-      label.classList.remove("AnimatedLabel");
-      label.classList.add("Label");
-    }
-    const inputBox = document.getElementById(inputBoxId);
-    if (inputBox) {
-      inputBox.classList.remove("InputBoxExtraShadow");
-      inputBox.classList.remove("InputBoxPrimaryBorderColour");
-    }
-  };
-
-
-  return (
-    <div className="mt-3">
-      <div className="space-y-5 ">
-        <div className="FormHeader">
-          <div
-            className="ProgressBarWrapper"
-            data-progress-bar="true"
-            data-show-progress-string="true"
-            data-progress-text="Progress:"
-          >
-            <div
-              className="ProgressBar"
-              data-progress-bar-visual="true"
-              style={{ width: "67%", transition: "width 1s ease-out 0s" }}
-            >
-              <div className="ProgressIndicatorImage"></div>
-            </div>
-            <div className="ProgressBarText" data-progress-bar-text="true">
-              <span>Progress:</span>
-              <span>67%</span>
-            </div>
-          </div>
-        </div>
-
-        <div className="text-center flex justify-center pt-5">
-          <Image
-            src={logo}
-            alt="logo"
-            width={150}
-            height={150}
-            draggable="false"
-          />
-        </div>
-
-        <div>
-          <div className="InputWithAnimatedLabel inline-flex flex-col relative min-w-0 p-0 m-0 border-0 align-top w-full">
-            <div id="genderFieldInputBox" className="InputBox">
-              <label id="genderFieldLabel" className="AnimatedLabel">
-                Gender
-              </label>
-              <select
-                className="GenderDropdown"
-                id="Gender"
-                value={gender}
-                onChange={(e) => setGender(e.target.value)}
-              >
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-                <option value="other">Other</option>
-              </select>
-            </div>
-          </div>
-        </div>
-
-        <br />
-
-        <div>
-          <div className="InputWithAnimatedLabel inline-flex flex-col relative min-w-0 p-0 m-0 border-0 align-top w-full">
             <label
               id="passwordFieldLabel"
               className={
@@ -634,14 +502,195 @@ const OtherInfo: React.FC<OtherInfoProps> = ({
   );
 };
 
+type PhoneInfoProps = {
+  setPhoneNumber: React.Dispatch<React.SetStateAction<string>>;
+  phone: string;
+};
+
+const PhoneInfo: React.FC<PhoneInfoProps> = ({
+  setPhoneNumber,
+  phone,
+}) => {
+  const [countryCode, setCountryCode] = useState("1242");
+  const [phoneNumber, setPhoneNumberState] = useState("1242");
+  const [phoneNumberError, setPhoneNumberError] = useState("");
+  
+  const handleCountryChange = (e: any) => {
+    const selectedCountry = e.target.value;
+    const prefix =
+      selectedCountry === "Bahamas"
+        ? "1242"
+        : selectedCountry === "United States"
+        ? "1"
+        : "";
+    setCountryCode(prefix);
+    setPhoneNumberState(prefix);
+  };
+
+  const checkPhoneNumberExists = async (phoneNumber: string) => {
+    try {
+      const response = await fetch(`/api/check-phone?phone=${phoneNumber}`);
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const data = await response.json();
+      return data.phoneExists;
+    } catch (error) {
+      console.error("Error fetching phone number:", error);
+      return false;
+    }
+  };
+
+  const handlePhoneNumberChange = async (e: any) => {
+    let inputNumber = e.target.value.slice(countryCode.length);
+    if (inputNumber.length > 10 - countryCode.length) {
+      inputNumber = inputNumber.slice(0, 11 - countryCode.length);
+    }
+    const fullPhoneNumber = countryCode + inputNumber;
+    setPhoneNumberState(fullPhoneNumber);
+    setPhoneNumber(fullPhoneNumber);
+
+    const isPhoneNumberTaken = await checkPhoneNumberExists(fullPhoneNumber);
+
+    if (isPhoneNumberTaken) {
+      setPhoneNumberError("Phone number in use");
+      toast.error("Phone number in use");
+    } else {
+      setPhoneNumberError("");
+    }
+  };
+
+  
+  const onFocusHandlerForInputWithActionIcon = (
+    labelId: string,
+    inputBoxId: string,
+    actionIconId: string
+  ) => {
+    const label = document.getElementById(labelId);
+    if (label) {
+      label.classList.add("LabelPrimaryColour");
+    }
+    const inputBox = document.getElementById(inputBoxId);
+    if (inputBox) {
+      inputBox.classList.add("InputBoxWithActionIconSelected");
+    }
+    const actionIcon = document.getElementById(actionIconId);
+    if (actionIcon) {
+      actionIcon.classList.add("ActionIconPrimaryColour");
+    }
+  };
+
+  const onBlurHandlerForInputWithActionIcon = (
+    labelId: string,
+    inputBoxId: string,
+    actionIconId: string
+  ) => {
+    const label = document.getElementById(labelId);
+    if (label) {
+      label.classList.remove("LabelPrimaryColour");
+    }
+    const inputBox = document.getElementById(inputBoxId);
+    if (inputBox) {
+      inputBox.classList.remove("InputBoxWithActionIconSelected");
+    }
+    const actionIcon = document.getElementById(actionIconId);
+    if (actionIcon) {
+      actionIcon.classList.remove("ActionIconPrimaryColour");
+    }
+  };
+
+  return (
+    <div className="mt-3">
+      <div className="space-y-5 ">
+        <div className="FormHeader"></div>
+        <div className="text-center flex justify-center">
+          <Image
+            src={logo}
+            alt="logo"
+            width={150}
+            height={150}
+            draggable="false"
+          />
+        </div>
+
+        <div className=" pt-20">
+          <div className="text-center text-sm text-gray-600 pb-7">Please enter your phone number to proceed</div>
+          <div className="InputWithAnimatedLabel inline-flex flex-col relative min-w-0 p-0 m-0 border-0 align-top w-full">
+            <label
+              id="standardInputLabelWithActionIcon2"
+              className="LabelWithActionIcon"
+            >
+              Phone Number
+            </label>
+            <div
+              id="standardInputBoxWithActionIcon2"
+              className="InputBoxWithActionIcon"
+            >
+              <div className="ActionIconWrapper">
+                <svg
+                  id="clearIconForInputWithActionIcon"
+                  focusable="false"
+                  aria-hidden="true"
+                  viewBox="2 2 20 20"
+                  role="button"
+                  className="font-normal text-base leading-6 inline-block fill-current text-current h-4 w-3.5 cursor-pointer"
+                  onClick={() => clearInputField("phoneNumberInputBox")}
+                >
+                  <title>Clear entry</title>
+                  <path d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z"></path>
+                </svg>
+                <div className="CountryFlagElement">
+                  <select
+                    className="CountryFlagDropdown"
+                    onChange={handleCountryChange}
+                  >
+                    <option value="Bahamas">🇧🇸</option>
+                    <option value="United States">🇺🇸</option>
+                  </select>
+                </div>
+              </div>
+              <input
+                id="phoneNumberInputBox"
+                type="number"
+                autoComplete="off"
+                max={7}
+                className="StandardInputWithActionIcon"
+                value={phone}
+                onChange={handlePhoneNumberChange}
+                onFocus={() =>
+                  onFocusHandlerForInputWithActionIcon(
+                    "standardInputLabelWithActionIcon2",
+                    "standardInputBoxWithActionIcon2",
+                    "clearIconForInputWithActionIcon"
+                  )
+                }
+                onBlur={() =>
+                  onBlurHandlerForInputWithActionIcon(
+                    "standardInputLabelWithActionIcon2",
+                    "standardInputBoxWithActionIcon2",
+                    "clearIconForInputWithActionIcon"
+                  )
+                }
+              />
+              {phoneNumberError && (
+                <div className="text-red-500 text-sm">{phoneNumberError}</div>
+              )}
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  );
+};
+
 const Signup = () => {
   const [step, setStep] = useState(1);
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
-  const [dob, setDob] = useState("");
-  const [gender, setGender] = useState("");
+  const [photoUrl, setPhotoUrl] = useState("");
 
 
   const previousStep = () => {
@@ -670,28 +719,6 @@ const Signup = () => {
         return;
       }
 
-      if (!dob) {
-        toast.error("Date of birth cannot be empty.");
-        return;
-      }
-      
-      const dobDate = new Date(dob);
-      const currentDate = new Date();
-      let age = currentDate.getFullYear() - dobDate.getFullYear();
-      const m = currentDate.getMonth() - dobDate.getMonth();
-      if (m < 0 || (m === 0 && currentDate.getDate() < dobDate.getDate())) {
-        age--;
-      }
-
-      if (age < 18) {
-        toast.error("You must be 18 years or older to sign up.");
-        return;
-      }
-      
-      setStep(step + 1);
-
-    } else if (step === 3) {
-
       if (!passwordRegex.test(password)) {
         toast.error(
           "Password must contain at least 8 characters, one number and one special character"
@@ -699,31 +726,69 @@ const Signup = () => {
         return;
       }
 
+      const loadingToastId = toast.loading("Signing up...");
+      
       try {
         const result = await signIn("credentials", {
           redirect: false,
           email,
           password,
           name,
-          dob,
-          gender,
           phoneNumber,
+          provider: "credentials",
         });
 
-        if (result && result.error) {
-          toast.error("There was trouble signing you up. Please try again.");
-        } else {
-          toast.success("Sign up successful!");
+        toast.dismiss(loadingToastId);
+
+        if (result && !result.error) {
+          toast.success("Signed in successfully!");
           router.push("/");
+        } else if (result) {
+          if (result.error === "User already exists with Google. Please sign in with Google.") {
+            toast.error(result.error);
+          } else {
+            toast.error("Email or password is incorrect");
+          }
         }
       } catch (error) {
+        toast.dismiss(loadingToastId);
         if (error instanceof Error) {
           toast.error(error.message);
         } else {
           toast.error("Unexpected error occured.");
         }
       }
+    } else if (step === 3) {
+      if (!phoneNumber.trim()) {
+        toast.error("Phone number cannot be empty.");
+        return;
+      }
 
+      const loadingToastId = toast.loading("Signing up with Google...");
+
+      try {
+        const result = await signIn("credentials", {
+          redirect: false,
+          email,
+          name,
+          phoneNumber,
+          photoUrl,
+          provider: "google",
+          password: email, // Using email as password for Google sign-up
+        });
+
+        toast.dismiss(loadingToastId);
+
+        if (result && !result.error) {
+          toast.success("Signed in successfully!");
+          router.push("/");
+        } else if (result) {
+          toast.error("There was trouble signing you in with Google. Please try again.");
+        }
+      } catch (error) {
+        toast.dismiss(loadingToastId);
+        toast.error("Unexpected error occurred.");
+      }
     } else {
       setStep(step + 1);
     }
@@ -742,14 +807,11 @@ const Signup = () => {
           }
         );
 
-        const fetchedUser = {
-          email: userData.data.email,
-          name: userData.data.name,
-          picture: userData.data.picture,
-        };
-
-        console.log(fetchedUser);
-        toast.success("Signed in successfully!");
+        setEmail(userData.data.email);
+        setName(userData.data.name);
+        setPhotoUrl(userData.data.picture);
+        // Redirect to phone number input page
+        setStep(3);
       } catch (error) {
         console.error(error);
         toast.error("Failed to fetch user information from Google");
@@ -766,53 +828,42 @@ const Signup = () => {
   return (
     <div className="FormContainer">
       <div className="w-full px-5" style={{ maxWidth: "400px" }}>
-        {step === 1 && 
-          <Contact setEmail={setEmail} 
-            email={email} 
-          />
-        }
+        {step === 1 && <Contact setEmail={setEmail} email={email} />}
         {step === 2 && (
           <BasicInfo
             setName={setName}
             setPhoneNumber={setPhoneNumber}
-            setDob={setDob}
+            setPassword={setPassword}
             name={name}
             phone={phoneNumber}
-            dob={dob}
+            password={password}
           />
         )}
         {step === 3 && (
-          <OtherInfo 
-            setPassword={setPassword} 
-            setGender={setGender} 
-            gender={gender}
-            password={password}
-          />
+          <PhoneInfo setPhoneNumber={setPhoneNumber} phone={phoneNumber} />
         )}
 
         <br />
         <div className="w-full mr-0 grid">
           <div className="flex w-full">
-            {step !== 1 && (
+            {step > 1 && (
               <a className="BackButton" onClick={previousStep}>
                 &lt;
               </a>
             )}
             <button onClick={nextStep} className="LoginButton w-full">
-              {step === 3 ? "Sign Up" : "Continue"}
+              {step === 2 || step === 3 ? "Sign Up" : "Continue"}
             </button>
           </div>
 
           {step == 1 && (
             <div className=" pt-5">
-              <div className="text-center text-sm text-gray-600">
-                Or Sign up with
-              </div>
+              <div className="text-center text-sm text-gray-600">Or</div>
 
               <div className="flex items-center justify-center space-x-4 pt-5">
                 <div className="w-full">
                   <GoogleLoginButton onClick={handleContinueWithGoogle}>
-                    Google
+                    Sign up with Google
                   </GoogleLoginButton>
                 </div>
               </div>
