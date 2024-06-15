@@ -560,6 +560,16 @@ const PhoneInfo: React.FC<PhoneInfoProps> = ({
     }
   };
 
+  const clearInputField = (inputElementId: string) => {
+    const inputElement = document.getElementById(
+      inputElementId
+    ) as HTMLInputElement;
+
+    if (inputElement) {
+      inputElement.value = countryCode;
+      inputElement.blur();
+    }
+  };
   
   const onFocusHandlerForInputWithActionIcon = (
     labelId: string,
