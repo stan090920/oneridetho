@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import useSWR from 'swr';
-import axios from 'axios';
-import { useRouter } from 'next/router';
+import React, { useState, useEffect } from "react";
+import useSWR from "swr";
+import axios from "axios";
+import { useRouter } from "next/router";
 
-const fetcher = (url: string) => axios.get(url).then(res => res.data);
+const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
 interface User {
   id: number;
@@ -14,6 +14,11 @@ interface User {
   gender: string;
   phone: string;
   rating: number;
+}
+
+interface Location {
+  lat: number;
+  lng: number;
 }
 
 interface Ride {
@@ -39,24 +44,66 @@ interface Ride {
 export const formatDateTime = (dateTimeString: string): string => {
   const dateTime = new Date(dateTimeString);
   const options: Intl.DateTimeFormatOptions = {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-    hour: 'numeric',
-    minute: 'numeric',
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "numeric",
+    minute: "numeric",
     hour12: true,
   };
-  return new Intl.DateTimeFormat('en-US', options).format(dateTime);
+  return new Intl.DateTimeFormat("en-US", options).format(dateTime);
 };
 
 const Rides = () => {
-  const { data: rides, error, mutate } = useSWR<Ride[]>('/api/rides', fetcher);
+  const { data: rides, error, mutate } = useSWR<Ride[]>("/api/rides", fetcher);
   const [showInProgress, setShowInProgress] = useState(false);
+  const [rideAddresses, setRideAddresses] = useState<{
+    [key: number]: { pickup: string; dropoff: string };
+  }>({});
   const router = useRouter();
+
+  
+  const reverseGeocode = async (lat: number, lng: number): Promise<string> => {
+    try {
+      const response = await axios.post("/api/reverseGeocode", { lat, lng });
+      return response.data.address;
+    } catch (error) {
+      console.error("Error in reverse geocoding:", error);
+      return "";
+    }
+  };
+
+  useEffect(() => {
+    if (rides) {
+      const fetchAddresses = async () => {
+        const addresses: {
+          [key: number]: { pickup: string; dropoff: string };
+        } = {};
+        for (const ride of rides) {
+          const pickupLocation: Location = JSON.parse(ride.pickupLocation);
+          const dropoffLocation: Location = JSON.parse(ride.dropoffLocation);
+          const pickupAddress = await reverseGeocode(
+            pickupLocation.lat,
+            pickupLocation.lng
+          );
+          const dropoffAddress = await reverseGeocode(
+            dropoffLocation.lat,
+            dropoffLocation.lng
+          );
+          addresses[ride.id] = {
+            pickup: pickupAddress,
+            dropoff: dropoffAddress,
+          };
+        }
+        setRideAddresses(addresses);
+      };
+      fetchAddresses();
+    }
+  }, [rides]);
 
   useEffect(() => {
     // Check if there are any rides in progress
-    if (rides && rides.some((ride: Ride) => ride.status === 'InProgress')) {
+    if (rides && rides.some((ride: Ride) => ride.status === "InProgress")) {
       setShowInProgress(true);
     }
   }, [rides]);
@@ -65,10 +112,14 @@ const Rides = () => {
   if (!rides) return <div>Loading...</div>;
 
   // Filter rides based on status
-  const rideInProgress = rides.find((ride: Ride) => ride.status === 'InProgress');
+  const rideInProgress = rides.find(
+    (ride: Ride) => ride.status === "InProgress"
+  );
   const filteredRides = showInProgress
-    ? rideInProgress ? [rideInProgress] : []
-    : rides.filter((ride: Ride) => ride.status !== 'InProgress');
+    ? rideInProgress
+      ? [rideInProgress]
+      : []
+    : rides.filter((ride: Ride) => ride.status !== "InProgress");
 
   const cancelRide = async (rideId: number) => {
     try {
@@ -87,13 +138,17 @@ const Rides = () => {
         <div>
           <button
             onClick={() => setShowInProgress(false)}
-            className={`font-bold text-[24px] mr-4 ${!showInProgress ? 'text-blue-500' : ''}`}
+            className={`font-bold text-[24px] mr-4 ${
+              !showInProgress ? "text-blue-500" : ""
+            }`}
           >
             Rides
           </button>
           <button
             onClick={() => setShowInProgress(true)}
-            className={`font-bold text-[24px] ${showInProgress ? 'text-blue-500' : ''}`}
+            className={`font-bold text-[24px] ${
+              showInProgress ? "text-blue-500" : ""
+            }`}
           >
             In-Progress
           </button>
@@ -108,10 +163,19 @@ const Rides = () => {
           {showInProgress && rideInProgress ? (
             <div className="border p-4 rounded-lg shadow">
               <div className="font-semibold">{rideInProgress.user.name}</div>
-              <p>Pickup: {rideInProgress.pickupLocation}</p>
-              <p>Dropoff: {rideInProgress.dropoffLocation}</p>
+              <p>
+                Pickup:{" "}
+                {rideAddresses[rideInProgress.id]?.pickup || "Loading..."}
+              </p>
+              <p>
+                Dropoff:{" "}
+                {rideAddresses[rideInProgress.id]?.dropoff || "Loading..."}
+              </p>
               <p>Fare: ${rideInProgress.fare}</p>
-              <p>Status: <span className="text-red-600">{rideInProgress.status}</span></p>
+              <p>
+                Status:{" "}
+                <span className="text-red-600">{rideInProgress.status}</span>
+              </p>
               <button
                 onClick={() => router.push(`/rides/${rideInProgress.id}`)}
                 className="mt-2 bg-blue-500 text-white py-1 px-3 rounded"
@@ -124,11 +188,26 @@ const Rides = () => {
               {filteredRides.map((ride: Ride, index: number) => (
                 <div key={index} className="border p-4 rounded-lg shadow">
                   <div className="font-semibold">{ride.user.name}</div>
-                  <p>Pickup: {ride.pickupLocation}</p>
-                  <p>Dropoff: {ride.dropoffLocation}</p>
+                  <p>
+                    Pickup: {rideAddresses[ride.id]?.pickup || "Loading..."}
+                  </p>
+                  <p>
+                    Dropoff: {rideAddresses[ride.id]?.dropoff || "Loading..."}
+                  </p>
                   <p>Fare: ${ride.fare}</p>
-                  <p>Status: <span className={`${ride.status === 'Completed' ? 'text-green-600' : 'text-red-600'}`}>{ride.status}</span></p>
-                  {ride.isScheduled && ride.status !== 'Cancelled' && (
+                  <p>
+                    Status:{" "}
+                    <span
+                      className={`${
+                        ride.status === "Completed"
+                          ? "text-green-600"
+                          : "text-red-600"
+                      }`}
+                    >
+                      {ride.status}
+                    </span>
+                  </p>
+                  {ride.isScheduled && ride.status !== "Cancelled" && (
                     <>
                       <p>Pickup Time: {formatDateTime(ride.pickupTime)}</p>
                       <button
@@ -139,7 +218,7 @@ const Rides = () => {
                       </button>
                     </>
                   )}
-                  {ride.status === 'Requested' && (
+                  {ride.status === "Requested" && (
                     <button
                       onClick={() => router.push(`/rides/${ride.id}`)}
                       className="mt-2 bg-blue-500 text-white py-1 px-3 rounded"
