@@ -62,7 +62,6 @@ const Rides = () => {
   }>({});
   const router = useRouter();
 
-  
   const reverseGeocode = async (lat: number, lng: number): Promise<string> => {
     try {
       const response = await axios.post("/api/reverseGeocode", { lat, lng });
@@ -102,8 +101,13 @@ const Rides = () => {
   }, [rides]);
 
   useEffect(() => {
-    // Check if there are any rides in progress
-    if (rides && rides.some((ride: Ride) => ride.status === "InProgress")) {
+    // Check if there are any rides in progress or accepted
+    if (
+      rides &&
+      rides.some(
+        (ride: Ride) => ride.status === "InProgress" || ride.isAccepted
+      )
+    ) {
       setShowInProgress(true);
     }
   }, [rides]);
@@ -111,15 +115,15 @@ const Rides = () => {
   if (error) return <div>Failed to load rides.</div>;
   if (!rides) return <div>Loading...</div>;
 
-  // Filter rides based on status
-  const rideInProgress = rides.find(
-    (ride: Ride) => ride.status === "InProgress"
+  // Filter rides based on status and acceptance
+  const ridesInProgress = rides.filter(
+    (ride: Ride) => ride.status === "InProgress" || ride.isAccepted
   );
   const filteredRides = showInProgress
-    ? rideInProgress
-      ? [rideInProgress]
-      : []
-    : rides.filter((ride: Ride) => ride.status !== "InProgress");
+    ? ridesInProgress
+    : rides.filter(
+        (ride: Ride) => ride.status !== "InProgress" && !ride.isAccepted
+      );
 
   const cancelRide = async (rideId: number) => {
     try {
@@ -160,29 +164,26 @@ const Rides = () => {
         </div>
       ) : (
         <div>
-          {showInProgress && rideInProgress ? (
-            <div className="border p-4 rounded-lg shadow">
-              <div className="font-semibold">{rideInProgress.user.name}</div>
-              <p>
-                Pickup:{" "}
-                {rideAddresses[rideInProgress.id]?.pickup || "Loading..."}
-              </p>
-              <p>
-                Dropoff:{" "}
-                {rideAddresses[rideInProgress.id]?.dropoff || "Loading..."}
-              </p>
-              <p>Fare: ${rideInProgress.fare}</p>
-              <p>
-                Status:{" "}
-                <span className="text-red-600">{rideInProgress.status}</span>
-              </p>
-              <button
-                onClick={() => router.push(`/rides/${rideInProgress.id}`)}
-                className="mt-2 bg-blue-500 text-white py-1 px-3 rounded"
-              >
-                View Ride
-              </button>
-            </div>
+          {showInProgress && ridesInProgress.length > 0 ? (
+            ridesInProgress.map((ride: Ride) => (
+              <div key={ride.id} className="border p-4 rounded-lg shadow">
+                <div className="font-semibold">{ride.user.name}</div>
+                <p>Pickup: {rideAddresses[ride.id]?.pickup || "Loading..."}</p>
+                <p>
+                  Dropoff: {rideAddresses[ride.id]?.dropoff || "Loading..."}
+                </p>
+                <p>Fare: ${ride.fare}</p>
+                <p>
+                  Status: <span className="text-red-600">{ride.status}</span>
+                </p>
+                <button
+                  onClick={() => router.push(`/rides/${ride.id}`)}
+                  className="mt-2 bg-blue-500 text-white py-1 px-3 rounded"
+                >
+                  View Ride
+                </button>
+              </div>
+            ))
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {filteredRides.map((ride: Ride, index: number) => (
