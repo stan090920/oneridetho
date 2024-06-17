@@ -1007,23 +1007,25 @@ const Ride = () => {
             </div>
           )}
 
-          {showScheduleInput && (
-            <div className="LoginPriceCheckButtonGroup w-full flex flex-row justify-center m-0 p-0">
-              <input
-                type="datetime-local"
-                value={scheduledPickupTime}
-                onChange={(e) => setScheduledPickupTime(e.target.value)}
-                className="outline-none bg-gray-200 py-3 pl-2 rounded-md text-gray-700 font-bold"
-                min={minTime}
-              />
-              <button
-                onClick={handleScheduleForLater}
-                className="py-2.5 bg-white text-gray-700 font-bold pl-4 pr-4 rounded-md ml-2 mt-2"
-              >
-                {isLoading ? <Spinner /> : "Confirm"}
-              </button>
-            </div>
-          )}
+          {fare && showScheduleInput && (
+              <div className="LoginPriceCheckButtonGroup w-full flex flex-row justify-center m-0 p-0">
+                <input
+                  type="datetime-local"
+                  value={scheduledPickupTime}
+                  onChange={(e) => setScheduledPickupTime(e.target.value)}
+                  className="outline-none bg-gray-200 py-3 rounded-md text-gray-700 font-bold"
+                  min={minTime}
+                  placeholder="Pickup Time"
+                  aria-label="Pickup Time"
+                />
+                <button
+                  onClick={handleScheduleForLater}
+                  className="py-2.5 bg-white text-gray-700 font-bold pl-4 pr-4 rounded-md ml-2 mt-2"
+                >
+                  {isLoading ? <Spinner /> : "Confirm"}
+                </button>
+              </div>
+            )}
         </div>
       </div>
       <div className="SimpleMap w-full lg:w-1/2 sm:py-0 py-10">
