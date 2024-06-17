@@ -47,8 +47,9 @@ function Directions({ pickupCoordinates, dropoffCoordinates, stops }: Readonly<S
   const count = useRef(0);
 
   useEffect(() => {
+    setDirections(null);
     count.current = 0;
-  }, [pickupCoordinates?.lat, pickupCoordinates?.lng, dropoffCoordinates?.lat, dropoffCoordinates?.lng, stops]);
+  }, [pickupCoordinates, dropoffCoordinates, stops]);
 
   const directionsCallback = (
     result: google.maps.DirectionsResult | null,
@@ -711,7 +712,7 @@ const Ride = () => {
       <div className="w-full lg:w-1/2">
         {isPickupLocationEmpty && (
           <button
-            className="absolute top-[120px] left-[20] transform sm:transform-none sm:top-[270px] sm:left-[65px] w-[220px] text-center text-sm text-gray-500 bg-white p-2 rounded-md shadow-md tooltip"
+            className="absolute top-[120px] left-[20] transform sm:transform-none sm:top-[270px] sm:left-[65px] w-[250px] text-center text-sm text-gray-500 bg-white p-2 rounded-md shadow-md tooltip"
             onClick={getUserLocation}
           >
             Click to use your current location

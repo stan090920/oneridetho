@@ -176,12 +176,25 @@ const Rides = () => {
                 <p>
                   Status: <span className="text-red-600">{ride.status}</span>
                 </p>
-                <button
-                  onClick={() => router.push(`/rides/${ride.id}`)}
-                  className="mt-2 bg-blue-500 text-white py-1 px-3 rounded"
-                >
-                  View Ride
-                </button>
+                {ride.isScheduled && ride.status !== "Cancelled" && (
+                  <>
+                    <p>Pickup Time: {formatDateTime(ride.pickupTime)}</p>
+                    <button
+                      onClick={() => cancelRide(ride.id)}
+                      className="mt-2 bg-red-500 text-white py-1 px-3 rounded"
+                    >
+                      Cancel Ride
+                    </button>
+                  </>
+                )}
+                {ride.status === "Requested" && (
+                  <button
+                    onClick={() => router.push(`/rides/${ride.id}`)}
+                    className="mt-2 bg-blue-500 text-white py-1 px-3 rounded"
+                  >
+                    View Ride
+                  </button>
+                )}
               </div>
             ))
           ) : (
