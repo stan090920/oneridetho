@@ -43,65 +43,83 @@ const DriversPhotoBlockPanel: React.FC = () => {
     }, []);
 
     const blockFieldClickHandler = (clickEvent: React.MouseEvent<HTMLButtonElement>) => {
-        if (clickEvent && clickEvent.target && (clickEvent.target as HTMLButtonElement).dataset) {
+        if (clickEvent?.target && (clickEvent.target as HTMLButtonElement).dataset) {
             // You may choose to add logic here that displays the driver's name or something in this handler
             // console.log('clicked block info', clickEvent.target.dataset);
         }
     };
 
     return (
-        <div className="min-w-[320px] h-screen border-none">
-            <h1>The Team - Meet Our Drivers</h1>
-            <br/>
-            <div id="colour-options-grid">
-                <button
-                    type="button"
-                    aria-label="color-button"
-                    id="colour-options-grid"
-                    className='sm:max-w-none'
-                    style={{ maxWidth: '100%' }}
-                    onClick={blockFieldClickHandler}
-                >
-                    <div className="relative">
-                        <Image
-                            id="watermark-ort-logo"
-                            src={logo}
-                            alt="Logo Watermark"
-                        />
-                    </div>
-                    
-                    {[...Array(10)].map((_, groupIndex) => (
-                        <div className="ColouredPhotoGroup float-left block" key={groupIndex}>
-                            {/* Generate ColouredPhotoBlock components */}
-                            {[...Array(8)].map((_, blockIndex) => {
-                                const currentIndex = groupIndex * 8 + blockIndex;
-                                // Ensure currentIndex does not exceed the length of imagePaths
-                                const currentImagePath = imagePaths[currentIndex % imagePaths.length];
-                                const currentColor = colorMap[currentIndex % imagePaths.length];
-                                
-                                return (
-                                    <div className="ColouredPhotoBlock" key={blockIndex}>
-                                        <div
-                                            className="ColouredPhotoField"
-                                            style={{ backgroundColor: currentColor }}
-                                            data-hex={currentColor === 'rgb(30, 142, 2)' ? '#1e8e02' : '#ffffff'}
-                                            data-rgb={currentColor === 'rgb(30, 142, 2)' ? '30, 142, 2' : '255, 255, 255'}
-                                            data-hsl={currentColor === 'rgb(30, 142, 2)' ? '108, 97%, 28%' : '0, 0%, 100%'}
-                                        >
-                                            <Image
-                                                id="driver-image"
-                                                alt="A dedicated driver"
-                                                src={currentImagePath}
-                                            />
-                                        </div>
-                                    </div>
-                                );
-                            })}
-                        </div>
-                    ))}
-                </button>
+      <div className="min-w-[320px] h-screen border-none">
+        <h1>The Team - Meet Our Drivers</h1>
+        <br />
+        <div id="colour-options-grid">
+          <button
+            type="button"
+            aria-label="color-button"
+            id="colour-options-grid"
+            className="sm:max-w-none"
+            style={{ maxWidth: "100%" }}
+            onClick={blockFieldClickHandler}
+          >
+            <div className="relative items-center justify-center">
+              <Image
+                id="watermark-ort-logo"
+                src={logo}
+                alt="Logo Watermark"
+                className="opacity-70 pt-12"
+              />
             </div>
+
+            {[...Array(10)].map((_, groupIndex) => (
+              <div
+                className="ColouredPhotoGroup float-left block"
+                key={groupIndex}
+              >
+                {/* Generate ColouredPhotoBlock components */}
+                {[...Array(8)].map((_, blockIndex) => {
+                  const currentIndex = groupIndex * 8 + blockIndex;
+                  // Ensure currentIndex does not exceed the length of imagePaths
+                  const currentImagePath =
+                    imagePaths[currentIndex % imagePaths.length];
+                  const currentColor =
+                    colorMap[currentIndex % imagePaths.length];
+
+                  return (
+                    <div className="ColouredPhotoBlock" key={blockIndex}>
+                      <div
+                        className="ColouredPhotoField"
+                        style={{ backgroundColor: currentColor }}
+                        data-hex={
+                          currentColor === "rgb(30, 142, 2)"
+                            ? "#1e8e02"
+                            : "#ffffff"
+                        }
+                        data-rgb={
+                          currentColor === "rgb(30, 142, 2)"
+                            ? "30, 142, 2"
+                            : "255, 255, 255"
+                        }
+                        data-hsl={
+                          currentColor === "rgb(30, 142, 2)"
+                            ? "108, 97%, 28%"
+                            : "0, 0%, 100%"
+                        }
+                      >
+                        <Image
+                          id="driver-image"
+                          alt="A dedicated driver"
+                          src={currentImagePath}
+                        />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            ))}
+          </button>
         </div>
+      </div>
     );
 };
 

@@ -226,6 +226,7 @@ const Estimate = () => {
             const address = await reverseGeocode(currentLocation);
             if (pickupInputRef.current) {
               pickupInputRef.current.value = address;
+              onChangeHandlerForInputWithActionIcon(pickupInputRef.current, "pickupLocationActionIcon", "pickupClearActionIcon");
             }
           } catch (error) {
             console.error("Error getting address:", error);
@@ -244,11 +245,7 @@ const Estimate = () => {
     getUserLocation();
   }, []);
 
-  const clearPickupInput = () => {
-    if (pickupInputRef.current) {
-      pickupInputRef.current.value = "";
-    }
-  };
+  const [isPickupLocationEmpty, setIsPickupLocationEmpty] = useState(false);
 
   // Define clearInputField and onChangeHandlerForInputWithActionIcon functions
   const clearInputField = (
@@ -309,6 +306,7 @@ const Estimate = () => {
       if (isClearActionIconVisible) {
         clearIcon.style.display = "none";
       }
+      setIsPickupLocationEmpty(true);
     } else {
       if (!isClearActionIconVisible) {
         clearIcon.style.display = "block";
@@ -317,6 +315,7 @@ const Estimate = () => {
       if (isLocationActionIconVisible) {
         locationIcon.style.display = "none";
       }
+      setIsPickupLocationEmpty(false);
     }
     
   };
@@ -395,9 +394,14 @@ const Estimate = () => {
 
   return (
     <div>
+      {isPickupLocationEmpty && (
+        <button className="absolute top-[120px] left-[20] transform sm:transform-none sm:top-[270px] sm:left-[65px] w-[220px] text-center text-sm text-gray-500 bg-white p-2 rounded-md shadow-md tooltip">
+          Click to use your current location
+          <div className="absolute left-4 bottom-[-6px] w-0 h-0 border-b-6 border-b-white border-l-6 border-l-transparent border-r-6 border-r-transparent"></div>
+        </button>
+      )}
       <div className="space-y-4 max-w-[500px]">
         <div className="sm:pt-5 font-bold text-[18px]">Price Preview</div>
-
         <div>
           <div className="inline-flex flex-col relative min-w-0 p-0 m-0 border-0 align-top w-full">
             <label id="pickupInputLabel" className="LabelWithActionIcon">
@@ -406,23 +410,36 @@ const Estimate = () => {
             <div id="pickupInputBox" className="InputBoxWithActionIcon">
               <div className="ActionIconWrapper">
                 <svg
-                  id="pickupLocationActionIcon" viewBox="0 0 24 24" fill="black" focusable="false" role="button"
+                  id="pickupLocationActionIcon"
+                  viewBox="0 0 24 24"
+                  fill="black"
+                  focusable="false"
+                  role="button"
                   className="font-normal text-base leading-6 inline-block fill-current text-current h-6 w-5 cursor-pointer"
-                  style={{ color: 'green' }}
+                  style={{ color: "green" }}
                   onClick={getUserLocation}
-                  >
+                >
                   <title>Use current location</title>
                   <path d="M10.5 13.5.5 11 21 3l-8 20.5-2.5-10Z"></path>
                 </svg>
-                <svg 
-                  id="pickupClearActionIcon" focusable="false" aria-hidden="true" viewBox="2 2 20 20" role="button"
-                  style={{ display: 'none'}}
+                <svg
+                  id="pickupClearActionIcon"
+                  focusable="false"
+                  aria-hidden="true"
+                  viewBox="2 2 20 20"
+                  role="button"
+                  style={{ display: "none" }}
                   className="font-normal text-base leading-6 inline-block fill-current text-current h-4 w-3.5 cursor-pointer"
-                  onClick={() => clearInputField('pickupLocationInput','pickupLocationActionIcon', 'pickupClearActionIcon')}
-                  >
+                  onClick={() =>
+                    clearInputField(
+                      "pickupLocationInput",
+                      "pickupLocationActionIcon",
+                      "pickupClearActionIcon"
+                    )
+                  }
+                >
                   <title>Clear entry</title>
-                  <path d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z">
-                  </path>
+                  <path d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z"></path>
                 </svg>
               </div>
               <input
@@ -430,15 +447,35 @@ const Estimate = () => {
                 ref={pickupInputRef}
                 placeholder=""
                 className="StandardInputWithActionIcon"
-                onFocus={() => onFocusHandlerForInputWithActionIcon('pickupInputLabel', 'pickupInputBox', 'pickupLocationActionIcon', 'pickupClearActionIcon')}
-                onBlur={() => onBlurHandlerForInputWithActionIcon('pickupInputLabel', 'pickupInputBox', 'pickupClearActionIcon', 'pickupLocationActionIcon')}
-                onChange={(e) => onChangeHandlerForInputWithActionIcon(e.target ,'pickupLocationActionIcon', 'pickupClearActionIcon')}
+                onFocus={() =>
+                  onFocusHandlerForInputWithActionIcon(
+                    "pickupInputLabel",
+                    "pickupInputBox",
+                    "pickupLocationActionIcon",
+                    "pickupClearActionIcon"
+                  )
+                }
+                onBlur={() =>
+                  onBlurHandlerForInputWithActionIcon(
+                    "pickupInputLabel",
+                    "pickupInputBox",
+                    "pickupClearActionIcon",
+                    "pickupLocationActionIcon"
+                  )
+                }
+                onChange={(e) =>
+                  onChangeHandlerForInputWithActionIcon(
+                    e.target,
+                    "pickupLocationActionIcon",
+                    "pickupClearActionIcon"
+                  )
+                }
               />
             </div>
           </div>
         </div>
 
-        <br/>
+        <br />
         <div>
           <div className="inline-flex flex-col relative min-w-0 p-0 m-0 border-0 align-top w-full">
             <label id="dropoffInputLabel" className="LabelWithActionIcon">
@@ -447,23 +484,36 @@ const Estimate = () => {
             <div id="dropoffInputBox" className="InputBoxWithActionIcon">
               <div className="ActionIconWrapper">
                 <svg
-                  id="dropoffLocationActionIcon" viewBox="0 0 24 24" fill="black" focusable="false" role="button"
+                  id="dropoffLocationActionIcon"
+                  viewBox="0 0 24 24"
+                  fill="black"
+                  focusable="false"
+                  role="button"
                   className="font-normal text-base leading-6 inline-block fill-current text-current h-6 w-5 cursor-pointer"
-                  style={{ color: 'green' }}
+                  style={{ color: "green" }}
                   onClick={getUserLocation}
-                  >
+                >
                   <title>Use current location</title>
                   <path d="M10.5 13.5.5 11 21 3l-8 20.5-2.5-10Z"></path>
                 </svg>
-                <svg 
-                  id="dropoffClearActionIcon" focusable="false" aria-hidden="true" viewBox="2 2 20 20" role="button"
-                  style={{ display: 'none'}}
+                <svg
+                  id="dropoffClearActionIcon"
+                  focusable="false"
+                  aria-hidden="true"
+                  viewBox="2 2 20 20"
+                  role="button"
+                  style={{ display: "none" }}
                   className="font-normal text-base leading-6 inline-block fill-current text-current h-4 w-3.5 cursor-pointer"
-                  onClick={() => clearInputField('dropoffLocationInput','dropoffLocationActionIcon', 'dropoffClearActionIcon')}
-                  >
+                  onClick={() =>
+                    clearInputField(
+                      "dropoffLocationInput",
+                      "dropoffLocationActionIcon",
+                      "dropoffClearActionIcon"
+                    )
+                  }
+                >
                   <title>Clear entry</title>
-                  <path d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z">
-                  </path>
+                  <path d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z"></path>
                 </svg>
               </div>
               <input
@@ -471,15 +521,35 @@ const Estimate = () => {
                 ref={dropoffInputRef}
                 placeholder=""
                 className="StandardInputWithActionIcon"
-                onFocus={() => onFocusHandlerForInputWithActionIcon('dropoffInputLabel', 'dropoffInputBox', 'dropoffLocationActionIcon', 'dropoffClearActionIcon')}
-                onBlur={() => onBlurHandlerForInputWithActionIcon('dropoffInputLabel', 'dropoffInputBox', 'dropoffClearActionIcon', 'dropoffLocationActionIcon')}
-                onChange={(e) => onChangeHandlerForInputWithActionIcon(e.target,'dropoffLocationActionIcon', 'dropoffClearActionIcon')}
+                onFocus={() =>
+                  onFocusHandlerForInputWithActionIcon(
+                    "dropoffInputLabel",
+                    "dropoffInputBox",
+                    "dropoffLocationActionIcon",
+                    "dropoffClearActionIcon"
+                  )
+                }
+                onBlur={() =>
+                  onBlurHandlerForInputWithActionIcon(
+                    "dropoffInputLabel",
+                    "dropoffInputBox",
+                    "dropoffClearActionIcon",
+                    "dropoffLocationActionIcon"
+                  )
+                }
+                onChange={(e) =>
+                  onChangeHandlerForInputWithActionIcon(
+                    e.target,
+                    "dropoffLocationActionIcon",
+                    "dropoffClearActionIcon"
+                  )
+                }
               />
             </div>
           </div>
         </div>
 
-        <br/>
+        <br />
         <div className="PricePreviewResult">
           <div className="flex">
             <Image src={dollar} alt="dollar" />
@@ -492,20 +562,25 @@ const Estimate = () => {
               <IoMdPerson size={24} />
             </div>
             <div>
-              <input 
-              type="number"
-              className="RequestedPassengerCount"
-              value={passengers} min="1" max="4"
-              onChange={(e) => {
-                const newPassengerCount = Math.max(1, Math.min(4, parseInt(e.target.value)));
-                setPassengers(newPassengerCount);
-              }}
+              <input
+                type="number"
+                className="RequestedPassengerCount"
+                value={passengers}
+                min="1"
+                max="4"
+                onChange={(e) => {
+                  const newPassengerCount = Math.max(
+                    1,
+                    Math.min(4, parseInt(e.target.value))
+                  );
+                  setPassengers(newPassengerCount);
+                }}
               />
             </div>
           </div>
         </div>
 
-        <br/>
+        <br />
         <div>
           {pickupCoordinates && dropoffCoordinates && !isAvailable && (
             <div className="text-center text-red-600">
@@ -513,17 +588,17 @@ const Estimate = () => {
             </div>
           )}
           <div className="LoginPriceCheckButtonGroup w-full flex flex-col items-center m-0 p-0">
-            <a 
+            <a
               className="CheckPriceButton mt-3 block w-full py-2 px-4"
               onClick={handlePickupClick}
-              >
-                Check Price
+            >
+              Check Price
             </a>
-            <a 
+            <a
               href="/auth/login"
               className="LoginButton mt-3 block w-full py-2 px-4"
-              >
-                Login & Book Now
+            >
+              Login & Book Now
             </a>
           </div>
         </div>

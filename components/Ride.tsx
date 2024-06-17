@@ -515,6 +515,7 @@ const Ride = () => {
             const address = await reverseGeocode(currentLocation);
             if (pickupInputRef.current) {
               pickupInputRef.current.value = address;
+              onChangeHandlerForInputWithActionIcon(pickupInputRef.current, "pickupLocationActionIcon", "pickupClearActionIcon");
             }
           } catch (error) {
             console.error("Error getting address:", error);
@@ -532,6 +533,8 @@ const Ride = () => {
   useEffect(() => {
     getUserLocation();
   }, []);
+
+  const [isPickupLocationEmpty, setIsPickupLocationEmpty] = useState(false);
 
   const clearPickupInput = () => {
     if (pickupInputRef.current) {
@@ -607,6 +610,7 @@ const Ride = () => {
       if (isClearActionIconVisible) {
         clearIcon.style.display = "none";
       }
+      setIsPickupLocationEmpty(true);
     } else {
       if (!isClearActionIconVisible) {
         clearIcon.style.display = "block";
@@ -615,6 +619,7 @@ const Ride = () => {
       if (isLocationActionIconVisible) {
         locationIcon.style.display = "none";
       }
+      setIsPickupLocationEmpty(false);
     }
     
   };
@@ -695,35 +700,60 @@ const Ride = () => {
   return (
     <div className="flex flex-wrap">
       <div className="w-full lg:w-1/2">
+        {isPickupLocationEmpty && (
+          <button
+            className="absolute top-[120px] left-[20] transform sm:transform-none sm:top-[270px] sm:left-[65px] w-[220px] text-center text-sm text-gray-500 bg-white p-2 rounded-md shadow-md tooltip"
+            onClick={getUserLocation}
+          >
+            Click to use your current location
+          </button>
+        )}
         <div className="space-y-4 max-w-[500px]">
+          <div className="sm:pt-5 text-white font-bold text-[18px]">
+            Book Your Ride
+          </div>
 
-          <div className="sm:pt-5 text-white font-bold text-[18px]">Book Your Ride</div>
-          
           <div className="flex space-x-4">
             <div className="inline-flex flex-col relative min-w-0 p-0 m-0 border-0 align-top w-full">
               <label id="pickupInputLabel" className="LabelWithActionIcon">
                 Enter Pickup Location
               </label>
-              <div id="pickupInputBox" className="InputBoxWithActionIcon">
+              <div
+                id="pickupInputBox"
+                className="InputBoxWithActionIcon relative"
+              >
                 <div className="ActionIconWrapper">
                   <svg
-                    id="pickupLocationActionIcon" viewBox="0 0 24 24" fill="black" focusable="false" role="button"
+                    id="pickupLocationActionIcon"
+                    viewBox="0 0 24 24"
+                    fill="black"
+                    focusable="false"
+                    role="button"
                     className="font-normal text-base leading-6 inline-block fill-current text-current h-6 w-5 cursor-pointer"
-                    style={{ color: 'green' }}
+                    style={{ color: "green" }}
                     onClick={getUserLocation}
-                    >
+                  >
                     <title>Use current location</title>
                     <path d="M10.5 13.5.5 11 21 3l-8 20.5-2.5-10Z"></path>
                   </svg>
-                  <svg 
-                    id="pickupClearActionIcon" focusable="false" aria-hidden="true" viewBox="2 2 20 20" role="button"
-                    style={{ display: 'none'}}
+                  <svg
+                    id="pickupClearActionIcon"
+                    focusable="false"
+                    aria-hidden="true"
+                    viewBox="2 2 20 20"
+                    role="button"
+                    style={{ display: "none" }}
                     className="font-normal text-base leading-6 inline-block fill-current text-current h-4 w-3.5 cursor-pointer"
-                    onClick={() => clearInputField('pickupLocationInput','pickupLocationActionIcon', 'pickupClearActionIcon')}
-                    >
+                    onClick={() =>
+                      clearInputField(
+                        "pickupLocationInput",
+                        "pickupLocationActionIcon",
+                        "pickupClearActionIcon"
+                      )
+                    }
+                  >
                     <title>Clear entry</title>
-                    <path d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z">
-                    </path>
+                    <path d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z"></path>
                   </svg>
                 </div>
                 <input
@@ -731,15 +761,37 @@ const Ride = () => {
                   ref={pickupInputRef}
                   placeholder=""
                   className="StandardInputWithActionIcon"
-                  onFocus={() => onFocusHandlerForInputWithActionIcon('pickupInputLabel', 'pickupInputBox', 'pickupLocationActionIcon', 'pickupClearActionIcon')}
-                  onBlur={() => onBlurHandlerForInputWithActionIcon('pickupInputLabel', 'pickupInputBox', 'pickupClearActionIcon', 'pickupLocationActionIcon')}
-                  onChange={(e) => onChangeHandlerForInputWithActionIcon(e.target ,'pickupLocationActionIcon', 'pickupClearActionIcon')}
+                  onFocus={() =>
+                    onFocusHandlerForInputWithActionIcon(
+                      "pickupInputLabel",
+                      "pickupInputBox",
+                      "pickupLocationActionIcon",
+                      "pickupClearActionIcon"
+                    )
+                  }
+                  onBlur={() =>
+                    onBlurHandlerForInputWithActionIcon(
+                      "pickupInputLabel",
+                      "pickupInputBox",
+                      "pickupClearActionIcon",
+                      "pickupLocationActionIcon"
+                    )
+                  }
+                  onChange={(e) =>
+                    onChangeHandlerForInputWithActionIcon(
+                      e.target,
+                      "pickupLocationActionIcon",
+                      "pickupClearActionIcon"
+                    )
+                  }
                 />
               </div>
             </div>
 
             <div className="AddStopButtonWrapper">
-              <button onClick={addStop} className="AddStopButton">+</button>
+              <button onClick={addStop} className="AddStopButton">
+                +
+              </button>
             </div>
           </div>
 
@@ -751,24 +803,37 @@ const Ride = () => {
                 </label>
                 <div id="stopInputBox" className="InputBoxWithActionIcon">
                   <div className="ActionIconWrapper">
-                    <svg 
-                      id="stopLocationActionIcon" viewBox="0 0 24 24" fill="black" focusable="false" role="button"
+                    <svg
+                      id="stopLocationActionIcon"
+                      viewBox="0 0 24 24"
+                      fill="black"
+                      focusable="false"
+                      role="button"
                       className="font-normal text-base leading-6 inline-block fill-current text-current h-6 w-5 cursor-pointer"
-                      style={{ color: 'green' }}
+                      style={{ color: "green" }}
                       onClick={getUserLocation}
-                      >
+                    >
                       <title>Use current location</title>
                       <path d="M10.5 13.5.5 11 21 3l-8 20.5-2.5-10Z"></path>
                     </svg>
                     <svg
-                      id="stopClearActionIcon" focusable="false" aria-hidden="true" viewBox="2 2 20 20" role="button"
+                      id="stopClearActionIcon"
+                      focusable="false"
+                      aria-hidden="true"
+                      viewBox="2 2 20 20"
+                      role="button"
                       className="font-normal text-base leading-6 inline-block fill-current text-current h-4 w-3.5 cursor-pointer"
-                      style={{ display: 'none'}}
-                      onClick={() => clearInputField('stopLocationInput', 'stopLocationActionIcon', 'stopClearActionIcon')}
-                      >
+                      style={{ display: "none" }}
+                      onClick={() =>
+                        clearInputField(
+                          "stopLocationInput",
+                          "stopLocationActionIcon",
+                          "stopClearActionIcon"
+                        )
+                      }
+                    >
                       <title>Clear entry</title>
-                      <path d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z">
-                      </path>
+                      <path d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z"></path>
                     </svg>
                   </div>
                   <input
@@ -776,15 +841,40 @@ const Ride = () => {
                     ref={(el) => assignRef(el, index)}
                     placeholder=""
                     className="StandardInputWithActionIcon"
-                    onFocus={() => onFocusHandlerForInputWithActionIcon('stopInputLabel', 'stopInputBox', 'stopLocationActionIcon', 'stopClearActionIcon')}
-                    onBlur={() => onBlurHandlerForInputWithActionIcon('stopInputLabel', 'stopInputBox', 'stopClearActionIcon', 'stopLocationActionIcon')}
-                    onInput={(e) => onChangeHandlerForInputWithActionIcon(e.target as HTMLInputElement, 'stopLocationActionIcon', 'stopClearActionIcon')}
+                    onFocus={() =>
+                      onFocusHandlerForInputWithActionIcon(
+                        "stopInputLabel",
+                        "stopInputBox",
+                        "stopLocationActionIcon",
+                        "stopClearActionIcon"
+                      )
+                    }
+                    onBlur={() =>
+                      onBlurHandlerForInputWithActionIcon(
+                        "stopInputLabel",
+                        "stopInputBox",
+                        "stopClearActionIcon",
+                        "stopLocationActionIcon"
+                      )
+                    }
+                    onInput={(e) =>
+                      onChangeHandlerForInputWithActionIcon(
+                        e.target as HTMLInputElement,
+                        "stopLocationActionIcon",
+                        "stopClearActionIcon"
+                      )
+                    }
                   />
                 </div>
               </div>
 
               <div className="RemoveStopButtonWrapper">
-                <button onClick={() => removeStop(index)} className="RemoveStopButton">-</button>
+                <button
+                  onClick={() => removeStop(index)}
+                  className="RemoveStopButton"
+                >
+                  -
+                </button>
               </div>
             </div>
           ))}
@@ -796,23 +886,36 @@ const Ride = () => {
             <div id="dropoffInputBox" className="InputBoxWithActionIcon">
               <div className="ActionIconWrapper">
                 <svg
-                  id="dropoffLocationActionIcon" viewBox="0 0 24 24" fill="black" focusable="false" role="button"
+                  id="dropoffLocationActionIcon"
+                  viewBox="0 0 24 24"
+                  fill="black"
+                  focusable="false"
+                  role="button"
                   className="font-normal text-base leading-6 inline-block fill-current text-current h-6 w-5 cursor-pointer"
-                  style={{ color: 'green' }}
+                  style={{ color: "green" }}
                   onClick={getUserLocation}
-                  >
+                >
                   <title>Use current location</title>
                   <path d="M10.5 13.5.5 11 21 3l-8 20.5-2.5-10Z"></path>
                 </svg>
-                <svg 
-                  id="dropoffClearActionIcon" focusable="false" aria-hidden="true" viewBox="2 2 20 20" role="button"
-                  style={{ display: 'none'}}
+                <svg
+                  id="dropoffClearActionIcon"
+                  focusable="false"
+                  aria-hidden="true"
+                  viewBox="2 2 20 20"
+                  role="button"
+                  style={{ display: "none" }}
                   className="font-normal text-base leading-6 inline-block fill-current text-current h-4 w-3.5 cursor-pointer"
-                  onClick={() => clearInputField('dropoffLocationInput','dropoffLocationActionIcon', 'dropoffClearActionIcon')}
-                  >
+                  onClick={() =>
+                    clearInputField(
+                      "dropoffLocationInput",
+                      "dropoffLocationActionIcon",
+                      "dropoffClearActionIcon"
+                    )
+                  }
+                >
                   <title>Clear entry</title>
-                  <path d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z">
-                  </path>
+                  <path d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z"></path>
                 </svg>
               </div>
               <input
@@ -820,14 +923,34 @@ const Ride = () => {
                 ref={dropoffInputRef}
                 placeholder=""
                 className="StandardInputWithActionIcon"
-                onFocus={() => onFocusHandlerForInputWithActionIcon('dropoffInputLabel', 'dropoffInputBox', 'dropoffLocationActionIcon', 'dropoffClearActionIcon')}
-                onBlur={() => onBlurHandlerForInputWithActionIcon('dropoffInputLabel', 'dropoffInputBox', 'dropoffClearActionIcon', 'dropoffLocationActionIcon')}
-                onChange={(e) => onChangeHandlerForInputWithActionIcon(e.target,'dropoffLocationActionIcon', 'dropoffClearActionIcon')}
+                onFocus={() =>
+                  onFocusHandlerForInputWithActionIcon(
+                    "dropoffInputLabel",
+                    "dropoffInputBox",
+                    "dropoffLocationActionIcon",
+                    "dropoffClearActionIcon"
+                  )
+                }
+                onBlur={() =>
+                  onBlurHandlerForInputWithActionIcon(
+                    "dropoffInputLabel",
+                    "dropoffInputBox",
+                    "dropoffClearActionIcon",
+                    "dropoffLocationActionIcon"
+                  )
+                }
+                onChange={(e) =>
+                  onChangeHandlerForInputWithActionIcon(
+                    e.target,
+                    "dropoffLocationActionIcon",
+                    "dropoffClearActionIcon"
+                  )
+                }
               />
             </div>
           </div>
-          
-          <br/>
+
+          <br />
           <div className="PricePreviewResult">
             <div className="flex">
               <Image src={dollar} alt="dollar" />
@@ -837,15 +960,20 @@ const Ride = () => {
             </div>
             <div className="flex items-center gap-2 w-[26%]">
               <div>
-                <IoMdPerson size={24} style={{ color: 'white' }}/>
+                <IoMdPerson size={24} style={{ color: "white" }} />
               </div>
               <div>
                 <input
                   type="number"
                   className="RequestedPassengerCount"
-                  value={passengers} min="1" max="4"
+                  value={passengers}
+                  min="1"
+                  max="4"
                   onChange={(e) => {
-                    const newPassengerCount = Math.max(1, Math.min(4, parseInt(e.target.value)));
+                    const newPassengerCount = Math.max(
+                      1,
+                      Math.min(4, parseInt(e.target.value))
+                    );
                     setPassengers(newPassengerCount);
                   }}
                 />
@@ -892,7 +1020,7 @@ const Ride = () => {
                 onClick={handleScheduleForLater}
                 className="py-2.5 bg-white text-gray-700 font-bold pl-4 pr-4 rounded-md ml-2 mt-2"
               >
-                {isLoading ? <Spinner /> : 'Confirm'}
+                {isLoading ? <Spinner /> : "Confirm"}
               </button>
             </div>
           )}
