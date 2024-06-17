@@ -126,7 +126,7 @@ const Ride = () => {
   const [fare, setFare] = useState("");
   const [pickupClicked, setPickupClicked] = useState(false);
   const [userLocation, setUserLocation] = useState<Coordinates | null>(null);
-  const [scheduledPickupTime, setScheduledPickupTime] = useState("");
+  const [scheduledPickupTime, setScheduledPickupTime] = useState("MM/DD/YYYY at --:--");
   const [showScheduleInput, setShowScheduleInput] = useState(false);
   const [stops, setStops] = useState<Coordinates[]>([]);
   const stopInputRefs = useRef<HTMLInputElement[]>([]);
@@ -137,8 +137,17 @@ const Ride = () => {
   useEffect(() => {
     const now = new Date();
     const oneHourFromNow = new Date(now.getTime() + 60 * 60 * 1000);
-    const formattedMinTime = oneHourFromNow.toISOString().slice(0, 16); // Format to 'YYYY-MM-DDTHH:mm'
+
+    const padWithZero = (number: number) => number.toString().padStart(2, "0");
+    const year = oneHourFromNow.getFullYear();
+    const month = padWithZero(oneHourFromNow.getMonth() + 1); // Months are 0-indexed
+    const day = padWithZero(oneHourFromNow.getDate());
+    const hours = padWithZero(oneHourFromNow.getHours());
+    const minutes = padWithZero(oneHourFromNow.getMinutes());
+
+    const formattedMinTime = `${year}-${month}-${day}T${hours}:${minutes}`;
     setMinTime(formattedMinTime);
+    setScheduledPickupTime(formattedMinTime);
   }, []);
 
   const addStop = () => {
@@ -1008,24 +1017,24 @@ const Ride = () => {
           )}
 
           {fare && showScheduleInput && (
-              <div className="LoginPriceCheckButtonGroup w-full flex flex-row justify-center m-0 p-0">
-                <input
-                  type="datetime-local"
-                  value={scheduledPickupTime}
-                  onChange={(e) => setScheduledPickupTime(e.target.value)}
-                  className="outline-none bg-gray-200 py-3 rounded-md text-gray-700 font-bold"
-                  min={minTime}
-                  placeholder="Pickup Time"
-                  aria-label="Pickup Time"
-                />
-                <button
-                  onClick={handleScheduleForLater}
-                  className="py-2.5 bg-white text-gray-700 font-bold pl-4 pr-4 rounded-md ml-2 mt-2"
-                >
-                  {isLoading ? <Spinner /> : "Confirm"}
-                </button>
-              </div>
-            )}
+            <div className="LoginPriceCheckButtonGroup w-full flex flex-row justify-center m-0 p-0">
+              <input
+                type="datetime-local"
+                value={scheduledPickupTime}
+                onChange={(e) => setScheduledPickupTime(e.target.value)}
+                className="outline-none bg-gray-200 py-3 rounded-md text-gray-700 font-bold"
+                min={minTime}
+                placeholder="MM/DD/YYYY --:--"
+                aria-label="MM/DD/YYYY --:--"
+              />
+              <button
+                onClick={handleScheduleForLater}
+                className="py-2.5 bg-white text-gray-700 font-bold pl-4 pr-4 rounded-md ml-2 mt-2"
+              >
+                {isLoading ? <Spinner /> : "Confirm"}
+              </button>
+            </div>
+          )}
         </div>
       </div>
       <div className="SimpleMap w-full lg:w-1/2 sm:py-0 py-10">
