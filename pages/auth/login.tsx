@@ -1,5 +1,5 @@
 import { useState, FormEvent, useEffect } from 'react';
-import { signIn } from 'next-auth/react';
+import { signIn, useSession } from "next-auth/react";
 import { useRouter } from 'next/router';
 import Image from 'next/image';
 import logo from "../../assets/oneridetho_logo_600ppi.png";
@@ -17,6 +17,13 @@ export default function Login() {
   const router = useRouter();
   const [emailLabelAnimated, setEmailLabelAnimated] = useState(false);
   const [loading, setLoading] = useState(false);
+  const { data: session, status } = useSession();
+
+  useEffect(() => {
+    if (status === "authenticated") {
+      router.push("/");
+    }
+  }, [status, router]);
 
   useEffect(() => {
     if (email.trim() !== "") {

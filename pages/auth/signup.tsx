@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import router, { useRouter } from "next/router";
 import { FcGoogle } from "react-icons/fc";
 import Image from "next/image";
@@ -701,6 +701,13 @@ const Signup = () => {
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [photoUrl, setPhotoUrl] = useState("");
+  const { data: session, status } = useSession();
+
+  useEffect(() => {
+    if (status === "authenticated") {
+      router.push("/");
+    }
+  }, [status, router]);
 
 
   const previousStep = () => {

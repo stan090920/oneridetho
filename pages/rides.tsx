@@ -55,7 +55,7 @@ export const formatDateTime = (dateTimeString: string): string => {
 };
 
 const Rides = () => {
-  const { data: rides, error, mutate } = useSWR<Ride[]>("/api/rides", fetcher);
+  const { data: rides, error } = useSWR<Ride[]>("/api/rides", fetcher);
   const [showInProgress, setShowInProgress] = useState(false);
   const [rideAddresses, setRideAddresses] = useState<{
     [key: number]: { pickup: string; dropoff: string };
@@ -104,7 +104,10 @@ const Rides = () => {
     // Check if there are any rides in progress or accepted
     if (
       rides?.some(
-        (ride: Ride) => ride.status === "InProgress" || ride.isAccepted
+        (ride: Ride) =>
+          ride.status === "InProgress" ||
+          (ride.isAccepted &&
+            (ride.status === "Requested" || ride.status === "Scheduled"))
       )
     ) {
       setShowInProgress(true);
@@ -116,12 +119,20 @@ const Rides = () => {
 
   // Filter rides based on status and acceptance
   const ridesInProgress = rides.filter(
-    (ride: Ride) => ride.status === "InProgress" || ride.isAccepted
+    (ride: Ride) =>
+      ride.status === "InProgress" ||
+      (ride.isAccepted &&
+        (ride.status === "Requested" || ride.status === "Scheduled"))
   );
   const filteredRides = showInProgress
     ? ridesInProgress
     : rides.filter(
-        (ride: Ride) => ride.status !== "InProgress" && !ride.isAccepted
+        (ride: Ride) =>
+          !(
+            ride.status === "InProgress" ||
+            (ride.isAccepted &&
+              (ride.status === "Requested" || ride.status === "Scheduled"))
+          )
       );
 
   const cancelRide = async (rideId: number) => {

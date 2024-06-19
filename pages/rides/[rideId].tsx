@@ -10,7 +10,8 @@ import {
   GoogleMap,
   LoadScript,
   Marker,
-} from '@react-google-maps/api';
+  useJsApiLoader,
+} from "@react-google-maps/api";
 import Rating from '@/components/Rating';
 import { Spinner } from '@/components/Spinner';
 
@@ -38,7 +39,11 @@ const RideDetails = () => {
   const mapRef = useRef();
   const driverIconUrl = "https://res.cloudinary.com/dxmrcocqb/image/upload/v1703094607/Haunted_House_Group_kxxb3v.png";
 
-
+  const { isLoaded } = useJsApiLoader({
+    id: "google-map-script",
+    googleMapsApiKey: process.env.API_KEY ?? "",
+    libraries: ["geometry", "drawing"],
+  });
 
   const [driverLocation, setDriverLocation] = useState({ lat: 0, lng: 0 });
 
@@ -222,19 +227,21 @@ const RideDetails = () => {
                 </div>
               )}
               {mapLocation && (
-                <LoadScript googleMapsApiKey={process.env.API_KEY || ""}>
-                  <GoogleMap
-                    mapContainerStyle={mapContainerStyle}
-                    center={mapLocation}
-                    zoom={15}
-                    onLoad={onMapLoad}
-                    options={mapOptions}
-                  >
-                    {renderDriverMarker()}
-                    <Marker position={mapLocation} label={ride.status === 'InProgress' ? "Dropoff" : "Pickup"} />
-                    {directions && <DirectionsRenderer directions={directions} />}
-                  </GoogleMap>
-                </LoadScript>
+                <>
+                  {isLoaded && (
+                    <GoogleMap
+                      mapContainerStyle={mapContainerStyle}
+                      center={mapLocation}
+                      zoom={15}
+                      onLoad={onMapLoad}
+                      options={mapOptions}
+                    >
+                      {renderDriverMarker()}
+                      <Marker position={mapLocation} label={ride.status === 'InProgress' ? "Dropoff" : "Pickup"} />
+                      {directions && <DirectionsRenderer directions={directions} />}
+                    </GoogleMap>
+                  )}
+                </>
               )}
             </div>
             <div className="relative z-10 bg-white py-4 px-4 rounded-t-lg flex flex-col max-w-[375px]">

@@ -1,6 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
-import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
+import {
+  GoogleMap,
+  LoadScript,
+  Marker,
+  useJsApiLoader,
+} from "@react-google-maps/api";
 import useSWR from 'swr';
 import { useRouter } from 'next/router';
 
@@ -53,6 +58,13 @@ const DriverMap = ({ driverIds }: DriverMapProps) => {
 
   const [driverLocations, setDriverLocations] = useState<Location[]>([]);
 
+  
+  const { isLoaded } = useJsApiLoader({
+    id: "google-map-script",
+    googleMapsApiKey: process.env.API_KEY ?? "",
+    libraries: ["geometry", "drawing"],
+  });
+
   useEffect(() => {
     driverIds.forEach((id) => {
       fetch(`/api/drivers/location/${id}`)
@@ -74,20 +86,28 @@ const DriverMap = ({ driverIds }: DriverMapProps) => {
   }, [driverIds]);
 
   return (
-    <LoadScript googleMapsApiKey={process.env.API_KEY as string}>
-      <GoogleMap mapContainerStyle={mapContainerStyle} center={center} zoom={12} options={mapOptions}>
-        {driverLocations.map((location) => (
-          <Marker
-            key={location.id}
-            position={{ lat: location.lat, lng: location.lng }}
-            icon={{
-              url: driverIconUrl,
-              scaledSize: new google.maps.Size(50, 50)
-            }}
-          />
-        ))}
-      </GoogleMap>
-    </LoadScript>
+    <>
+      {!isLoaded && <div>Loading...</div>}
+      {isLoaded && (
+        <GoogleMap
+          mapContainerStyle={mapContainerStyle}
+          center={center}
+          zoom={12}
+          options={mapOptions}
+        >
+          {driverLocations.map((location) => (
+            <Marker
+              key={location.id}
+              position={{ lat: location.lat, lng: location.lng }}
+              icon={{
+                url: driverIconUrl,
+                scaledSize: new google.maps.Size(50, 50),
+              }}
+            />
+          ))}
+        </GoogleMap>
+      )}
+    </>
   );
 };
 
