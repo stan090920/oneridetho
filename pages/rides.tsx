@@ -193,7 +193,8 @@ const Rides = () => {
                   </p>
                   {ride.isScheduled &&
                     ride.status !== "Cancelled" &&
-                    !ride.isAccepted && (
+                    ride.status !== "InProgress" &&
+                    ride.status !== "Completed" && (
                       <button
                         onClick={() => cancelRide(ride.id)}
                         className="mt-2 bg-red-500 text-white py-1 px-3 rounded"
@@ -241,7 +242,8 @@ const Rides = () => {
                   </p>
                   {ride.isScheduled &&
                     ride.status !== "Cancelled" &&
-                    !ride.isAccepted && (
+                    ride.status !== "InProgress" &&
+                    ride.status !== "Completed" && (
                       <button
                         onClick={() => cancelRide(ride.id)}
                         className="mt-2 bg-red-500 text-white py-1 px-3 rounded"
