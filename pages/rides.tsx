@@ -103,8 +103,7 @@ const Rides = () => {
   useEffect(() => {
     // Check if there are any rides in progress or accepted
     if (
-      rides &&
-      rides.some(
+      rides?.some(
         (ride: Ride) => ride.status === "InProgress" || ride.isAccepted
       )
     ) {
@@ -129,7 +128,6 @@ const Rides = () => {
     try {
       await axios.post(`/api/rides/cancel/${rideId}`);
       alert("Ride has been canceled");
-      // Reload the page to reflect the change
       router.reload();
     } catch (error) {
       console.error("Error cancelling ride:", error);
@@ -165,38 +163,44 @@ const Rides = () => {
       ) : (
         <div>
           {showInProgress && ridesInProgress.length > 0 ? (
-            ridesInProgress.map((ride: Ride) => (
-              <div key={ride.id} className="border p-4 rounded-lg shadow">
-                <div className="font-semibold">{ride.user.name}</div>
-                <p>Pickup: {rideAddresses[ride.id]?.pickup || "Loading..."}</p>
-                <p>
-                  Dropoff: {rideAddresses[ride.id]?.dropoff || "Loading..."}
-                </p>
-                <p>Fare: ${ride.fare}</p>
-                <p>
-                  Status: <span className="text-red-600">{ride.status}</span>
-                </p>
-                {ride.isScheduled && ride.status !== "Cancelled" && (
-                  <>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {ridesInProgress.map((ride: Ride) => (
+                <div key={ride.id} className="border p-4 rounded-lg shadow">
+                  <div className="font-semibold">{ride.user.name}</div>
+                  <p>
+                    Pickup: {rideAddresses[ride.id]?.pickup || "Loading..."}
+                  </p>
+                  <p>
+                    Dropoff: {rideAddresses[ride.id]?.dropoff || "Loading..."}
+                  </p>
+                  <p>Fare: ${ride.fare}</p>
+                  {ride.isScheduled && (
                     <p>Pickup Time: {formatDateTime(ride.pickupTime)}</p>
+                  )}
+                  <p>
+                    Status: <span className="text-red-600">{ride.status}</span>
+                  </p>
+                  {ride.isScheduled &&
+                    ride.status !== "Cancelled" &&
+                    !ride.isAccepted && (
+                      <button
+                        onClick={() => cancelRide(ride.id)}
+                        className="mt-2 bg-red-500 text-white py-1 px-3 rounded"
+                      >
+                        Cancel Ride
+                      </button>
+                    )}
+                  {ride.status === "Requested" && (
                     <button
-                      onClick={() => cancelRide(ride.id)}
-                      className="mt-2 bg-red-500 text-white py-1 px-3 rounded"
+                      onClick={() => router.push(`/rides/${ride.id}`)}
+                      className="mt-2 bg-blue-500 text-white py-1 px-3 rounded"
                     >
-                      Cancel Ride
+                      View Ride
                     </button>
-                  </>
-                )}
-                {ride.status === "Requested" && (
-                  <button
-                    onClick={() => router.push(`/rides/${ride.id}`)}
-                    className="mt-2 bg-blue-500 text-white py-1 px-3 rounded"
-                  >
-                    View Ride
-                  </button>
-                )}
-              </div>
-            ))
+                  )}
+                </div>
+              ))}
+            </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {filteredRides.map((ride: Ride, index: number) => (
@@ -209,6 +213,9 @@ const Rides = () => {
                     Dropoff: {rideAddresses[ride.id]?.dropoff || "Loading..."}
                   </p>
                   <p>Fare: ${ride.fare}</p>
+                  {ride.isScheduled && (
+                    <p>Pickup Time: {formatDateTime(ride.pickupTime)}</p>
+                  )}
                   <p>
                     Status:{" "}
                     <span
@@ -221,17 +228,16 @@ const Rides = () => {
                       {ride.status}
                     </span>
                   </p>
-                  {ride.isScheduled && ride.status !== "Cancelled" && (
-                    <>
-                      <p>Pickup Time: {formatDateTime(ride.pickupTime)}</p>
+                  {ride.isScheduled &&
+                    ride.status !== "Cancelled" &&
+                    !ride.isAccepted && (
                       <button
                         onClick={() => cancelRide(ride.id)}
                         className="mt-2 bg-red-500 text-white py-1 px-3 rounded"
                       >
                         Cancel Ride
                       </button>
-                    </>
-                  )}
+                    )}
                   {ride.status === "Requested" && (
                     <button
                       onClick={() => router.push(`/rides/${ride.id}`)}
