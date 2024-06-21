@@ -191,10 +191,7 @@ const Rides = () => {
                   <p>
                     Status: <span className="text-red-600">{ride.status}</span>
                   </p>
-                  {ride.isScheduled &&
-                    ride.status !== "Cancelled" &&
-                    ride.status !== "InProgress" &&
-                    ride.status !== "Completed" && (
+                  {ride.isScheduled && ride.status === "Scheduled" && (
                       <button
                         onClick={() => cancelRide(ride.id)}
                         className="mt-2 bg-red-500 text-white py-1 px-3 rounded"
@@ -240,10 +237,7 @@ const Rides = () => {
                       {ride.status}
                     </span>
                   </p>
-                  {ride.isScheduled &&
-                    ride.status !== "Cancelled" &&
-                    ride.status !== "InProgress" &&
-                    ride.status !== "Completed" && (
+                  {ride.isScheduled ride.status === "Scheduled" && (
                       <button
                         onClick={() => cancelRide(ride.id)}
                         className="mt-2 bg-red-500 text-white py-1 px-3 rounded"
