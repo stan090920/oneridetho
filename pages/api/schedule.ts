@@ -36,6 +36,17 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
       return res.status(404).send("User not found");
     }
 
+    const toUTCDate = (dateString: string) => {
+      const localDate = new Date(dateString);
+
+      const localTime = localDate.getTime();
+      const localOffset = localDate.getTimezoneOffset() * 60000;
+      const utcTime = localTime - localOffset;
+      const utcDate = new Date(utcTime);
+
+      return utcDate;
+    };
+
     try {
       const scheduledRide = await prisma.ride.create({
         data: {
@@ -45,13 +56,13 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
           fare: parseFloat(fare),
           passengerCount: parseInt(passengerCount),
           paymentMethod,
-          pickupTime: new Date(scheduledPickupTime),
+          pickupTime: toUTCDate(scheduledPickupTime),
           dropoffTime: null,
           driverId: null,
           isScheduled: true,
           status: "Scheduled",
           isConfirmed: false,
-          scheduledPickupTime: new Date(scheduledPickupTime),
+          scheduledPickupTime: toUTCDate(scheduledPickupTime),
         },
       });
 

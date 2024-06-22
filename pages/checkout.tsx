@@ -4,6 +4,7 @@ import axios from "axios";
 import { useSession } from "next-auth/react";
 import { useEffect, useRef, useState, useMemo } from "react";
 import { Spinner } from "@/components/Spinner";
+import { toast } from "react-hot-toast";
 
 interface Stop {
   lat: number;
@@ -107,6 +108,7 @@ const Checkout = () => {
         const response = await axios.post('/api/bookings', bookingData);
         const { rideId } = response.data;
 
+        toast.success("Ride scheduled successfully");
         router.push(`/rides/${rideId}`);
         setIsLoading(false);
       } else {
@@ -133,18 +135,20 @@ const Checkout = () => {
         });
 
         if (response.ok) {
-          alert('Ride scheduled successfully!');
+          toast.success("Ride scheduled successfully");
           setIsLoading(false);
           router.push('/'); 
           return;
         } else {
           setIsLoading(false);
+          toast.error("Failed to schedule ride");
           console.error("Failed to schedule ride:", await response.text());
         }
       }
 
     } catch (error) {
       console.error('Error during booking:', error);
+      toast.error("Unexpected error occurred while booking your ride. Please try again.");
       setIsLoading(false);
     }
   };

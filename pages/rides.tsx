@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import useSWR from "swr";
 import axios from "axios";
 import { useRouter } from "next/router";
+import { toast } from "react-hot-toast";
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
@@ -136,12 +137,19 @@ const Rides = () => {
       );
 
   const cancelRide = async (rideId: number) => {
+    const toastId = toast.loading("Cancelling ride...");
+
     try {
       await axios.post(`/api/rides/cancel/${rideId}`);
-      alert("Ride has been canceled");
+      toast.success("Ride has been canceled", {
+        id: toastId,
+      });
       router.reload();
     } catch (error) {
       console.error("Error cancelling ride:", error);
+      toast.error("Error cancelling ride", {
+        id: toastId,
+      });
     }
   };
 
