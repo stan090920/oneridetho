@@ -14,6 +14,46 @@ import Image from "next/image";
 import dollar from "../assets/dollar-bill.png";
 import axios from 'axios';
 import { Spinner } from '../components/Spinner';
+import { DemoContainer, DemoItem } from "@mui/x-date-pickers/internals/demo";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { MobileDateTimePicker } from "@mui/x-date-pickers/MobileDateTimePicker";
+import { TextField, createTheme, ThemeProvider } from "@mui/material";
+import { styled } from "@mui/system";
+import dayjs, { Dayjs } from "dayjs";
+
+const darkTheme = createTheme({
+  palette: {
+    mode: "dark",
+    primary: {
+      main: "#ffffff",
+    },
+    background: {
+      default: "#000000",
+    },
+  },
+});
+
+const CustomTextField = styled(TextField)({
+  "& .MuiInputBase-input": {
+    color: "white", // Text color
+  },
+  "& .MuiOutlinedInput-root": {
+    "& fieldset": {
+      borderColor: "white", // Border color
+    },
+    "&:hover fieldset": {
+      borderColor: "white", // Border color on hover
+    },
+    "&.Mui-focused fieldset": {
+      borderColor: "white", // Border color when focused
+    },
+  },
+  "& .MuiInputLabel-root": {
+    color: "white", // Label color
+  },
+});
+
 
 type Driver = {
   id: number;
@@ -127,13 +167,19 @@ const Ride = () => {
   const [fare, setFare] = useState("");
   const [pickupClicked, setPickupClicked] = useState(false);
   const [userLocation, setUserLocation] = useState<Coordinates | null>(null);
-  const [scheduledPickupTime, setScheduledPickupTime] = useState("MM/DD/YYYY at --:--");
+  const [scheduledPickupTime, setScheduledPickupTime] = useState<string>(dayjs().toISOString());
   const [showScheduleInput, setShowScheduleInput] = useState(false);
   const [stops, setStops] = useState<Coordinates[]>([]);
   const stopInputRefs = useRef<HTMLInputElement[]>([]);
   const [isAvailable, setIsAvailable] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [minTime, setMinTime] = useState('');
+
+  const handleDateChange = (date: Dayjs | null) => {
+    if (date) {
+      setScheduledPickupTime(date.toISOString());
+    }
+  };
 
   useEffect(() => {
     const now = new Date();
@@ -1019,15 +1065,19 @@ const Ride = () => {
 
           {fare && showScheduleInput && (
             <div className="LoginPriceCheckButtonGroup w-full flex flex-row justify-center m-0 p-0">
-              <input
-                type="datetime-local"
-                value={scheduledPickupTime}
-                onChange={(e) => setScheduledPickupTime(e.target.value)}
-                className="outline-none bg-gray-200 py-3 rounded-md text-gray-700 font-bold"
-                min={minTime}
-                placeholder="MM/DD/YYYY --:--"
-                aria-label="MM/DD/YYYY --:--"
-              />
+              <ThemeProvider theme={darkTheme}>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DemoContainer components={["MobileDateTimePicker"]}>
+                    <DemoItem>
+                      <MobileDateTimePicker
+                        onChange={handleDateChange}
+                        defaultValue={dayjs(scheduledPickupTime)}
+                        minDate={dayjs()}
+                      />
+                    </DemoItem>
+                  </DemoContainer>
+                </LocalizationProvider>
+              </ThemeProvider>
               <button
                 onClick={handleScheduleForLater}
                 className="py-2.5 bg-white text-gray-700 font-bold pl-4 pr-4 rounded-md ml-2 mt-2"
