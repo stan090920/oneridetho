@@ -56,7 +56,19 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
       });
 
       const scheduledPickupDateTime = new Date(scheduledPickupTime);
-      const formattedPickupTime = `${scheduledPickupDateTime.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })} ${scheduledPickupDateTime.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })}`;
+
+      const options: Intl.DateTimeFormatOptions = {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour: "numeric",
+        minute: "numeric",
+        hour12: true,
+        timeZoneName: "short",
+      };
+
+      const formattedPickupTime = new Intl.DateTimeFormat('en-US', options).format(scheduledPickupDateTime);
 
       const messageBody = `${user.name} has scheduled a ride!\n
       Pickup Time: ${formattedPickupTime}.\n
