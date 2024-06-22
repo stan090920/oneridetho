@@ -34,26 +34,6 @@ const darkTheme = createTheme({
   },
 });
 
-const CustomTextField = styled(TextField)({
-  "& .MuiInputBase-input": {
-    color: "white", // Text color
-  },
-  "& .MuiOutlinedInput-root": {
-    "& fieldset": {
-      borderColor: "white", // Border color
-    },
-    "&:hover fieldset": {
-      borderColor: "white", // Border color on hover
-    },
-    "&.Mui-focused fieldset": {
-      borderColor: "white", // Border color when focused
-    },
-  },
-  "& .MuiInputLabel-root": {
-    color: "white", // Label color
-  },
-});
-
 
 type Driver = {
   id: number;

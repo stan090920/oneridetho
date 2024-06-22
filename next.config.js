@@ -1,3 +1,5 @@
+const withTM = require("next-transpile-modules")(["@mui/x-date-pickers"]);
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
@@ -12,8 +14,8 @@ const nextConfig = {
     TWILIO_AUTH_TOKEN: process.env.TWILIO_AUTH_TOKEN,
     TWILIO_WHATSAPP_NUMBER: process.env.TWILIO_PHONE_NUMBER,
     PAYPAL_CLI: process.env.PAYPAL_CLI,
-    GOOGLE_CLIENT_ID:  process.env.GOOGLE_CLIENT_ID,
-    GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET
+    GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
+    GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
   },
 
   images: {
@@ -27,10 +29,10 @@ const nextConfig = {
   webpack(config, options) {
     config.module.rules.push({
       test: /\.mp4$/,
-      type: 'asset/resource',
+      type: "asset/resource",
     });
     return config;
   },
-}
+};
 
-module.exports = nextConfig;
+module.exports = withTM(nextConfig);
