@@ -260,7 +260,7 @@ const Checkout = () => {
 
   return (
     <div className="px-2 mt-5">
-      <h1 className="font-bold text-[32px]">Checkout</h1>
+      <h1 className="font-bold text-[30px]">Select Payment Method</h1>
       <div>
         <div>
           <button className="py-3 bg-black text-white pl-4 pr-4 rounded-md mt-5 sm:w-auto w-full text-center"
