@@ -2,6 +2,20 @@ import prisma from "@/lib/prisma";
 import { NextApiRequest, NextApiResponse } from "next";
 import sendDriverAlertEmail from '../../sendDriverAlertEmail';
 
+function formatTime(date: any) {
+  if (!date) return "";
+  const dateTime = new Date(Date.parse(date));
+  const options: Intl.DateTimeFormatOptions = {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+    hour12: true,
+  };
+  return dateTime.toLocaleString("en-US", options);
+}
+
 export default async function handle(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === "POST") {
     const {
@@ -55,23 +69,9 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
         },
       });
 
-      const scheduledPickupDateTime = new Date(scheduledPickupTime);
-
-      const options: Intl.DateTimeFormatOptions = {
-        weekday: "long",
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-        hour: "numeric",
-        minute: "numeric",
-        hour12: true,
-        timeZoneName: "short",
-      };
-
-      const formattedPickupTime = new Intl.DateTimeFormat('en-US', options).format(scheduledPickupDateTime);
 
       const messageBody = `${user.name} has scheduled a ride!\n
-      Pickup Time: ${formattedPickupTime}.\n
+      Pickup Time: ${formatTime(scheduledPickupTime)}.\n
       Pickup Location: ${pickupLocation},\n
       Drop-off Location: ${dropoffLocation},\n
       Passengers: ${passengerCount}.`;

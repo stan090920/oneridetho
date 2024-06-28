@@ -216,13 +216,13 @@ const RideDetails = () => {
   }
 
   return (
-    <div className='relative h-full'>
+    <div className="relative h-full">
       {ride ? (
         ride.driver ? (
           <div className="flex flex-col h-full">
             <div className="flex-grow relative">
               {eta && (
-                <div className='absolute bottom-20 z-10 bg-white py-2 px-4 rounded-md flex ml-10'>
+                <div className="absolute bottom-20 z-10 bg-white py-2 px-4 rounded-md flex ml-10">
                   Your driver's ETA is {eta}
                 </div>
               )}
@@ -237,8 +237,15 @@ const RideDetails = () => {
                       options={mapOptions}
                     >
                       {renderDriverMarker()}
-                      <Marker position={mapLocation} label={ride.status === 'InProgress' ? "Dropoff" : "Pickup"} />
-                      {directions && <DirectionsRenderer directions={directions} />}
+                      <Marker
+                        position={mapLocation}
+                        label={
+                          ride.status === "InProgress" ? "Dropoff" : "Pickup"
+                        }
+                      />
+                      {directions && (
+                        <DirectionsRenderer directions={directions} />
+                      )}
                     </GoogleMap>
                   )}
                 </>
@@ -248,7 +255,10 @@ const RideDetails = () => {
               <div className="flex items-center gap-4">
                 <div className="flex flex-col items-center">
                   <Image
-                    src={ride.driver.photoUrl || "https://res.cloudinary.com/dxmrcocqb/image/upload/v1700749220/Social_Media_Chatting_Online_Blank_Profile_Picture_Head_And_Body_Icon_People_Standing_Icon_Grey_Background_generated_qnojdz.jpg"}
+                    src={
+                      ride.driver.photoUrl ||
+                      "https://res.cloudinary.com/dxmrcocqb/image/upload/v1700749220/Social_Media_Chatting_Online_Blank_Profile_Picture_Head_And_Body_Icon_People_Standing_Icon_Grey_Background_generated_qnojdz.jpg"
+                    }
                     alt="driver"
                     width={60}
                     height={60}
@@ -256,7 +266,9 @@ const RideDetails = () => {
                     style={{ objectFit: "cover" }}
                   />
                   <div className="flex items-center mt-2">
-                    <span className="text-yellow-500">{ride.driver.rating.toFixed(1)}</span>
+                    <span className="text-yellow-500">
+                      {ride.driver.rating.toFixed(1)}
+                    </span>
                     <HiMiniStar className="ml-1 text-yellow-500" />
                   </div>
                 </div>
@@ -268,18 +280,31 @@ const RideDetails = () => {
                   className="rounded-lg"
                 />
                 <div className="ml-4">
-                  <p className="text-gray-500 text-lg">{ride.driver.name?.split(" ")[0]}</p>
-                  <p className="font-bold text-xl">{ride.driver.licensePlate}</p>
+                  <p className="text-gray-500 text-lg">
+                    {ride.driver.name?.split(" ")[0]}
+                  </p>
+                  <p className="font-bold text-xl">
+                    {ride.driver.licensePlate}
+                  </p>
                   <p className="text-gray-500 text-lg">{ride.driver.carType}</p>
                 </div>
               </div>
 
               <div className="flex items-center justify-between w-full mt-4">
-                <a href="https://wa.me/12428221495" className="flex flex-col items-center">
+                <a
+                  href="https://wa.me/12428221495"
+                  className="flex flex-col items-center"
+                >
                   <div>Customer Service</div>
                   <p className="underline text-blue-400 text-lg">822-1495</p>
                 </a>
-                <button className="bg-red-500 py-2 px-4 rounded-md text-white" onClick={cancelRide}>Cancel Ride</button>
+                <p className="font-bold text-3xl text-yellow-700">${ride.fare}</p>
+                {/* <button
+                  className="bg-red-500 py-2 px-4 rounded-md text-white"
+                  onClick={cancelRide}
+                >
+                  Cancel Ride
+                </button> */}
               </div>
             </div>
           </div>
