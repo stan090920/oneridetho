@@ -68,7 +68,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       },
     });
 
-    const messageBody = `${user.name} has booked a ride!
+    const messageBody = `${user.name} has booked a ride for now!
 Pickup: ${pickupLocation},
 Drop-off: ${dropoffLocation},
 Stops: ${stops.map((stop: { address: any; }) => stop.address).join(', ')},
