@@ -10,6 +10,16 @@ input::-webkit-inner-spin-button {
   margin: 0;
 }
 
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+.containerWrap {
+  @apply container mx-auto max-w-4xl
+}
+
 /* Firefox */
 input[type=number] {
   -webkit-appearance: textfield;

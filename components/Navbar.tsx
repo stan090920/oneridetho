@@ -2,10 +2,8 @@ import Image from "next/image";
 import logo from "../assets/logo.svg";
 import Link from "next/link";
 import { useSession, signOut, getSession } from "next-auth/react";
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Webcam from "react-webcam";
-import React from "react";
-import { FaFacebook, FaInstagram, FaTiktok } from "react-icons/fa";
 
 const Navbar = () => {
   const { data: session } = useSession();

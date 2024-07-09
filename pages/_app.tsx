@@ -5,6 +5,7 @@ import type { AppProps } from "next/app";
 import { Toaster } from "react-hot-toast";
 import { AuthProvider } from '../components/AuthProvider';
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import ChatPanel from "../components/ChatPanel";
 
 export default function MyApp({ Component, pageProps }: AppProps) {
   return (
@@ -13,6 +14,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
         <GoogleOAuthProvider clientId={process.env.GOOGLE_CLIENT_ID ?? ""}>
           <Toaster position="bottom-center" />
           <Navbar />
+          <ChatPanel />
           <Component {...pageProps} />
         </GoogleOAuthProvider>
       </AuthProvider>
