@@ -101,6 +101,7 @@ model Ride {
   extraCharges        Float?     @default(0)
   stopWaitTimes       Json?
   stops               Json?
+  pickupDescription   String?
   bookings            Booking[]
   driver              Driver?    @relation("DriverRides", fields: [driverId], references: [id])
   user                User       @relation("UserRides", fields: [userId], references: [id])
