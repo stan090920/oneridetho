@@ -3,7 +3,11 @@ import { db } from "../scripts/Firebase";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { useSession } from "next-auth/react";
 
-function SendMessage() {
+interface SendMessageProps {
+  rideId: number;
+}
+
+const SendMessage: React.FC<SendMessageProps> = ({ rideId }) => {
   const [value, setValue] = useState("");
   const { data: session } = useSession();
 
@@ -25,6 +29,7 @@ function SendMessage() {
           avatar: photoURL,
           createdAt: serverTimestamp(),
           uid,
+          rideId,
         });
       } else {
         alert("User session not found");
@@ -32,6 +37,8 @@ function SendMessage() {
     } catch (error) {
       console.error(error);
     }
+
+    console.log(value);
     setValue("");
   };
 
@@ -53,6 +60,6 @@ function SendMessage() {
       </form>
     </div>
   );
-}
+};
 
 export default SendMessage;
