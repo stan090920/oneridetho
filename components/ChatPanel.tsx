@@ -1,38 +1,51 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
+import useSWR from "swr";
 import ChatBox from "./ChatBox";
 import SendMessage from "./SendMessage";
 import { useSession } from "next-auth/react";
 
 interface Ride {
   id: number;
+  pickupTime: string;
+  dropoffTime: string | null;
+  fare: number;
+  tip: number;
+  extraCharges: number;
+  isAccepted: boolean;
+  isConfirmed: boolean;
+  isScheduled: boolean;
+  passengerCount: number;
+  paymentMethod: string;
   pickupLocation: string;
   dropoffLocation: string;
+  status: string;
+  driverId: number;
+  user: User;
 }
+
+interface User {
+  id: number;
+  name: string;
+  email: string;
+  // Add other fields as needed
+}
+
+const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 const ChatPanel: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [rides, setRides] = useState<Ride[]>([]);
   const [selectedRideId, setSelectedRideId] = useState<number | null>(null);
   const { data: session } = useSession();
 
-  useEffect(() => {
-    const fetchRides = async () => {
-      if (session) {
-        try {
-          const response = await fetch("../pages/api/rides/inprogress.ts");
-          const data = await response.json();
-          setRides(data);
-          if (data.length > 0) {
-            setSelectedRideId(data[0].id);
-          }
-        } catch (error) {
-          console.error("Error fetching rides:", error);
-        }
-      }
-    };
+  const { data: rides, error } = useSWR<Ride[]>(session ? "/api/rides" : null, fetcher);
 
-    fetchRides();
-  }, [session]);
+  const inProgressRides =
+    rides?.filter(
+      (ride) =>
+        ride.status === "InProgress" ||
+        (ride.isAccepted &&
+          (ride.status === "Requested" || ride.status === "Scheduled"))
+    ) || [];
 
   const toggleChat = () => {
     setIsOpen(!isOpen);
@@ -74,7 +87,7 @@ const ChatPanel: React.FC = () => {
           </div>
           <div className="p-4 h-full flex flex-col">
             <div className="flex space-x-2 mb-2 overflow-x-auto">
-              {rides.map((ride) => (
+              {inProgressRides.map((ride) => (
                 <button
                   key={ride.id}
                   className={`py-2 px-4 rounded-lg ${
