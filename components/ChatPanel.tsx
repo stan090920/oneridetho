@@ -39,13 +39,14 @@ const ChatPanel: React.FC = () => {
 
   const { data: rides, error } = useSWR<Ride[]>(session ? "/api/rides" : null, fetcher);
 
-  const inProgressRides =
-    rides?.filter(
-      (ride) =>
-        ride.status === "InProgress" ||
-        (ride.isAccepted &&
-          (ride.status === "Requested" || ride.status === "Scheduled"))
-    ) || [];
+  const inProgressRides = Array.isArray(rides)
+    ? rides.filter(
+        (ride) =>
+          ride.status === "InProgress" ||
+          (ride.isAccepted &&
+            (ride.status === "Requested" || ride.status === "Scheduled"))
+      )
+    : [];
 
   const toggleChat = () => {
     setIsOpen(!isOpen);
