@@ -62,7 +62,7 @@ const ChatPanel: React.FC = () => {
         Chat
       </button>
       {isOpen && (
-        <div className="fixed bottom-5 left-5 w-11/12 sm:w-2/4 max-w-lg h-3/4 max-h-[80vh] bg-white rounded-lg shadow-lg z-50">
+        <div className="fixed bottom-5 left-5 w-11/12 sm:w-2/4 max-w-lg h-4/5 max-h-[90vh] bg-white rounded-lg shadow-lg z-50">
           <div className="flex justify-between items-center bg-green-600 text-white p-3 rounded-t-lg">
             <div>Chat</div>
             <button
@@ -102,12 +102,11 @@ const ChatPanel: React.FC = () => {
                 </button>
               ))}
             </div>
-            <div className="p-4 h-[55vh] overflow-y-auto">
+            <div className="p-4 h-[50vh] overflow-y-auto">
               {selectedRideId && <ChatBox rideId={selectedRideId} />}
             </div>
-            <div className="absolute bottom-0 w-full bg-gray-200 shadow-lg">
-              {selectedRideId && <SendMessage rideId={selectedRideId} />}
-            </div>
+            
+            {selectedRideId && <SendMessage rideId={selectedRideId} />}
           </div>
         </div>
       )}
