@@ -223,7 +223,7 @@ const Ride = () => {
     const isNightFee = currentHour >= 0 && currentHour < 6;
     const nightFee = isNightFee ? 5 : 0;
 
-    const totalFare = baseFare + distanceCharge + passengerCharge + nightFee + stopCharge - ratePerMile;
+    const totalFare = baseFare + distanceCharge + passengerCharge + nightFee + stopCharge;
     return totalFare.toFixed(2);
   };
 
