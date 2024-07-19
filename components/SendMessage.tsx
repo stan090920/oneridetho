@@ -38,7 +38,6 @@ const SendMessage: React.FC<SendMessageProps> = ({ rideId }) => {
       console.error(error);
     }
 
-    console.log(value);
     setValue("");
   };
 
