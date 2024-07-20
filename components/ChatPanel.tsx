@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import useSWR from "swr";
 import ChatBox from "./ChatBox";
 import SendMessage from "./SendMessage";
@@ -47,6 +47,12 @@ const ChatPanel: React.FC = () => {
             (ride.status === "Requested" || ride.status === "Scheduled"))
       )
     : [];
+
+  useEffect(() => {
+    if (inProgressRides.length > 0 && selectedRideId === null) {
+      setSelectedRideId(inProgressRides[0].id);
+    }
+  }, [inProgressRides, selectedRideId]);
 
   const toggleChat = () => {
     setIsOpen(!isOpen);
