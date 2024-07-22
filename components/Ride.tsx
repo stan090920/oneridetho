@@ -154,6 +154,29 @@ const Ride = () => {
   const [isAvailable, setIsAvailable] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [minTime, setMinTime] = useState('');
+  const [verified, setVerified] = useState(true);
+
+  const { data: session } = useSession();
+
+  const fetchVerificationDetails = async () => {
+    if (session?.user) {
+      try {
+        const response = await fetch("/api/verification/getVerificationDetails");
+        if (response.ok) {
+          const data = await response.json();
+          setVerified(data.user.verified);
+        } else {
+          console.error("Failed to fetch verification details");
+        }
+      } catch (error) {
+        console.error("Error fetching verification details:", error);
+      }
+    }
+  };
+
+  useEffect(() => {
+    fetchVerificationDetails();
+  }, [session]);
 
   const handleDateChange = (date: Dayjs | null) => {
     if (date) {
@@ -572,17 +595,14 @@ const Ride = () => {
 
   const [isPickupLocationEmpty, setIsPickupLocationEmpty] = useState(false);
 
-  const clearPickupInput = () => {
-    if (pickupInputRef.current) {
-      pickupInputRef.current.value = "";
-    }
-  };
-
   const removeStop = (index: number) => {
     const newStops = stops.filter((_, stopIndex) => stopIndex !== index);
     setStops(newStops);
   };
 
+  const navigateToVerificationPage = () => {
+    router.push("/VerificationPage");
+  };
 
   const clearInputField = (
       inputElementId: string,
@@ -1017,22 +1037,38 @@ const Ride = () => {
             </div>
           </div>
 
-          {pickupCoordinates && dropoffCoordinates && fare && (
-            <div className="LoginPriceCheckButtonGroup w-full flex flex-col items-center m-0 p-0">
-              <div className="m-1 text-base font-semibold text-white w-full">
-                Total Distance: {distance} miles
+          {verified ? (
+            pickupCoordinates &&
+            dropoffCoordinates &&
+            fare && (
+              <div className="LoginPriceCheckButtonGroup w-full flex flex-col items-center m-0 p-0">
+                <div className="m-1 text-base font-semibold text-white w-full">
+                  Total Distance: {distance} miles
+                </div>
+                <button
+                  onClick={handleBooking}
+                  className="LoginButton mt-3 block w-full py-2 px-4"
+                >
+                  Book Now
+                </button>
+                <button
+                  className="CheckPriceButton mt-3 block w-full py-2 px-4"
+                  onClick={handleScheduleClick}
+                >
+                  Schedule for Later
+                </button>
               </div>
+            )
+          ) : (
+            <div className="flex items-center justify-center space-x-4">
+              <span>
+                Your account is not yet verified. You cannot book rides.
+              </span>
               <button
-                onClick={handleBooking}
-                className="LoginButton mt-3 block w-full py-2 px-4"
+                className="btn btn-sm"
+                onClick={navigateToVerificationPage}
               >
-                Book Now
-              </button>
-              <button
-                className="CheckPriceButton mt-3 block w-full py-2 px-4"
-                onClick={handleScheduleClick}
-              >
-                Schedule for Later
+                Verify Now
               </button>
             </div>
           )}
