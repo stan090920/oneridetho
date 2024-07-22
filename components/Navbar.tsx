@@ -226,7 +226,7 @@ const Navbar = () => {
               className="absolute inset-0 object-cover w-full h-full"
             />
             <div className="absolute bottom-10 flex items-center justify-center w-full">
-              <button onClick={capture} className="bg-white h-16 w-16 rounded-full flex items-center justify-center">
+              <button onClick={capture} className="bg-white h-16 w-16 rounded-full flex items-center justify-center" title="Capture Image">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-blue-500" viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M8 5a2 2 0 0 1 4 0v5a1 1 0 1 0 2 0V5a4 4 0 0 0-8 0v5a1 1 0 1 0 2 0V5zM7 13a1 1 0 0 1 1-1h4a1 1 0 0 1 0 2H8a1 1 0 0 1-1-1z" clipRule="evenodd" />
                 </svg>
