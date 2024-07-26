@@ -731,7 +731,7 @@ const Signup = () => {
         return;
       }
 
-      if (!phoneNumber.trim()) {
+      if (!phoneNumber?.trim()) {
         toast.error("Phone number cannot be empty.");
         return;
       }
@@ -776,7 +776,7 @@ const Signup = () => {
         }
       }
     } else if (step === 3) {
-      if (!phoneNumber.trim()) {
+      if (!phoneNumber?.trim()) {
         toast.error("Phone number cannot be empty.");
         return;
       }
