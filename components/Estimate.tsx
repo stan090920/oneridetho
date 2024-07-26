@@ -395,7 +395,7 @@ const Estimate = () => {
   return (
     <div>
       {isPickupLocationEmpty && (
-        <button className="absolute top-[120px] left-[20] transform sm:transform-none sm:top-[270px] sm:left-[65px] w-[220px] text-center text-sm text-gray-500 bg-white p-2 rounded-md shadow-md tooltip">
+        <button className="absolute top-[100px] left-[20] transform sm:transform-none sm:top-[250px] sm:left-[65px] w-[220px] text-center text-sm text-gray-500 bg-white p-2 rounded-md shadow-md tooltip">
           Click to use your current location
           <div className="absolute left-4 bottom-[-6px] w-0 h-0 border-b-6 border-b-white border-l-6 border-l-transparent border-r-6 border-r-transparent"></div>
         </button>
