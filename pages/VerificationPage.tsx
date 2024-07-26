@@ -125,7 +125,7 @@ const VerificationPage: React.FC = () => {
               htmlFor="governmentIssuedId"
               className="block mb-2 text-sm font-medium text-gray-700"
             >
-              Government Issued ID
+              Upload Government Issued ID
             </label>
             <div className="flex items-center w-full h-12 px-3 border border-gray-300 rounded-lg bg-gray-50">
               <input
@@ -141,7 +141,7 @@ const VerificationPage: React.FC = () => {
               htmlFor="verificationPhoto"
               className="block mb-2 text-sm font-medium text-gray-700"
             >
-              Verification Photo
+              Upload Recent Selfie
             </label>
             <div className="flex items-center w-full h-12 px-3 border border-gray-300 rounded-lg bg-gray-50">
               <input
