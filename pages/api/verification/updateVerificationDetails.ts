@@ -4,6 +4,7 @@ import { PrismaClient } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]";
+import sendEmail from "@/lib/mailer";
 
 const prisma = new PrismaClient();
 
@@ -19,6 +20,10 @@ export default async function handler(
   }
 
   const userId = parseInt(session.user.id);
+  const userEmail = session.user.email;
+  const userName = session.user.name;
+
+  const supportEmail = "oneridetho242@gmail.com";
 
   if (req.method === "POST") {
     const { governmentIssuedId, verificationPhotoUrl } = req.body;
@@ -40,6 +45,24 @@ export default async function handler(
           governmentIssuedId,
           verificationPhotoUrl,
         },
+      });
+
+      // Send email to support team
+      await sendEmail({
+        subject: "New Verification Documents Uploaded",
+        text: `${userName} has uploaded their verification documents. Please log in to the admin page to review and verify the documents.`,
+        html: `<p><strong>${userName}</strong> has uploaded their verification documents. Please log in to the <a href="https://oneridetho-driver.vercel.app/admin/AdminPanel">admin page</a> to review and verify the documents.</p>`,
+        recipient_email: supportEmail,
+      });
+
+      // Send email to user
+      await sendEmail({
+        subject: "Documents Received",
+        text: `Dear ${userName},\n\nWe have received your verification documents and are currently processing them. We will notify you once the verification is complete.\n\nThank you for your patience.`,
+        html: `<p>Dear ${userName},</p>
+               <p>We have received your verification documents and are currently processing them. We will notify you once the verification is complete.</p>
+               <p>Thank you for your patience.</p>`,
+        recipient_email: userEmail,
       });
 
       res.json({ message: "Verification details updated successfully", user });

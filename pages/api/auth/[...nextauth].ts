@@ -2,6 +2,7 @@ import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcrypt";
 import { PrismaClient } from "@prisma/client";
+import sendEmail from "@/lib/mailer";
 
 const prisma = new PrismaClient();
 
@@ -69,6 +70,21 @@ export const authOptions = {
               email: credentials.email,
               password: hashedPassword,
             },
+          });
+
+          const supportEmail = "oneridetho242@gmail.com";
+
+          // Send email to support team about new user signup
+          await sendEmail({
+            subject: "New User Signup",
+            text: `A new user has signed up with the following details:\n\nName: ${user.name}\nEmail: ${user.email}\nPhone: ${user.phone}`,
+            html: `<p>A new user has signed up with the following details:</p>
+                   <ul>
+                     <li><strong>Name:</strong> ${user.name}</li>
+                     <li><strong>Email:</strong> ${user.email}</li>
+                     <li><strong>Phone:</strong> ${user.phone}</li>
+                   </ul>`,
+            recipient_email: supportEmail,
           });
         }
 
