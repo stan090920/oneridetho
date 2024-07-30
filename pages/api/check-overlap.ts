@@ -8,18 +8,25 @@ export default async function handleCheckOverlap(
   if (req.method === "POST") {
     const { scheduledPickupTime, userId } = req.body;
 
+
     if (!scheduledPickupTime || !userId) {
       return res.status(400).send("Missing scheduled pickup time or user ID");
     }
 
     try {
+      const userIdInt = parseInt(userId, 10);
+
+      if (isNaN(userIdInt)) {
+        return res.status(400).send("Invalid user ID");
+      }
+
       const overlappingRides = await prisma.ride.findMany({
         where: {
           AND: [
             { pickupTime: new Date(scheduledPickupTime) },
             { dropoffTime: null },
             { status: "Scheduled" },
-            { userId },
+            { userId: userIdInt },
           ],
         },
       });
