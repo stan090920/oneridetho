@@ -35,6 +35,7 @@ const Checkout = () => {
 
   const [stopsWithAddress, setStopsWithAddress] = useState<Stop[]>([]);
   const [paymentMethod, setPaymentMethod] = useState('');
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("Cash");
   const [isLoading, setIsLoading] = useState(false);
 
   // Memoize the formatted pickup time to avoid unnecessary recalculations
@@ -180,6 +181,7 @@ const Checkout = () => {
 
   const handlePaymentMethodChange = (method: any) => {
     setPaymentMethod(method);
+    setSelectedPaymentMethod(method);
     console.log("Selected payment method:", method);
   };
 
@@ -259,17 +261,8 @@ const Checkout = () => {
   );
 
   return (
-    <div className="px-2 mt-5">
+    <div className="px-2 mb-5">
       <h1 className="font-bold text-[30px]">Select Payment Method</h1>
-      <div>
-        <div>
-          <button className="py-3 bg-black text-white pl-4 pr-4 rounded-md mt-5 sm:w-auto w-full text-center"
-            onClick={() => handlePaymentMethodChange('Cash')}
-          >
-            Pay with Cash
-          </button>
-        </div>
-      </div>
       <div className="border rounded-md sm:w-[450px] w-[360px] max-h-[40vh] px-2 mt-5 pt-5 space-y-2 overflow-auto">
         <p className="font-bold">Pickup Location: <span className="font-normal">{pickup}</span></p>
         <p className="font-bold">Dropoff Location: <span className="font-normal">{dropoff}</span></p>
@@ -281,27 +274,43 @@ const Checkout = () => {
         {isScheduled && <p className="font-bold">Pickup Time: <span className="font-normal">{formattedPickupTime}</span></p>}
         <p className="font-bold">Fare: $<span className="font-normal">{fare}</span></p>
         <p className="flex items-center gap-4"><IoMdPerson size={24} /> {passengers}</p>
-      </div>
-      <div className="flex items-center gap-3">
-        <div>
+        <div className=" pb-2">
           <button
             onClick={handleEdit}
-            className="py-3 bg-black text-white pl-12 pr-12 rounded-md mt-5"
+            className="py-1 bg-red-500 text-white px-4 rounded-md"
           >
             Edit Ride
           </button>
         </div>
-        {paymentMethod && (
-          <div>
-            <button className="py-3 bg-black text-white pl-12 pr-12 rounded-md mt-5"
-              onClick={handleCheckout}
-              disabled={isLoading}
-            >
-              {isLoading ? <Spinner /> : 'Confirm Ride'}
-            </button>
-          </div>
-        )}
       </div>
+      <div className="flex gap-4">
+        <button 
+          className={`py-3 bg-green-500 text-white pl-4 pr-4 rounded-md mt-5 sm:w-auto w-full text-center ${
+            selectedPaymentMethod === 'Cash' ? 'border-2 border-black' : ''
+          }`}
+          onClick={() => handlePaymentMethodChange('Cash')}
+        >
+          Pay with Cash
+        </button>
+        <button
+          className={`py-3 bg-amber-500 text-white px-4 rounded-md mt-5 sm:w-auto w-full text-center ${
+            selectedPaymentMethod === 'Bank' ? 'border-2 border-black' : ''
+          }`}
+          onClick={() => handlePaymentMethodChange('Bank')}
+        >
+          Pay with Bank
+        </button>
+      </div>
+      {paymentMethod && (
+        <div>
+          <button className="py-3 bg-black text-white pl-12 pr-12 rounded-md mt-5 sm:w-[450px] w-[360px]"
+            onClick={handleCheckout}
+            disabled={isLoading}
+          >
+            {isLoading ? <Spinner /> : 'Confirm Ride'}
+          </button>
+        </div>
+      )}
       {paymentMethod === 'Cash' && cashPaymentMessages}
       {showProfilePhotoMessage && (
         <div className="mt-5 p-4 bg-red-100 border border-red-400 text-red-700 sm:w-[50%]">

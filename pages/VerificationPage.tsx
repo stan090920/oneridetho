@@ -117,8 +117,11 @@ const VerificationPage: React.FC = () => {
         <form onSubmit={handleSubmit} className="space-y-4">
           <p className="text-gray-600">
             Please upload clear images of your government-issued ID and a
-            verification photo for the safety of our drivers. This helps us
-            ensure the safety and trustworthiness of our service.
+            verification photo for the safety of our drivers. Rest assured, your
+            documents are strictly for verification purposes and will only be
+            viewed by our management team. They will not be shared with any
+            third parties. This process helps us maintain the highest standards
+            of safety and trustworthiness for our service.
           </p>
           <div>
             <label

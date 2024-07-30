@@ -391,13 +391,14 @@ const Ride = () => {
     const dropoffLocation = dropoffInputRef.current?.value;
 
     try {
+      const userId = session?.user.id;
       // Check for overlapping rides
       const overlapResponse = await fetch("/api/check-overlap", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ scheduledPickupTime }),
+        body: JSON.stringify({ scheduledPickupTime, userId }),
       });
 
       if (overlapResponse.ok) {

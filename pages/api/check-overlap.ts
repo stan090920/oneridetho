@@ -6,10 +6,10 @@ export default async function handleCheckOverlap(
   res: NextApiResponse
 ) {
   if (req.method === "POST") {
-    const { scheduledPickupTime } = req.body;
+    const { scheduledPickupTime, userId } = req.body;
 
-    if (!scheduledPickupTime) {
-      return res.status(400).send("Missing scheduled pickup time");
+    if (!scheduledPickupTime || !userId) {
+      return res.status(400).send("Missing scheduled pickup time or user ID");
     }
 
     try {
@@ -18,8 +18,9 @@ export default async function handleCheckOverlap(
           AND: [
             { pickupTime: new Date(scheduledPickupTime) },
             { dropoffTime: null },
-            { status: 'Scheduled' }
-          ]
+            { status: "Scheduled" },
+            { userId },
+          ],
         },
       });
 

@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { signIn, useSession } from "next-auth/react";
 import router, { useRouter } from "next/router";
-import { FcGoogle } from "react-icons/fc";
 import Image from "next/image";
 import logo from "/assets/oneridetho_logo_600ppi.png"
-import { useAuth } from "@/components/AuthProvider";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { emailRegex, passwordRegex } from "@/scripts/RegEx";
@@ -23,6 +21,13 @@ const Contact: React.FC<ContactProps> = ({
 }) => {
   const [emailError, setEmailError] = useState("");
   const [emailLabelAnimated, setEmailLabelAnimated] = useState(false);
+  const { data: session, status } = useSession();
+
+  useEffect(() => {
+    if (status === "authenticated") {
+      router.push("/");
+    }
+  }, [status, router]);
 
   useEffect(() => {
     // Check if there's already content in the email input on mount
@@ -427,6 +432,7 @@ const BasicInfo: React.FC<BasicInfoProps> = ({
                 <div className="CountryFlagElement">
                   <select
                     className="CountryFlagDropdown"
+                    title="Country Flag Dropdown"
                     onChange={handleCountryChange}
                   >
                     <option value="Bahamas">🇧🇸</option>
@@ -652,6 +658,7 @@ const PhoneInfo: React.FC<PhoneInfoProps> = ({
                 <div className="CountryFlagElement">
                   <select
                     className="CountryFlagDropdown"
+                    title="Country Flag Dropdown"
                     onChange={handleCountryChange}
                   >
                     <option value="Bahamas">🇧🇸</option>
