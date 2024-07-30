@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import useSWR from "swr";
 import ChatBox from "./ChatBox";
 import SendMessage from "./SendMessage";
 import { useSession } from "next-auth/react";
@@ -30,15 +29,42 @@ interface User {
   // Add other fields as needed
 }
 
-const fetcher = (url: string) => fetch(url).then((res) => res.json());
+const fetchRides = async () => {
+  const response = await fetch("/api/rides");
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+  return response.json();
+};
 
 const ChatPanel: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [rides, setRides] = useState<Ride[]>([]);
   const [selectedRideId, setSelectedRideId] = useState<number | null>(null);
   const { data: session } = useSession();
   const isLoggedIn = session != null;
 
-  const { data: rides, error } = useSWR<Ride[]>(session ? "/api/rides" : null, fetcher);
+  useEffect(() => {
+    const fetchAndSetRides = async () => {
+      try {
+        const data = await fetchRides();
+        setRides(data);
+      } catch (error) {
+        console.error("Error fetching rides:", error);
+      }
+    };
+
+    // Initial fetch
+    if (isLoggedIn) {
+      fetchAndSetRides();
+    }
+
+    // Set up interval to fetch rides every 3 seconds
+    const intervalId = setInterval(fetchAndSetRides, 3000);
+
+    // Clear interval on component unmount
+    return () => clearInterval(intervalId);
+  }, [isLoggedIn]);
 
   const inProgressRides = Array.isArray(rides)
     ? rides.filter(
@@ -55,22 +81,21 @@ const ChatPanel: React.FC = () => {
     }
   }, [inProgressRides, selectedRideId]);
 
-
   const toggleChat = () => {
     setIsOpen(!isOpen);
   };
 
   return (
     <>
-    {isLoggedIn && inProgressRides.length > 0 && (
-      <button
-        className="fixed bottom-5 left-5 bg-green-600 text-white rounded-full px-4 py-2 z-50"
-        onClick={toggleChat}
-        title="Toggle Chat"
-      >
-        Chat
-      </button>
-    )}
+      {isLoggedIn && inProgressRides.length > 0 && (
+        <button
+          className="fixed bottom-5 left-5 bg-green-600 text-white rounded-full px-4 py-2 z-50"
+          onClick={toggleChat}
+          title="Toggle Chat"
+        >
+          Chat
+        </button>
+      )}
       {isOpen && (
         <div className="fixed bottom-5 left-5 w-11/12 sm:w-2/4 max-w-lg h-4/5 max-h-[90vh] bg-white rounded-lg shadow-lg z-50">
           <div className="flex justify-between items-center bg-green-600 text-white p-3 rounded-t-lg">
