@@ -68,11 +68,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       },
     });
 
+    const rideUrl = `https://oneridetho-driver.vercel.app/dashboard?rideId=${ride.id}`;
+
     const messageBody = `${user.name} has booked a ride for now!
-Pickup: ${pickupLocation},
-Drop-off: ${dropoffLocation},
-Stops: ${stops.map((stop: { address: any; }) => stop.address).join(', ')},
-Passengers: ${passengerCount}`;
+      Pickup: ${pickupLocation},
+      Drop-off: ${dropoffLocation},
+      Stops: ${stops.map((stop: { address: any }) => stop.address).join(", ")},
+      Passengers: ${passengerCount}.
+      You can view the ride details <a href="${rideUrl}">here</a>.`;
 
 
     // Send emails to drivers

@@ -69,12 +69,14 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
         },
       });
 
+      const rideUrl = `https://oneridetho-driver.vercel.app/dashboard?rideId=${scheduledRide.id}`;
 
       const messageBody = `${user.name} has scheduled a ride!\n
-      Pickup Time: ${formatTime(scheduledPickupTime)}.\n
-      Pickup Location: ${pickupLocation},\n
-      Drop-off Location: ${dropoffLocation},\n
-      Passengers: ${passengerCount}.`;
+        Pickup Time: ${formatTime(scheduledPickupTime)}.\n
+        Pickup Location: ${pickupLocation},\n
+        Drop-off Location: ${dropoffLocation},\n
+        Passengers: ${passengerCount}.
+        You can view the ride details <a href="${rideUrl}">here</a>.`;
 
       // Call the email sending function
       try {
