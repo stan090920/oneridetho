@@ -19,7 +19,15 @@ interface Ride {
   dropoffLocation: string;
   status: string;
   driverId: number;
+  driver: Driver;
   user: User;
+}
+
+interface Driver {
+  id: number;
+  name: string;
+  email: string;
+  // Add other fields as needed
 }
 
 interface User {
@@ -37,9 +45,18 @@ const fetchRides = async () => {
   return response.json();
 };
 
+const fetchDrivers = async () => {
+  const response = await fetch("/api/drivers/list");
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+  return response.json();
+};
+
 const ChatPanel: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [rides, setRides] = useState<Ride[]>([]);
+  const [drivers, setDrivers] = useState<Driver[]>([]);
   const [selectedRideId, setSelectedRideId] = useState<number | null>(null);
   const { data: session } = useSession();
   const isLoggedIn = session != null;
@@ -54,15 +71,29 @@ const ChatPanel: React.FC = () => {
       }
     };
 
+    const fetchAndSetDrivers = async () => {
+      try {
+        const data = await fetchDrivers();
+        setDrivers(data);
+      } catch (error) {
+        console.error("Error fetching drivers:", error);
+      }
+    };
+
     // Initial fetch
     if (isLoggedIn) {
       fetchAndSetRides();
+      fetchAndSetDrivers();
     }
 
     // Set up interval to fetch rides every 3 seconds
-    const intervalId = setInterval(fetchAndSetRides, 3000);
+    const intervalId = setInterval(() => {
+      if (isLoggedIn) {
+        fetchAndSetRides();
+        fetchAndSetDrivers();
+      }
+    }, 3000);
 
-    // Clear interval on component unmount
     return () => clearInterval(intervalId);
   }, [isLoggedIn]);
 
@@ -83,6 +114,11 @@ const ChatPanel: React.FC = () => {
 
   const toggleChat = () => {
     setIsOpen(!isOpen);
+  };
+
+  const getDriverEmail = (driverId: number): string => {
+    const driver = drivers.find((driver) => driver.id === driverId);
+    return driver ? driver.email : "";
   };
 
   return (
@@ -140,8 +176,15 @@ const ChatPanel: React.FC = () => {
             <div className="p-4 h-[50vh] overflow-y-auto">
               {selectedRideId && <ChatBox rideId={selectedRideId} />}
             </div>
-            
-            {selectedRideId && <SendMessage rideId={selectedRideId} />}
+            {selectedRideId && (
+              <SendMessage
+                rideId={selectedRideId}
+                driverEmail={getDriverEmail(
+                  inProgressRides.find((ride) => ride.id === selectedRideId)
+                    ?.driverId ?? 0
+                )}
+              />
+            )}
           </div>
         </div>
       )}

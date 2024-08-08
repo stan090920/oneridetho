@@ -5,9 +5,10 @@ import { useSession } from "next-auth/react";
 
 interface SendMessageProps {
   rideId: number;
+  driverEmail: string;
 }
 
-const SendMessage: React.FC<SendMessageProps> = ({ rideId }) => {
+const SendMessage: React.FC<SendMessageProps> = ({ rideId, driverEmail }) => {
   const [value, setValue] = useState("");
   const { data: session } = useSession();
 
@@ -31,11 +32,26 @@ const SendMessage: React.FC<SendMessageProps> = ({ rideId }) => {
           uid,
           rideId,
         });
+
+        // Send email to the driver
+        await fetch("/api/send-notification", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            recipient_email: driverEmail,
+            subject: "New Message from Customer",
+            text: `A new message has been sent regarding ride ID: ${rideId}. Please check your messages.`,
+            html: `<p>A new message has been sent regarding ride ID: ${rideId}. Please check your messages.</p>`,
+          }),
+        });
       } else {
         alert("User session not found");
       }
     } catch (error) {
       console.error(error);
+      setValue("");
     }
 
     setValue("");

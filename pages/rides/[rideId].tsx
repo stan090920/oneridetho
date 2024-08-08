@@ -115,7 +115,6 @@ const RideDetails = () => {
     }
   };
 
-
   useEffect(() => {
     const fetchLocation = async () => {
       if (ride?.status) {
@@ -195,7 +194,8 @@ const RideDetails = () => {
     streetViewControl: false,
     zoomControl: false,
   };
-    const cancelRide = async () => {
+
+  const cancelRide = async () => {
     try {
       await axios.post(`/api/rides/cancel/${rideId}`);
       alert("Ride has been canceled");
@@ -204,8 +204,6 @@ const RideDetails = () => {
       console.error("Error cancelling ride:", cancelError);
     }
   };
-
-
 
 
   if (!ride && !error) return <Spinner />;
