@@ -50,10 +50,17 @@ const Estimate = () => {
     passengers: number
   ): string => {
     const baseFare = 10;
-    const ratePerMile = 2;
-    const distanceCharge = distance * ratePerMile;
-    const passengerCharge = (passengers - 1) * 2;
+    let distanceCharge = 0;
 
+    if (distance <= 5) {
+      // Calculate fare for rides under 5 miles
+      distanceCharge = baseFare + Math.ceil(distance * 2);
+    } else {
+      // Calculate fare for rides over 5 miles
+      distanceCharge = 20 + Math.ceil((distance - 5) * 1.5);
+    }
+
+    const passengerCharge = (passengers - 1) * 2;
     const currentHour = new Date().getHours();
     const isNightFee = currentHour >= 23 && currentHour < 6;
     const nightFee = isNightFee ? 5 : 0;

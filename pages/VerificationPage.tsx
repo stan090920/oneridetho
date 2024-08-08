@@ -16,7 +16,9 @@ const VerificationPage: React.FC = () => {
   const fetchVerificationDetails = async () => {
     if (session?.user) {
       try {
-        const response = await fetch("/api/verification/getVerificationDetails");
+        const response = await fetch(
+          "/api/verification/getVerificationDetails"
+        );
         if (response.ok) {
           const data = await response.json();
           setFetchedGovernmentIssuedId(data.user.governmentIssuedId || "");
@@ -82,16 +84,19 @@ const VerificationPage: React.FC = () => {
     const updateToast = toast.loading("Updating verification details...");
 
     try {
-      const response = await fetch("/api/verification/updateVerificationDetails", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          governmentIssuedId,
-          verificationPhotoUrl,
-        }),
-      });
+      const response = await fetch(
+        "/api/verification/updateVerificationDetails",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            governmentIssuedId,
+            verificationPhotoUrl,
+          }),
+        }
+      );
 
       if (response.ok) {
         toast.success("Verification details updated successfully!", {
@@ -120,8 +125,10 @@ const VerificationPage: React.FC = () => {
             verification photo for the safety of our drivers. Rest assured, your
             documents are strictly for verification purposes and will only be
             viewed by our management team. They will not be shared with any
-            third parties. This process helps us maintain the highest standards
-            of safety and trustworthiness for our service.
+            third parties. You will only need to complete this verification
+            process once and won't need to do it again. This process helps us
+            maintain the highest standards of safety and trustworthiness for our
+            service.
           </p>
           <div>
             <label

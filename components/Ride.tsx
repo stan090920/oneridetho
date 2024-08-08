@@ -237,8 +237,16 @@ const Ride = () => {
     stops: number
   ): string => {
     const baseFare = 10;
-    const ratePerMile = 2;
-    const distanceCharge = distance * ratePerMile;
+    let distanceCharge = 0;
+
+    if (distance <= 5) {
+    // Calculate fare for rides under 5 miles
+    distanceCharge = baseFare + Math.ceil(distance * 2);
+  } else {
+    // Calculate fare for rides over 5 miles
+    distanceCharge = 20 + Math.ceil((distance - 5) * 1.5);
+  }
+
     const passengerCharge = (passengers - 1) * 2;
     const stopCharge = stops * 5;
 
